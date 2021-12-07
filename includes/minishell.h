@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/07 17:28:29 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/07 18:21:20 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,24 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
+# include <stdlib.h>
 # include "libft.h"
+
+typedef struct s_arg
+{
+	char			*str;
+	char			**split;
+	char			*cmd;
+	char			*oper;
+	char			*opt;
+	char			*word;
+	struct s_redir	*redir;
+}	t_arg;
+
 
 typedef struct s_pipe
 {
-	char			*cmd;
+	struct s_arg	arg;
 	struct s_pipe	*prev;
 	struct s_pipe	*next;
 }	t_pipe;
@@ -41,9 +54,7 @@ typedef struct s_pars
 	char 			*line;
 	char 			**split;
 	struct s_pipe	*pipe;
-	char			*args;
-	char			*cmd;
-	char			*op;
+	struct s_arg	*arg;
 }	t_pars;
 
 #endif
