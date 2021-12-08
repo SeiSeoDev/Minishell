@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/08 12:13:29 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/08 13:17:23 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,30 +128,41 @@ void    parsing(t_pars *pars, char *str)
 	}
 }
 
+void loop(t_pars *pars)
+{
+	char *str;
+	(void)pars;
+
+	str = NULL;
+	while (get_next_line(0, &str) > 0)
+	{
+		parsing(pars, str);
+		print_pars(pars);
+	}
+}
+
 int	main(int ac, char **av, char **env)
 {
 	int i;
 	char **strenv;
 	t_pars  *pars;
 
+	(void)ac;
+	(void)av;
 	i = -1;
 	while (env[i])
 		i++;
 	strenv = malloc(sizeof(char *) * (i + 1));
+	pars = malloc(sizeof(t_pars));
+	if (!pars || !strenv)
+	{
+		printf("Error in pars malloc.\n");
+		exit(EXIT_FAILURE);
+	}
 	i = -1;
 	while (env[++i])
 		strenv[i] = ft_strdup(env[i]);
 	strenv[i] = 0;
-	if (ac == 2)
-	{
-		pars = malloc(sizeof(t_pars));
-		if (!pars)
-		{
-			printf("Error in pars malloc.\n");
-			exit(EXIT_FAILURE);
-		}
-		parsing(pars, av[1]);
-		print_pars(pars);
-	}
+	loop(pars);
 	return (1);
 }
