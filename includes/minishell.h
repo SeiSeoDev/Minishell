@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/08 13:09:34 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/08 16:18:16 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 typedef struct s_arg
 {
 	char			*str;
-	char			**split;
 	char			*cmd;
 	char			*oper;
 	char			*opt;
@@ -50,9 +49,40 @@ typedef struct s_redir
 typedef struct s_pars
 {
 	char 			*line;
-	char 			**split;
 	struct s_arg	*arg;
 	struct s_pipe	*pipe;
 }	t_pars;
+
+typedef struct s_shell
+{
+	struct s_pars *pars;
+}	t_shell;
+
+/*
+** free.c
+*/
+
+void	free_arg(t_arg *arg);
+void	exit_free(t_pars *pars, char *err);
+
+/*
+** check.c
+*/
+
+int		check_line(char *str);
+
+/*
+** get.c
+*/
+
+int		get_cmd(char *res, char *str);
+int		get_oper(char *res, char *str, int i);
+
+/*
+** init.c
+*/
+
+void	init_pipe(t_pars *pars);
+void	init_arg(t_pars *pars);
 
 #endif
