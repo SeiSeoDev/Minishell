@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/07 18:21:20 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/08 13:09:34 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,12 @@ typedef struct s_arg
 	char			*cmd;
 	char			*oper;
 	char			*opt;
-	char			*word;
 	struct s_redir	*redir;
 }	t_arg;
 
-
 typedef struct s_pipe
 {
-	struct s_arg	arg;
+	struct s_arg	*arg;
 	struct s_pipe	*prev;
 	struct s_pipe	*next;
 }	t_pipe;
@@ -53,8 +51,8 @@ typedef struct s_pars
 {
 	char 			*line;
 	char 			**split;
-	struct s_pipe	*pipe;
 	struct s_arg	*arg;
+	struct s_pipe	*pipe;
 }	t_pars;
 
 #endif

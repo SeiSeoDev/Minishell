@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/08 12:13:29 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/08 13:18:27 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,18 @@ void    print_pars(t_pars *pars)
 			i++;
 		}
 	}
-	if (pars->pipe)
-	{
-		i = 0;
-		while (pars->pipe)
-		{
-			printf("Pipe %d:%s\n", i, pars->pipe->arg.str);
-			pars->pipe = pars->pipe->next;
-			i++;
-		}
-	}
-	if (pars->arg->str)
-		printf("Arg:%s\n", pars->arg->str);
+	// if (pars->pipe)
+	// {
+	// 	i = 0;
+	// 	while (pars->pipe)
+	// 	{
+	// 		printf("Pipe %d:%s\n", i, pars->pipe->arg.str);
+	// 		pars->pipe = pars->pipe->next;
+	// 		i++;
+	// 	}
+	// }
+	// if (pars->arg->str)
+	// 	printf("Arg:%s\n", pars->arg->str);
 }
 
 void	init_pipe(t_pars *pars)
@@ -85,25 +85,39 @@ void	init_pipe(t_pars *pars)
 	(void)pars;
 }
 
-void	init_arg(t_pars *pars)
+void	init_arg(t_pars *pars, int i)
 {
 	int	i;
 	char **tmp;
 
 	i = 0;
-	if (pars->split)
-	{
-		while (pars->split[i])
-			i++;
-	}
-	pars->arg = malloc(sizeof(t_arg) * i);
+	pars->arg = malloc(sizeof(t_arg));
+	if (!pars->arg)
+		exit_free(pars);
+	pars->arg->str = pars->split[i];
+	pars->arg->split = ft_split(pars->arg[i].str, ' ');
+	pars->arg->cmd = pars->arg[i].split[0];
+	while 
+	i++;
+}
+
+int		check_line(char *str)
+{
+	int	i;
+	int	sq;
+	int	dq;
+	int	lock;
+
 	i = 0;
-	while (pars->split[i])
+	sq = 0;
+	dq = 0;
+	while (str[i])
 	{
-		pars->arg[i].str = pars->split[i];
-		tmp = ft_split(pars->arg[i].str, '\"');
-		pars->arg[i].split = ft_split(pars->arg[i].str, ' ');
-		i++;
+		if (str[i] == '\'')
+		{
+			if (sq == 0)
+				
+		}
 	}
 }
 
@@ -111,6 +125,8 @@ void    parsing(t_pars *pars, char *str)
 {
 	int	i;
 
+	if (!check_line(str))
+		exit_free(pars, "Error quote don't match");
 	pars->line = str;
 	pars->split = ft_split(str, ';');
 	if (!pars->split)
@@ -120,10 +136,7 @@ void    parsing(t_pars *pars, char *str)
 	i = 0;
 	while (pars->split[i])
 	{
-		if (ft_strchr(pars->split[i], '|'))
-			init_pipe(pars);
-		else
-			init_arg(pars);
+		init_arg(pars, i);
 		i++;
 	}
 }
