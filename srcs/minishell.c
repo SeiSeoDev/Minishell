@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/07 19:00:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/08 12:13:29 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void    print_pars(t_pars *pars)
 
 	printf("Parsing :\n");
 	if (pars->line)
-		printf("The initial line received in argument: %s\n", pars->line);
+		printf("The command line: %s\n", pars->line);
 	if (pars->split)
 	{
 		i = 0;
@@ -88,7 +88,6 @@ void	init_pipe(t_pars *pars)
 void	init_arg(t_pars *pars)
 {
 	int	i;
-	int	j;
 	char **tmp;
 
 	i = 0;
@@ -103,13 +102,6 @@ void	init_arg(t_pars *pars)
 	{
 		pars->arg[i].str = pars->split[i];
 		tmp = ft_split(pars->arg[i].str, '\"');
-		printf("start:\n");
-		j = 0;
-		while (tmp[j])
-		{
-			printf("%s\n", tmp[j]);
-			j++;
-		}
 		pars->arg[i].split = ft_split(pars->arg[i].str, ' ');
 		i++;
 	}
@@ -120,9 +112,7 @@ void    parsing(t_pars *pars, char *str)
 	int	i;
 
 	pars->line = str;
-	printf("error\n");
 	pars->split = ft_split(str, ';');
-	printf("error 2\n");
 	if (!pars->split)
 		exit_free(pars);
 	pars->pipe = NULL;
@@ -130,7 +120,7 @@ void    parsing(t_pars *pars, char *str)
 	i = 0;
 	while (pars->split[i])
 	{
-		if (ft_strchr(str, '|'))
+		if (ft_strchr(pars->split[i], '|'))
 			init_pipe(pars);
 		else
 			init_arg(pars);
