@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
+#    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2021/12/07 16:06:05 by dasanter         ###   ########.fr        #
+#    Updated: 2021/12/14 13:16:53 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,11 @@ DIR_S = srcs/
 
 HEADER = includes/
 
-SOURCES =	minishell.c 
-			
+SOURCES =	minishell.c	\
+			check.c		\
+			free.c		\
+			init.c		\
+			get.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 

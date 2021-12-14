@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 13:56:52 by tamigore          #+#    #+#             */
-/*   Updated: 2019/11/11 21:02:38 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/08 11:54:35 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static	void	ft_free_all(char **tab, int x)
 
 static	int	add_space_to_tab(char **tab, int j, int *x)
 {
-	tab[*x] = (char *)malloc(j + 1);
+	tab[*x] = (char *)malloc(sizeof(char) * (j + 1));
 	if (!tab[*x])
 	{
 		ft_free_all(tab, *x);
 		return (0);
 	}
-	x++;
+	(*x)++;
 	return (1);
 }
 
@@ -71,7 +71,9 @@ static	void	ft_filtab(char **tab, const char *s, char c)
 		{
 			j = 0;
 			while (s[i] != c && s[i])
+			{
 				tab[x][j++] = s[i++];
+			}
 			tab[x++][j] = '\0';
 		}
 		if (s[i])
