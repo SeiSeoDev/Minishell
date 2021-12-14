@@ -6,7 +6,7 @@
 #    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2021/12/14 14:43:42 by tamigore         ###   ########.fr        #
+#    Updated: 2021/12/14 18:30:50 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,11 @@ DIR_S = srcs/
 
 HEADER = includes/
 
-SOURCES =	minishell.c	\
-			check.c		\
-			free.c		\
-			init.c		\
-			get.c		\
+SOURCES =	minishell.c		\
+			usefull_pars.c	\
+			free.c			\
+			init.c			\
+			pars.c			\
 			print.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))

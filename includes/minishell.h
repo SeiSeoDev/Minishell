@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 14:43:34 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/14 18:40:53 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,18 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include "libft.h"
+
+typedef enum s_type
+{
+	word,
+	pip,
+	rin,
+	rdin,
+	rout,
+	rdout,
+	fd,
+	lim,
+}	t_type;
 
 typedef struct s_token
 {
@@ -51,14 +63,19 @@ void	free_cmd(t_cmd *cmd);
 void	exit_free(t_cmd *cmd, char *err);
 
 /*
-** check.c
+** usefull_pars.c
 */
 
-int		check_line(char *str);
+void	skip_cot(char *str, int *i);
+int 	check_sep(char c);
+void	split(char *str, int *i, int *last);
+void	get_type(t_token *tmp, int *l, int *f);
 
 /*
-** get.c
+** pars.c
 */
+
+void    split_words(char *str);
 
 /*
 ** init.c

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 13:44:02 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 14:44:17 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/14 18:41:18 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	print_token(t_token *token)
 	{
 		i = 0;
 		tmp = token;
+		printf("Start print token\n");
 		while (tmp)
 		{
 			printf("token [%d]: TYPE[%d] word=%s\n", i++, tmp->type, tmp->str);
