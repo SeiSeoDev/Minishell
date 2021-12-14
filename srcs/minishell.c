@@ -6,66 +6,98 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/14 13:16:54 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/14 15:23:37 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    print_pars(t_pars *pars)
+int	is_separator(char *str/*, char *cot*/)
 {
-	int	i;
+	if (ft_strncmp(str, "<<", 2) == 0 || ft_strncmp(str, ">>", 2) == 0)
+		return (2);
+	else if (str[0] == '<' || str[0] == '>' || str[0] == ' ' || str[0] == '|')
+		return (1);
+	else if (str[0] == '\0')
+		return (3);
+	return (0);
+}
 
-	printf("Parsing :\n");
-	if (pars->line)
-		printf("The command line: %s\n", pars->line);
-	if (pars->pipe)
+void	skip_cot(char *str, int *i)
+{
+	char	cot;
+
+	cot = str[*i];
+	(*i)++;
+	while (str[*i])
 	{
-		i = 0;
-		while (pars->pipe)
+		if (str[*i] == cot)
+			break ;
+		(*i)++;
+	}
+}
+
+void	tokenize(t_token *token)
+{
+	(void)token;
+}
+
+void    split_words(char *str)
+{
+	t_token	*token;
+	t_token *tmp;
+	int		i;
+	int		last;
+	int		ret;
+
+	i = 0;
+	token = NULL;
+	while (str[i])
+	{
+		last = i;
+		ret = 0;
+		while (ret == 0)
 		{
-			printf("Pipe %d:%s\n", i, pars->pipe->arg->str);
-			pars->pipe = pars->pipe->next;
+			if (str[i] == '"' || str[i] == '\'')
+				skip_cot(str, &i);
+			ret = is_separator(&str[i]);
 			i++;
 		}
+		printf("str[last] = %s\n", &str[last]);
+		if (!token)
+		{
+			token = init_token(NULL, ft_strndup(&str[last], i - (last + 1 )), 0);
+			tmp = token;
+		}
+		else
+		{
+			token->next = init_token(NULL, ft_strndup(&str[last], i - (last + 1)), 0);
+			token = token->next;
+		}
+		if (!token)
+			exit_free(NULL, "error init token...");
+		if (ret == 3)
+			break ;
+		i += ret - 1;
 	}
-	if (pars->arg->str)
-	{
-		printf("Arg:%s\n", pars->arg->str);
-	}
+	printf("Have I succed ?\n");
+	print_token(tmp);
+	tokenize(tmp);
 }
 
-void    parsing(t_pars *pars, char *str)
-{
-	if (!check_line(str))
-		exit_free(pars, "Error quote don't match");
-	pars->line = str;
-	pars->pipe = NULL;
-	pars->arg = NULL;
-	if (strchr(str, '|'))
-		init_pipe(pars);
-	else
-		init_arg(pars);
-}
-
-void	loop(t_pars *pars)
+void	loop(void)
 {
 	char *str;
-	(void)pars;
 
 	str = NULL;
 	while (get_next_line(0, &str) > 0)
-	{
-		parsing(pars, str);
-		print_pars(pars);
-	}
+		split_words(str);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	int i;
 	char **strenv;
-	t_shell	shell;
 
 	(void)ac;
 	(void)av;
@@ -73,8 +105,7 @@ int	main(int ac, char **av, char **env)
 	while (env[i])
 		i++;
 	strenv = malloc(sizeof(char *) * (i + 1));
-	shell.pars = malloc(sizeof(t_pars));
-	if (!shell.pars || !strenv)
+	if (!strenv)
 	{
 		printf("Error in pars malloc.\n");
 		exit(EXIT_FAILURE);
@@ -83,6 +114,6 @@ int	main(int ac, char **av, char **env)
 	while (env[++i])
 		strenv[i] = ft_strdup(env[i]);
 	strenv[i] = 0;
-	loop(shell.pars);
+	loop();
 	return (1);
 }

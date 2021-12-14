@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 13:16:52 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/14 14:43:34 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,9 @@ typedef struct s_shell
 ** free.c
 */
 
-void	free_arg(t_arg *arg);
-void	exit_free(t_pars *pars, char *err);
+void	free_token(t_token *token);
+void	free_cmd(t_cmd *cmd);
+void	exit_free(t_cmd *cmd, char *err);
 
 /*
 ** check.c
@@ -59,14 +60,17 @@ int		check_line(char *str);
 ** get.c
 */
 
-int		get_cmd(char *res, char *str);
-int		get_oper(char *res, char *str, int i);
-
 /*
 ** init.c
 */
 
-void	init_pipe(t_pars *pars);
-void	init_arg(t_pars *pars);
+t_token	*init_token(t_token *next, char *str, int type);
+
+/*
+** print.c
+*/
+
+void	print_cmd(t_cmd *cmd);
+void	print_token(t_token *token);
 
 #endif

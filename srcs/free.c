@@ -6,41 +6,51 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/08 15:39:57 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/14 14:39:07 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_arg(t_arg *arg)
+void	free_token(t_token *token)
 {
-	if (arg->cmd)
-		free(arg->cmd);
-	if (arg->opt)
-		free(arg->opt);
-	if (arg->oper)
-		free(arg->oper);
-	free(arg);
+	t_token	*tmp;
+
+	if (token)
+	{
+		while (token)
+		{
+			if (token->str)
+				free(token->str);
+			tmp = token;
+			token = token->next;
+			free(tmp);
+		}
+	}
 }
 
-void	exit_free(t_pars *pars, char *err)
+void	free_cmd(t_cmd *cmd)
 {
-	t_pipe	*tmp;
+	t_cmd	*tmp;
 
-	if (pars)
+	if (cmd)
 	{
-		if (pars->pipe)
+		while (cmd)
 		{
-			while (pars->pipe)
-			{
-				free_arg(pars->pipe->arg);
-				tmp = pars->pipe;
-				pars->pipe = pars->pipe->next;
-				free(tmp);
-			}
+			if (cmd->arg)
+				free_token(cmd->arg);
+			if (cmd->redir)
+				free_token(cmd->redir);
+			tmp = cmd;
+			cmd = cmd->next;
+			free(tmp);
 		}
-		if (pars->arg)
-			free_arg(pars->arg);
 	}
+}
+
+void	exit_free(t_cmd *cmd, char *err)
+{
+	if (cmd)
+		free_cmd(cmd);
 	printf("%s\n", err);
 }
