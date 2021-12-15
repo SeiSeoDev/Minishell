@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/14 16:35:20 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:09:22 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ int	main(int ac, char **av, char **env)
 		i++;
 	strenv = malloc(sizeof(char *) * (i + 1));
 	if (!strenv)
-	{
-		printf("Error in pars malloc.\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_free(NULL, "Error in env malloc.\n", 0);
 	i = -1;
 	while (env[++i])
 		strenv[i] = ft_strdup(env[i]);

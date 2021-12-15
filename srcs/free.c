@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 14:39:07 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:09:46 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,11 @@ void	free_cmd(t_cmd *cmd)
 	}
 }
 
-void	exit_free(t_cmd *cmd, char *err)
+void	exit_free(void *ptr, char *err, char type)
 {
-	if (cmd)
-		free_cmd(cmd);
+	if (type == 't')
+		free_token(ptr);
+	else if (type == 'c')
+		free_cmd(ptr);
 	printf("%s\n", err);
 }

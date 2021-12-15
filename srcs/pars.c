@@ -6,17 +6,54 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 18:43:47 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:29:30 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 void	expension(t_token *token)
 {
-	(void)token;
-}
+	t_cmd	*data;
+	t_cmd	*tmp;
+	int		i;
+	int		f;
+	t_token	*nul;
 
+	data = malloc(sizeof(t_cmd));
+	if (!data)
+		exit_free(token, 't');
+	tmp = data;
+	f = 0;
+	while (token)
+	{
+		if (token->type == pip)
+		{
+			data->next = malloc(sizeof(t_cmd));
+			if (!data->next)
+			{
+				free_token(token);
+				exit_free(data, "Error init cmd...\n",'c');
+			}
+			data = data->next;
+			f = 1;
+		}
+		else if (token->type == word)
+		{
+			if (get_dquot())
+			{
+				token->str = get_env(token->str);
+			}
+		}
+		else if (token->type == fd)
+		{
+
+		}
+		token = token->next;
+	}
+	return (tmp);
+}
+*/
 void	tokenize(t_token *token)
 {
 	t_token *tmp;
@@ -36,7 +73,7 @@ void	tokenize(t_token *token)
 		tmp = tmp->next;
 	}
 	print_token(token);
-	expension(token);
+//	expension(token);
 }
 
 void	split_words(char *str)
@@ -65,7 +102,7 @@ void	split_words(char *str)
 			token = token->next;
 		}
 		if (!token)
-			exit_free(NULL, "error init token...");
+			exit_free(token, "error init token...\n", 't');
 	}
 	print_token(tmp);
 	tokenize(tmp);

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 18:40:53 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 14:09:44 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_shell
 
 void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
-void	exit_free(t_cmd *cmd, char *err);
+void	exit_free(void *ptr, char *err, char type);
 
 /*
 ** usefull_pars.c
