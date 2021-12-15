@@ -6,11 +6,39 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 18:40:56 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 18:11:46 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	quot_status(char *str, int i)
+{
+	int		j;
+	char	quot;
+
+	j = 0;
+	quot = 0;
+	while (str[j])
+	{
+		if (str[j] == '"' || str[i] == '\'')
+		{
+			if (quot == 0)
+				quot = str[i];
+			else if (quot == str[i])
+				quot = 0;
+		}
+		if (j >= i)
+			break ;
+		j++;
+	}
+	if (quot == '\'')
+		return (1);
+	else if (quot == '"')
+		return (2);
+	else
+		return (0);
+}
 
 int check_sep(char c)
 {
@@ -71,7 +99,6 @@ void	get_type(t_token *tmp, int *l, int *f)
 		tmp->type = pip;
 	else
 	{
-		// if l == 1 && fd == 1 ???
 		if (*l == 1)
 		{
 			tmp->type = lim;

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/15 14:09:44 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 18:13:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,14 @@ void	skip_cot(char *str, int *i);
 int 	check_sep(char c);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
+int		quot_status(char *str, int i);
+
+/*
+** handle.c
+*/
+
+void	handle_words(t_token *token, t_token *tmp);
+void	handle_fd(t_token *token, t_token *tmp, int rd);
 
 /*
 ** pars.c
@@ -82,6 +90,8 @@ void    split_words(char *str);
 */
 
 t_token	*init_token(t_token *next, char *str, int type);
+t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
+void	add_token(t_token *token, t_token *new);
 
 /*
 ** print.c

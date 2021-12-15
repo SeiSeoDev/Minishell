@@ -6,7 +6,7 @@
 #    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2021/12/14 18:30:50 by tamigore         ###   ########.fr        #
+#    Updated: 2021/12/15 18:17:34 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ SOURCES =	minishell.c		\
 			free.c			\
 			init.c			\
 			pars.c			\
-			print.c
+			print.c			\
+			handle.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 
@@ -39,7 +40,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(HEADER)
 	make -C $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME) -lreadline
 
 norme:
 	norminette ./$(LIBFT)

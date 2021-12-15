@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/15 14:09:22 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/15 15:02:05 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ void	loop(void)
 	char *str;
 
 	str = NULL;
-	while (get_next_line(0, &str) > 0)
+	while (1)
+	{
+		str = readline("minishell:");
 		split_words(str);
+	}
 }
 
 int	main(int ac, char **av, char **env)
