@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2021/12/15 15:02:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/16 18:36:58 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ void	loop(void)
 	str = NULL;
 	while (1)
 	{
-		str = readline("minishell:");
-		split_words(str);
+		str = readline("\e[1m\e[31m\002""Minishell : ""\001\e[0m\002");
+		add_history(str);
+		//split_words(str);
 	}
 }
 
@@ -41,6 +42,7 @@ int	main(int ac, char **av, char **env)
 	while (env[++i])
 		strenv[i] = ft_strdup(env[i]);
 	strenv[i] = 0;
+	//test_exec();
 	loop();
 	return (1);
 }

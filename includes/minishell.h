@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/15 18:13:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/16 16:57:48 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,35 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include "libft.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 typedef enum s_type
 {
-	word,
-	pip,
-	rin,
-	rdin,
-	rout,
-	rdout,
-	fd,
-	lim,
+	word, // "whatever"
+	pip, // |
+	rin, // <
+	rdin, // <<
+	rout, // >
+	rdout, // >>
+	fd,	// >> "this"
+	lim, // << "this"
 }	t_type;
 
 typedef struct s_token
 {
-	int				type;
-	char			*str;
+	int				type; // t_type
+	char			*str; // "str"
 	struct s_token	*next;
 }	t_token;
 
 typedef struct s_cmd
 {
-	t_token			*arg;
+	t_token			*arg; // while arg exec(arg) arg = arg->next
 	t_token			*redir;
-	int				fdin;
-	int				fdout;
+	int				fdin; // a remplir avec l entree
+	int				fdout; // ou est ce que j ecris/transmet
 	int				pid;
 	struct s_cmd	*next;
 }	t_cmd;
@@ -100,4 +103,9 @@ void	add_token(t_token *token, t_token *new);
 void	print_cmd(t_cmd *cmd);
 void	print_token(t_token *token);
 
+/*
+** test_main.c
+*/
+
+t_cmd *test_exec();
 #endif

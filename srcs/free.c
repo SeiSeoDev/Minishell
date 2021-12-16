@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/15 14:09:46 by tamigore         ###   ########.fr       */
+/*   Updated: 2021/12/16 18:45:08 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,5 @@ void	exit_free(void *ptr, char *err, char type)
 	else if (type == 'c')
 		free_cmd(ptr);
 	printf("%s\n", err);
+	exit(1);
 }
