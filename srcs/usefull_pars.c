@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/15 18:11:46 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:50:52 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,15 @@ int	quot_status(char *str, int i)
 
 	j = 0;
 	quot = 0;
-	while (str[j])
+	while (str[j] && j < i)
 	{
-		if (str[j] == '"' || str[i] == '\'')
+		if (str[j] == '"' || str[j] == '\'')
 		{
 			if (quot == 0)
-				quot = str[i];
-			else if (quot == str[i])
+				quot = str[j];
+			else if (quot == str[j])
 				quot = 0;
 		}
-		if (j >= i)
-			break ;
 		j++;
 	}
 	if (quot == '\'')
@@ -38,13 +36,6 @@ int	quot_status(char *str, int i)
 		return (2);
 	else
 		return (0);
-}
-
-int check_sep(char c)
-{
-	if (c == '|' || c == '<' || c == '>' || c == ' ' || c == '\t')
-		return (1);
-	return (0);
 }
 
 void	skip_cot(char *str, int *i)
@@ -75,7 +66,8 @@ void	split(char *str, int *i, int *last)
 		(*i)++;
 	else
 	{
-		while (str[*i] && !check_sep(str[*i]))
+		while (str[*i] && !(str[*i] == '|' || str[*i] == '<' || str[*i] == '>' ||
+			str[*i] == ' ' || str[*i] == '\t'))
 		{
 			if (str[*i] == '"' || str[*i] == '\'')
 				skip_cot(str, i);

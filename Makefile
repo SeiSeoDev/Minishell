@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
+#    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2021/12/16 16:51:58 by dasanter         ###   ########.fr        #
+#    Updated: 2022/01/11 17:56:59 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ SOURCES =	minishell.c		\
 			init.c			\
 			pars.c			\
 			print.c			\
-			handle.c		\
-			test_main.c
+			expend.c		\
+			handler.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 
@@ -59,3 +59,7 @@ fclean: clean
 	@make fclean -C $(LIBFT)
 
 re: fclean all
+
+fsan: $(OBJS) $(HEADER)
+	make -C $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME) -lreadline -g3 -fsanitize=address

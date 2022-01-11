@@ -6,12 +6,12 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/15 18:15:31 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:52:14 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
+
 void	cmd_creat(t_token *token)
 {
 	t_cmd	*data;
@@ -36,28 +36,20 @@ void	cmd_creat(t_token *token)
 	}
 	print_cmd(tmp);
 }
-*/
+
 void	expension(t_token *token)
 {
 	t_token	*tmp;
-	int		rd;
 
 	tmp = token;
-	rd = -1;
 	while (tmp)
 	{
 		if (tmp->type == word)
-			handle_words(token, tmp);
-		// else if (tmp->type == fd)
-		// {
-		// 	handle_fd(token, tmp, rd);
-		// 	rd = -1;
-		// }
-		else if (tmp->type == rin || tmp->type == rout || tmp->type == rdout)
-			rd = tmp->type;
+			expend_words(token, tmp);
 		tmp = tmp->next;
 	}
-	print_token(tmp);
+	print_token(token);
+	cmd_creat(token);
 }
 
 void	tokenize(t_token *token)

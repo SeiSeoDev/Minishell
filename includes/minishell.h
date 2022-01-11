@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/16 16:57:48 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/11 17:08:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include "libft.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 typedef enum s_type
 {
@@ -70,7 +70,6 @@ void	exit_free(void *ptr, char *err, char type);
 */
 
 void	skip_cot(char *str, int *i);
-int 	check_sep(char c);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
 int		quot_status(char *str, int i);
@@ -79,8 +78,8 @@ int		quot_status(char *str, int i);
 ** handle.c
 */
 
-void	handle_words(t_token *token, t_token *tmp);
-void	handle_fd(t_token *token, t_token *tmp, int rd);
+void	expend_words(t_token *token, t_token *tmp);
+// void	expend_fd(t_token *token, t_token *tmp, int rd);
 
 /*
 ** pars.c
@@ -95,6 +94,7 @@ void    split_words(char *str);
 t_token	*init_token(t_token *next, char *str, int type);
 t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
 void	add_token(t_token *token, t_token *new);
+void	del_token(t_token **token, t_token *del);
 
 /*
 ** print.c
@@ -104,8 +104,15 @@ void	print_cmd(t_cmd *cmd);
 void	print_token(t_token *token);
 
 /*
+** handler.c
+*/
+
+char	*handler(int opt, char **env, char *comp);
+
+/*
 ** test_main.c
 */
 
-t_cmd *test_exec();
+// t_cmd *test_exec();
+
 #endif
