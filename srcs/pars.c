@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/11 18:52:14 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/12 14:41:06 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	cmd_creat(t_token *token)
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
 		exit_free(token, "Error init cmd\n", 't');
+	tmp = data;
 	while (token)
 	{
 		if (token->type == pip)
@@ -31,6 +32,13 @@ void	cmd_creat(t_token *token)
 				exit_free(tmp, "Error init cmd...\n",'c');
 			}
 			data = data->next;
+		}
+		else if (token->type == word)
+		{
+		}
+		else if (token->type == rout || token->type == rin || token->type == rdout)
+		{
+			
 		}
 		token = token->next;
 	}
