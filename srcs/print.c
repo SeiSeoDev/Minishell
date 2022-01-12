@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 13:44:02 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/14 18:41:18 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/12 19:13:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,7 @@ void	print_cmd(t_cmd *cmd)
 			if (cmd->redir)
 				print_token(tmp->redir);
 			printf("fdin = %d | fd out = %d | pid = %d\n", tmp->fdin, tmp->fdout, tmp->pid);
-			if (tmp->next)
-				tmp = tmp->next;
-			else
-				break ;
+			tmp = tmp->next;
 		}
 	}
 	else

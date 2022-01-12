@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/11 18:35:51 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:37:32 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static char	*replace_str(char *str, char *old, char *new)
 	int		j;
 	int		k;
 
-	// printf("start\n");
 	if (!new || !old)
 		return (NULL);
 	j = ft_strlen(old) + 1;
@@ -31,17 +30,13 @@ static char	*replace_str(char *str, char *old, char *new)
 	while (str[k] && ft_strncmp(&str[i], old, ft_strlen(old)))
 		res[i++] = str[k++];
 	i--;
-	// printf("ajout :%s\n", &new[j]);
 	while (new[j])
 		res[i++] = new[j++];
 	k += ft_strlen(old);
-	// printf("reste :%s\n", &str[k]);
 	while (str[k])
 		res[i++] = str[k++];
 	res[i] = '\0';
 	free(str);
-	// printf("res =%s\n", res);
-	// printf("end\n");
 	return (res);
 }
 
@@ -72,8 +67,6 @@ void	expend_words(t_token *token, t_token *tmp)
 				}
 				if (!util)
 					exit_free(token, "Error ...\n",'t');
-				// printf("var = %s\n", util);
-				// printf("res = %s\n", handler(1, NULL, util));
 				tmp->str = replace_str(tmp->str, util, handler(1, NULL, util));
 				free(util);
 			}

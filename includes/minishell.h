@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/12 14:42:04 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:51:09 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,11 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-typedef struct s_shell
+typedef struct s_env
 {
-	t_cmd	*cmd;
-}	t_shell;
+	char			*str;
+	struct s_env	*next;
+}	t_env;
 
 /*
 ** free.c
@@ -63,6 +64,7 @@ typedef struct s_shell
 
 void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
+void	free_env(t_env *env);
 void	exit_free(void *ptr, char *err, char type);
 
 /*
@@ -75,7 +77,7 @@ void	get_type(t_token *tmp, int *l, int *f);
 int		quot_status(char *str, int i);
 
 /*
-** handle.c
+** expend.c
 */
 
 void	expend_words(t_token *token, t_token *tmp);
@@ -91,6 +93,7 @@ void    split_words(char *str);
 ** init.c
 */
 
+t_env	*init_env(t_env *next, char *str);
 t_token	*init_token(t_token *next, char *str, int type);
 t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
 void	add_token(t_token *token, t_token *new);
