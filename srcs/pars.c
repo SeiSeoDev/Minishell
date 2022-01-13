@@ -6,44 +6,117 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/12 16:17:50 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/13 17:27:27 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_token	*cmd_arg(t_token **tmp)
+{
+	t_token *res;
+	t_token *arg;
+
+	res = NULL;
+	arg = NULL;
+	while ((*tmp) && (*tmp)->type != pip && (*tmp)->type != rin && (*tmp)->type != rout &&
+		(*tmp)->type != rdin && (*tmp)->type != rdout)
+	{
+		if (arg == NULL)
+		{
+			arg = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
+			if (!arg)
+				return (NULL);
+			res = arg;
+		}
+		else
+		{
+			arg->next = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
+			if (!arg->next)
+				return (NULL);
+			arg = arg->next;
+		}
+		(*tmp) = (*tmp)->next;
+	}
+	return (res);
+}
+
+t_token	*cmd_redir(t_token **tmp)
+{
+	t_token *res;
+	t_token *redir;
+
+	res = NULL;
+	redir = NULL;
+	while ((*tmp) && (*tmp)->type != pip)
+	{
+		if (redir == NULL)
+		{
+			redir = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
+			if (!redir)
+				return (NULL);
+			res = redir;
+			printf("redir str:%s\n", redir->str);
+		}
+		else
+		{
+			redir->next = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
+			if (!redir->next)
+				return (NULL);
+			redir = redir->next;
+			printf("redir str:%s\n", redir->str);
+		}
+		(*tmp) = (*tmp)->next;
+	}
+	return (res);
+}
+
 void	cmd_creat(t_token *token)
 {
 	t_cmd	*data;
-	t_cmd	*tmp;
-	
+	t_cmd	*res;
+	t_token	*tmp;
+
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
 		exit_free(token, "Error init cmd\n", 't');
-	tmp = data;
-	while (token)
+	res = data;
+	tmp = token;
+	while (tmp)
 	{
-		if (token->type == pip)
+		if (tmp->type == pip)
 		{
 			data->next = init_cmd(NULL, NULL, NULL);
 			if (!data->next)
 			{
 				free_token(token);
-				exit_free(tmp, "Error init cmd...\n",'c');
+				exit_free(res, "Error init_cmd...\n",'c');
 			}
 			data = data->next;
+			tmp = tmp->next;
 		}
-		else if (token->type == word)
+		else
 		{
+			printf("Before cmd arg\n");
+			print_token(tmp);
+			data->arg = cmd_arg(&tmp);
+			printf("Before cmd redir\n");
+			print_token(tmp);
+			data->redir = cmd_redir(&tmp);
+			printf("After cmd redir\n");
+			print_token(tmp);
 		}
-		else if (token->type == rout || token->type == rin || token->type == rdout)
-		{
-			
-		}
-		token = token->next;
 	}
+<<<<<<< HEAD
 	print_cmd(tmp);
 	exec(tmp);
+=======
+	printf("token before free\n");
+	print_token(token);
+	free_token(token);
+	printf("Cmd creat:\n");
+	print_cmd(res);
+>>>>>>> 4fbf018f0b4e86dc924a3cdf26ff10737489a0b5
 }
 
 void	expension(t_token *token)
@@ -53,11 +126,12 @@ void	expension(t_token *token)
 	tmp = token;
 	while (tmp)
 	{
-		if (tmp->type == word)
+		if (tmp->type == word || tmp->type == fd)
 			expend_words(token, tmp);
 		tmp = tmp->next;
 	}
-	print_token(token);
+	// printf("Expension:\n");
+	// print_token(token);
 	cmd_creat(token);
 }
 
@@ -79,7 +153,8 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
-	print_token(token);
+	// printf("Tokenize:\n");
+	// print_token(token);
 	expension(token);
 }
 
@@ -111,6 +186,7 @@ void	split_words(char *str)
 		if (!token)
 			exit_free(token, "error init token...\n", 't');
 	}
-	print_token(tmp);
+	// printf("Split words:\n");
+	// print_token(tmp);
 	tokenize(tmp);
 }

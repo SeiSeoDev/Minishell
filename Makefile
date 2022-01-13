@@ -6,11 +6,11 @@
 #    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/12 16:18:11 by dasanter         ###   ########.fr        #
+#    Updated: 2022/01/13 17:27:25 by dasanter         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = clang
+CC = cc
 
 NAME = minishell
 

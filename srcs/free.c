@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/16 18:45:08 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/12 16:09:18 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,23 @@ void	free_cmd(t_cmd *cmd)
 				free_token(cmd->redir);
 			tmp = cmd;
 			cmd = cmd->next;
+			free(tmp);
+		}
+	}
+}
+
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	if (env)
+	{
+		while (env)
+		{
+			if (env->str)
+				free(env->str);
+			tmp = env;
+			env = env->next;
 			free(tmp);
 		}
 	}

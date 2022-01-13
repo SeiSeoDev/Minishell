@@ -6,11 +6,23 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2021/12/15 18:09:54 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:50:02 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_env	*init_env(t_env *next, char *str)
+{
+	t_env	*env;
+
+	env = malloc(sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->next = next;
+	env->str = str;
+	return (env);
+}
 
 t_token	*init_token(t_token *next, char *str, int type)
 {
