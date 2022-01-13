@@ -6,11 +6,11 @@
 #    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/11 17:56:59 by tamigore         ###   ########.fr        #
+#    Updated: 2022/01/13 16:13:13 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = clang
+CC = cc
 
 NAME = minishell
 
