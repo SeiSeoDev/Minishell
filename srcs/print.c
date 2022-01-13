@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 13:44:02 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/13 16:51:36 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/13 18:15:41 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,7 @@ void	print_token(t_token *token)
 		while (tmp)
 		{
 			printf("token [%d]: TYPE[%d] word=%s\n", i++, tmp->type, tmp->str);
-			if (tmp->next)
-				tmp = tmp->next;
-			else
-				break ;
+			tmp = tmp->next;
 		}
 	}
 	else
@@ -47,11 +44,11 @@ void	print_cmd(t_cmd *cmd)
 		while (tmp)
 		{
 			printf("cmd [%d]:\n", i++);
-			if (cmd->arg)
+			if (tmp->arg)
 				print_token(tmp->arg);
 			else
 				printf("no arg...\n");
-			if (cmd->redir)
+			if (tmp->redir)
 				print_token(tmp->redir);
 			else
 				printf("no redir...\n");

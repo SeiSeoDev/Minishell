@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/13 17:19:32 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/13 18:16:36 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,59 +15,48 @@
 t_token	*cmd_arg(t_token **tmp)
 {
 	t_token *res;
-	t_token *arg;
+	t_token	*stop;
 
-	res = NULL;
-	arg = NULL;
-	while ((*tmp) && (*tmp)->type != pip && (*tmp)->type != rin && (*tmp)->type != rout &&
-		(*tmp)->type != rdin && (*tmp)->type != rdout)
+	res = *tmp;
+	if (*tmp)
 	{
-		if (arg == NULL)
-		{
-			arg = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
-			if (!arg)
-				return (NULL);
-			res = arg;
-		}
-		else
-		{
-			arg->next = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
-			if (!arg->next)
-				return (NULL);
-			arg = arg->next;
-		}
-		(*tmp) = (*tmp)->next;
+		if ((*tmp)->type == pip)
+			return (NULL);
+		while ((*tmp)->next && (*tmp)->next->type != pip && (*tmp)->type != pip &&
+			(*tmp)->next->type != rin && (*tmp)->next->type != rout &&
+			(*tmp)->next->type != rdin && (*tmp)->next->type != rdout)
+			(*tmp) = (*tmp)->next;
 	}
+	stop = res;
+	while (stop != *tmp)
+		stop = stop->next;
+	if (*tmp)
+		*tmp = (*tmp)->next;
+	if (stop)
+		stop->next = NULL;
 	return (res);
 }
 
 t_token	*cmd_redir(t_token **tmp)
 {
 	t_token *res;
-	t_token *redir;
+	t_token	*stop;
 
-	res = NULL;
-	redir = NULL;
-	while ((*tmp) && (*tmp)->type != pip)
+	res = *tmp;
+	if (*tmp)
 	{
-		if (redir == NULL)
-		{
-			redir = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
-			if (!redir)
-				return (NULL);
-			res = redir;
-			printf("redir str:%s\n", redir->str);
-		}
-		else
-		{
-			redir->next = init_token(NULL, ft_strdup((*tmp)->str), (*tmp)->type);
-			if (!redir->next)
-				return (NULL);
-			redir = redir->next;
-			printf("redir str:%s\n", redir->str);
-		}
-		(*tmp) = (*tmp)->next;
+		if ((*tmp)->type == pip)
+			return (NULL);
+		while ((*tmp)->next && (*tmp)->type != pip && (*tmp)->next->type != pip)
+			(*tmp) = (*tmp)->next;
 	}
+	stop = res;
+	while (stop != *tmp)
+		stop = stop->next;
+	if (*tmp)
+		*tmp = (*tmp)->next;
+	if (stop)
+		stop->next = NULL;
 	return (res);
 }
 
@@ -97,19 +86,16 @@ void	cmd_creat(t_token *token)
 		}
 		else
 		{
-			printf("Before cmd arg\n");
-			print_token(tmp);
+			// printf("Before cmd\n");
+			// print_token(tmp);
 			data->arg = cmd_arg(&tmp);
-			printf("Before cmd redir\n");
-			print_token(tmp);
+			// printf("Arg\n");
+			// print_token(data->arg);
 			data->redir = cmd_redir(&tmp);
-			printf("After cmd redir\n");
-			print_token(tmp);
+			// printf("Redir\n");
+			// print_token(data->redir);
 		}
 	}
-	printf("token before free\n");
-	print_token(token);
-	free_token(token);
 	printf("Cmd creat:\n");
 	print_cmd(res);
 }
