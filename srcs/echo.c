@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/12 15:08:28 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/12 16:19:19 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int test_error(t_cmd *cmd)
 {
+    (void)cmd;
     return (0);
 }
 
@@ -22,14 +23,15 @@ int     ex_echo(t_cmd *cmd)
     int n;
     int fd;
 
-    if (!redir)
+    printf("dwqdqdqwdqdqw\n");
+    if (!cmd->redir)
         fd = 1;
     
     t_token *arg;
 
     arg = cmd->arg->next;
     n = 0;
-    if (test_error())
+    if (test_error(cmd))
         return (-1);
     if (!ft_strcmp(arg->str, "-n"))
     {
@@ -43,4 +45,5 @@ int     ex_echo(t_cmd *cmd)
     }
     if (!n)
         write(fd, "\n", 1);
+    return (1);
 }
