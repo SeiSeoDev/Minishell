@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
+#    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/13 16:13:13 by tamigore         ###   ########.fr        #
+#    Updated: 2022/01/13 17:27:25 by dasanter         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,9 @@ SOURCES =	minishell.c		\
 			pars.c			\
 			print.c			\
 			expend.c		\
-			handler.c
+			handler.c		\
+			echo.c			\
+			exec.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 

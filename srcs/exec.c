@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/12 15:48:37 by dasanter         ###   ########.fr       */
+/*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
+/*   Updated: 2022/01/12 16:28:14 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	loop(void)
+void    exec(t_cmd *cmd)
 {
-	char *str;
-
-	str = NULL;
-	while (1)
-	{
-		str = readline("\e[1m\e[31m\002""Minishell : ""\001\e[0m\002");
-		add_history(str);
-		split_words(str);
-	}
-}
-
-int	main(int ac, char **av, char **env)
-{
-	(void)ac;
-	(void)av;
-	handler(0, env, NULL);
-	handler(2, NULL, NULL);
-	loop();
-	return (1);
+    printf("first\n");
+    if (cmd != NULL && cmd->arg != NULL)
+    {
+        printf("second\n");
+        if (ft_strcmp(cmd->arg->str, "echo"))
+            ex_echo(cmd);
+    }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/12 18:51:09 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/13 17:27:28 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,17 @@ char	*handler(int opt, char **env, char *comp);
 ** test_main.c
 */
 
+/*
+** echo.c
+*/
+
+int     ex_echo(t_cmd *cmd);
+
+/*
+** exec.c
+*/
+
+void	exec(t_cmd *cmd);
 // t_cmd *test_exec();
 
 #endif
