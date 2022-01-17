@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/12 15:48:37 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/14 15:39:24 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,23 @@ void	loop(void)
 	}
 }
 
+void sig_handler(int sig)
+{
+	if (sig == SIGINT) 
+		printf("\nCTRL + C need to free stucts\n ");
+	if (sig == SIGQUIT)
+		printf("CTRL + -\\ need to do nothing only catch");
+	exit(EXIT_SUCCESS);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	(void)ac;
 	(void)av;
 	handler(0, env, NULL);
 	handler(2, NULL, NULL);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	loop();
 	return (1);
 }

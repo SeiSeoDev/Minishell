@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/12 18:58:02 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/14 17:44:40 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,10 @@ char	*handler(int opt, char **env, char *comp)
 			delone_env(myenv, comp);
 		else if (opt == 4)
 			addone_env(myenv, comp);
+		else if (opt == 6)
+			edit_path(myenv, comp);
+		else if (opt == 7)
+			return(get_value(myenv, comp));
 	}
 	return (NULL);
 }

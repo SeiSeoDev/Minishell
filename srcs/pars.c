@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/13 17:27:27 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/13 17:33:14 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,16 +107,12 @@ void	cmd_creat(t_token *token)
 			print_token(tmp);
 		}
 	}
-<<<<<<< HEAD
-	print_cmd(tmp);
-	exec(tmp);
-=======
-	printf("token before free\n");
+	/*printf("token before free\n");
 	print_token(token);
 	free_token(token);
 	printf("Cmd creat:\n");
-	print_cmd(res);
->>>>>>> 4fbf018f0b4e86dc924a3cdf26ff10737489a0b5
+	print_cmd(res);*/
+	exec(res);
 }
 
 void	expension(t_token *token)

@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/14 16:38:32 by dasanter         ###   ########.fr       */
+/*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
+/*   Updated: 2022/01/17 14:48:54 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    exec(t_cmd *cmd)
+int ex_cd(t_cmd *cmd)
 {
-    //printf("first\n");
-    if (cmd != NULL && cmd->arg != NULL)
-    {
-        //printf("TEST : %s\n", cmd->arg->str);
-        if (!ft_strcmp(cmd->arg->str, "echo"))
-            ex_echo(cmd);
-        if (!ft_strcmp(cmd->arg->str, "cd"))
-            ex_cd(cmd);
-    }
+    (void)cmd;
+    char *home = NULL;
+
+    if (!cmd->arg->next || (cmd->arg->next->str && !ft_strcmp(cmd->arg->next->str, "~"))) // ICI
+        home = handler(7, NULL, "HOME");
+	else if ()
+	{
+		
+	}
+    printf("HOME :%s\n", home);
+    return (0);
 }

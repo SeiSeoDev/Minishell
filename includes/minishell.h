@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/13 17:27:28 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/14 17:43:51 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+#include <signal.h>
 
 typedef enum s_type
 {
@@ -127,6 +128,19 @@ int     ex_echo(t_cmd *cmd);
 */
 
 void	exec(t_cmd *cmd);
+
+/*
+** path.c
+*/
+
+int ex_cd(t_cmd *cmd);
+
+/*
+** utils.c
+*/
+void	edit_env(t_env *env, char *name, char *new_value);
+void	edit_path(t_env *env, char *new_path);
+char    *get_value(t_env *env, char *name);
 // t_cmd *test_exec();
 
 #endif
