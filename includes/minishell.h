@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 14:58:33 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 16:19:01 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ void	exec(t_cmd *cmd);
 */
 
 int ex_cd(t_cmd *cmd);
+int ex_pwd(t_cmd *cmd);
 
 /*
 ** utils.c
