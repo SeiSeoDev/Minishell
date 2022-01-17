@@ -6,13 +6,13 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/12 18:50:02 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/17 19:43:54 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	*init_env(t_env *next, char *str)
+t_env	*init_env(t_env *next, char *name, char *val, char **all)
 {
 	t_env	*env;
 
@@ -20,7 +20,9 @@ t_env	*init_env(t_env *next, char *str)
 	if (!env)
 		return (NULL);
 	env->next = next;
-	env->str = str;
+	env->name = name;
+	env->val = val;
+	env->all = all;
 	return (env);
 }
 

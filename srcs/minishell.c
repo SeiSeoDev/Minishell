@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/14 15:39:24 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 19:42:02 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	loop(void)
 	while (1)
 	{
 		str = readline("\e[1m\e[31m\002""Minishell : ""\001\e[0m\002");
+		printf("%s\n", str);
 		add_history(str);
 		split_words(str);
 	}
@@ -36,10 +37,17 @@ void sig_handler(int sig)
 
 int	main(int ac, char **av, char **env)
 {
+	t_env	*myenv;
+
 	(void)ac;
 	(void)av;
-	handler(0, env, NULL);
-	handler(2, NULL, NULL);
+	handler(0, env, NULL, NULL);
+	myenv = handler(3, NULL, NULL, NULL);
+	while (myenv)
+	{
+		printf("%s=%s\n", myenv->name, myenv->val);
+		myenv = myenv->next;
+	}
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	loop();

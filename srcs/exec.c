@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/17 16:19:19 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 16:48:30 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,12 @@ void    exec(t_cmd *cmd)
         if (!ft_strcmp(cmd->arg->str, "pwd"))
             ex_pwd(cmd);
     }
+
+    /*
+    fork
+    if (child)
+        exec
+    if (parent)
+        cmd -> next;
+    */
 }

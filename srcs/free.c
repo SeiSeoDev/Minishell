@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 14:57:31 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 19:14:48 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,15 @@ void	free_cmd(t_cmd *cmd)
 {
 	t_cmd	*tmp;
 
-	if (cmd)
+	while (cmd)
 	{
-		while (cmd)
-		{
-			if (cmd->arg)
-				free_token(cmd->arg);
-			if (cmd->redir)
-				free_token(cmd->redir);
-			tmp = cmd;
-			cmd = cmd->next;
-			free(tmp);
-		}
+		if (cmd->arg)
+			free_token(cmd->arg);
+		if (cmd->redir)
+			free_token(cmd->redir);
+		tmp = cmd;
+		cmd = cmd->next;
+		free(tmp);
 	}
 }
 
@@ -54,14 +51,18 @@ void	free_env(t_env *env)
 
 	if (env)
 	{
-		while (env)
-		{
-			if (env->str)
-				free(env->str);
-			tmp = env;
-			env = env->next;
-			free(tmp);
-		}
+		if (env->all)
+			free(env->all);
+	}
+	while (env)
+	{
+		if (env->name)
+			free(env->name);
+		if (env->val)
+			free(env->val);
+		tmp = env;
+		env = env->next;
+		free(tmp);
 	}
 }
 
@@ -73,4 +74,13 @@ void	exit_free(void *ptr, char *err, char type)
 		free_cmd(ptr);
 	printf("%s\n", err);
 	exit(1);
+}
+
+void	free_all(t_cmd *cmd)
+{
+	handler(4, NULL, NULL, NULL);
+	if (cmd)
+		free_cmd(cmd);
+	printf("exit success\n");
+	exit(EXIT_SUCCESS);
 }
