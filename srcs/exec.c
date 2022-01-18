@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/18 17:12:02 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/18 17:15:29 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ static char *creat_exe(t_env *env, t_cmd *cmd)
 		{
 			path = ft_strndup(&env->val[j], i - j);
 			path = ft_free_join(path, "/", 1);
-			printf("path=%s\n", path);
-			printf("arg=%s\n", cmd->arg->str);
+			// printf("path=%s\n", path);
+			// printf("arg=%s\n", cmd->arg->str);
 			exe = ft_strjoin(path, cmd->arg->str);
 			free(path);
 			path = NULL;
@@ -157,4 +157,5 @@ void    exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
+	printf("done\n");
 }
