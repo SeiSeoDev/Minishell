@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/18 16:58:38 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/18 17:28:11 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@
 # include <fcntl.h>
 #include <signal.h>
 
+#define STDIN	0
+#define STDOUT        1
+#define READ_END    0
+#define WRTIE_END    1
 typedef enum s_type
 {
 	word, // "whatever"
@@ -126,7 +130,7 @@ int	ex_echo(t_cmd *cmd);
 /*
 ** exec.c
 */
-
+void	child(t_cmd *cmd);
 void	exec(t_cmd *cmd);
 
 /*
