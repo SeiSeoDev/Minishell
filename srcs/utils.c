@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:47:15 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/17 15:18:12 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 18:12:44 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void	edit_env(t_env *env, char *name, char *new_value)
    // free(this->str); IL VA FALLOIR FAIRE CA UN JOUR
     this->str = join_env(name, new_value);
     printf("AFTER JOIN\n : %s\n", this->str);
-
 }
 
 void	edit_path(t_env *env, char *new_path)
