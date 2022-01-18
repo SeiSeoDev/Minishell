@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 16:19:01 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 19:14:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,9 @@ typedef struct s_cmd
 
 typedef struct s_env
 {
-	char			*str;
+	char			**all;
+	char			*name;
+	char			*val;
 	struct s_env	*next;
 }	t_env;
 
@@ -67,12 +69,13 @@ void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
 void	free_env(t_env *env);
 void	exit_free(void *ptr, char *err, char type);
+void	free_all(t_cmd *cmd);
 
-/*
-** usefull_pars.c
-*/
+	/*
+	** usefull_pars.c
+	*/
 
-void	skip_cot(char *str, int *i);
+	void skip_cot(char *str, int *i);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
 int		quot_status(char *str, int i);
@@ -82,20 +85,21 @@ int		quot_status(char *str, int i);
 */
 
 void	expend_words(t_token *token, t_token *tmp);
-// void	expend_fd(t_token *token, t_token *tmp, int rd);
+t_token *cmd_arg(t_token **tmp);
+t_token *cmd_redir(t_token **tmp);
 
 /*
 ** pars.c
 */
 
-void    split_words(char *str);
+void split_words(char *str);
 
 /*
 ** init.c
 */
 
-t_env	*init_env(t_env *next, char *str);
-t_token	*init_token(t_token *next, char *str, int type);
+t_env	*init_env(t_env *next, char *name, char *val, char **all);
+t_token *init_token(t_token *next, char *str, int type);
 t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
 void	add_token(t_token *token, t_token *new);
 void	del_token(t_token **token, t_token *del);
@@ -111,17 +115,13 @@ void	print_token(t_token *token);
 ** handler.c
 */
 
-char	*handler(int opt, char **env, char *comp);
-
-/*
-** test_main.c
-*/
+t_env	*handler(int opt, char **env, char *name, char *val);
 
 /*
 ** echo.c
 */
 
-int     ex_echo(t_cmd *cmd);
+int	ex_echo(t_cmd *cmd);
 
 /*
 ** exec.c
@@ -133,15 +133,15 @@ void	exec(t_cmd *cmd);
 ** path.c
 */
 
-int ex_cd(t_cmd *cmd);
-int ex_pwd(t_cmd *cmd);
+int	ex_cd(t_cmd *cmd);
+int	ex_pwd(t_cmd *cmd);
 
 /*
 ** utils.c
 */
-void	edit_env(t_env *env, char *name, char *new_value);
-void	edit_path(t_env *env, char *new_path);
-char    *get_value(t_env *env, char *name);
-// t_cmd *test_exec();
+
+char	**get_env(char **env);
+char	*get_value(char *ret);
+char	*get_name(char *ret);
 
 #endif

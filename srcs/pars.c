@@ -3,62 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 14:59:23 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 18:48:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_token	*cmd_arg(t_token **tmp)
-{
-	t_token *res;
-	t_token	*stop;
-
-	res = *tmp;
-	if (*tmp)
-	{
-		if ((*tmp)->type == pip)
-			return (NULL);
-		while ((*tmp)->next && (*tmp)->next->type != pip && (*tmp)->type != pip &&
-			(*tmp)->next->type != rin && (*tmp)->next->type != rout &&
-			(*tmp)->next->type != rdin && (*tmp)->next->type != rdout)
-			(*tmp) = (*tmp)->next;
-	}
-	stop = res;
-	while (stop != *tmp)
-		stop = stop->next;
-	if (*tmp)
-		*tmp = (*tmp)->next;
-	if (stop)
-		stop->next = NULL;
-	return (res);
-}
-
-t_token	*cmd_redir(t_token **tmp)
-{
-	t_token *res;
-	t_token	*stop;
-
-	res = *tmp;
-	if (*tmp)
-	{
-		if ((*tmp)->type == pip)
-			return (NULL);
-		while ((*tmp)->next && (*tmp)->type != pip && (*tmp)->next->type != pip)
-			(*tmp) = (*tmp)->next;
-	}
-	stop = res;
-	while (stop != *tmp)
-		stop = stop->next;
-	if (*tmp)
-		*tmp = (*tmp)->next;
-	if (stop)
-		stop->next = NULL;
-	return (res);
-}
 
 void	cmd_creat(t_token *token)
 {
@@ -86,21 +38,10 @@ void	cmd_creat(t_token *token)
 		}
 		else
 		{
-			// printf("Before cmd\n");
-			// print_token(tmp);
 			data->arg = cmd_arg(&tmp);
-			// printf("Arg\n");
-			// print_token(data->arg);
 			data->redir = cmd_redir(&tmp);
-			// printf("Redir\n");
-			// print_token(data->redir);
 		}
 	}
-	/*printf("token before free\n");
-	print_token(token);
-	free_token(token);
-	printf("Cmd creat:\n");
-	print_cmd(res);*/
 	print_cmd(res);
 	exec(res);
 }
@@ -116,8 +57,6 @@ void	expension(t_token *token)
 			expend_words(token, tmp);
 		tmp = tmp->next;
 	}
-	// printf("Expension:\n");
-	// print_token(token);
 	cmd_creat(token);
 }
 
@@ -139,8 +78,6 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
-	// printf("Tokenize:\n");
-	// print_token(token);
 	expension(token);
 }
 
@@ -172,7 +109,5 @@ void	split_words(char *str)
 		if (!token)
 			exit_free(token, "error init token...\n", 't');
 	}
-	// printf("Split words:\n");
-	// print_token(tmp);
 	tokenize(tmp);
 }

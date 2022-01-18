@@ -3,14 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   expend.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 14:57:27 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/17 18:53:32 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_token *cmd_arg(t_token **tmp)
+{
+	t_token *res;
+	t_token *stop;
+
+	res = *tmp;
+	if (*tmp)
+	{
+		if ((*tmp)->type == pip)
+			return (NULL);
+		while ((*tmp)->next && (*tmp)->next->type != pip && (*tmp)->type != pip &&
+			   (*tmp)->next->type != rin && (*tmp)->next->type != rout &&
+			   (*tmp)->next->type != rdin && (*tmp)->next->type != rdout)
+			(*tmp) = (*tmp)->next;
+	}
+	stop = res;
+	while (stop != *tmp)
+		stop = stop->next;
+	if (*tmp)
+		*tmp = (*tmp)->next;
+	if (stop)
+		stop->next = NULL;
+	return (res);
+}
+
+t_token *cmd_redir(t_token **tmp)
+{
+	t_token *res;
+	t_token *stop;
+
+	res = *tmp;
+	if (*tmp)
+	{
+		if ((*tmp)->type == pip)
+			return (NULL);
+		while ((*tmp)->next && (*tmp)->type != pip && (*tmp)->next->type != pip)
+			(*tmp) = (*tmp)->next;
+	}
+	stop = res;
+	while (stop != *tmp)
+		stop = stop->next;
+	if (*tmp)
+		*tmp = (*tmp)->next;
+	if (stop)
+		stop->next = NULL;
+	return (res);
+}
 
 static char	*replace_str(char *str, char *old, char *new)
 {
@@ -46,6 +94,7 @@ void	expend_words(t_token *token, t_token *tmp)
 	char	*util;
 	int		quot;
 	int		j;
+	t_env	*var;
 
 	i = 0;
 	while (tmp->str[i])
@@ -67,38 +116,11 @@ void	expend_words(t_token *token, t_token *tmp)
 				}
 				if (!util)
 					exit_free(token, "Error ...\n",'t');
-				tmp->str = replace_str(tmp->str, util, handler(1, NULL, util));
+				var = handler(3, NULL, util, NULL);
+				tmp->str = replace_str(tmp->str, util, var->val);
 				free(util);
 			}
 		}
 		i++;
 	}
 }
-
-// void	expend_fd(t_token *token, t_token *tmp, int rd)
-// {
-// 	int		i;
-// 	char	*util;
-// 	int		quot;
-// 	int		j;
-
-// 	i = 0;
-// 	if (rd == rin)
-// 	{
-//     	j = open(tmp->str, );
-// 		if (j < 0)
-// 			exit_free(token, "open failed", 't');
-// 	}
-// 	else if (rd == rout)
-// 	{
-// 		j = open(tmp->str, );
-// 		if (j < 0)
-// 			exit_free(token, "open failed", 't');
-// 	}
-// 	else if (rd == rdout)
-// 	{
-// 		j = open(tmp->str, O_WRONLY | );
-// 		if (j < 0)
-// 			exit_free(token, "open failed", 't');
-// 	}
-// }
