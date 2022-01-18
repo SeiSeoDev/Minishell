@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/18 17:15:29 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/18 18:04:28 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,5 +157,59 @@ void    exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
-	printf("done\n");
+}
+
+int		get_nbpipe(t_cmd *cmd)
+{
+	int i;
+	t_cmd *tmp;
+
+	i = 0;
+	tmp = cmd;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+void	child(t_cmd *cmd)
+{
+	int        nb_pipe;
+	nb_pipe = get_nbpipe(cmd);
+	printf("ON A %d pipes\n", nb_pipe);
+
+    int        *fd = malloc(sizeof(*fd) * 2 * nb_pipe);
+    pid_t    pid;
+    int        status;
+	t_cmd	*tmp;
+	tmp = cmd;
+	
+    for (int i = 0; i < nb_pipe; ++i)
+    {
+        pipe(&fd[i * 2]);
+        pid = fork();
+        if (pid == 0)
+        {
+            if (i != nb_pipe - 1)
+                dup2(fd[i * 2 + 1], STDOUT); //dup write end in stdout
+            if (i > 0)
+                dup2(fd[(i - 1) * 2], STDIN); //dup read end of previous pipe in stdin
+			//printf("ON ME VOIT : %s\n", tmp->arg->str);
+            exec(tmp);
+            exit(1);
+        }
+        else
+        {
+            waitpid(pid, &status, 0);
+            close(fd[i * 2 + 1]); //close write end
+            if (i == nb_pipe - 1)
+                close(fd[i * 2]); //close read end
+            if (i > 0)
+                close(fd[(i - 1) * 2]); //close read end of previous pipe
+        }
+		tmp = tmp->next;
+    }
+
 }
