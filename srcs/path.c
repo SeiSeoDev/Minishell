@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 15:15:38 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:37:07 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	ex_cd(t_cmd *cmd)
 		printf("get myenv:\n");
 		myenv = handler(3, NULL, "HOME", NULL);
 		old_pwd = handler(3, NULL, "PWD", NULL)->val;
+		printf("OLD PWD %s\n", old_pwd);
 		printf("%s=%s\n", myenv->name, myenv->val);
 
 		handler(3, NULL, "PWD", myenv->val);

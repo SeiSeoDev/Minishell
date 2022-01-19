@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 14:26:35 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:40:44 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int     ex_echo(t_cmd *cmd)
 
 void    ex_env(t_cmd *cmd)
 {
-    t_env *env;
+    char **env;
     int i;
 
-    env = handler(5, NULL, NULL, NULL);
+    env = handler(3, NULL, NULL, NULL)->all;
     i = 0;
-    while (env->all[i])
+    while (env[i])
     {
-        ft_putstr_fd(env->all[i], cmd->fdout);
+        ft_putstr_fd(env[i], cmd->fdout);
         write(cmd->fdout, "\n", 1);
         i++;
     }
