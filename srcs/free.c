@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 19:14:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:09:44 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,8 @@ void	free_env(t_env *env)
 {
 	t_env	*tmp;
 
-	if (env)
-	{
-		if (env->all)
-			free(env->all);
-	}
+	if (!env)
+		return ;
 	while (env)
 	{
 		if (env->name)

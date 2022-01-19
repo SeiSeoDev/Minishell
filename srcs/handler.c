@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 14:03:32 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:12:13 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,15 @@ static t_env	*init_handler(char **env)
 	int		i;
 	t_env	*myenv;
 	t_env	*tmp;
-	char	**all;
 	
-	all = get_env(env);
-	if (!all)
-		return (NULL);
-	myenv = init_env(NULL, get_name(env[0]), get_value(env[0]), all);
+	myenv = init_env(NULL, get_name(env[0]), get_value(env[0]));
 	if (!myenv)
 		return (NULL);
-	i = 1;
+	i = 0;
 	tmp = myenv;
 	while (env[i])
 	{
-		tmp->next = init_env(NULL, get_name(env[i]), get_value(env[i]), all);
+		tmp->next = init_env(NULL, get_name(env[i]), get_value(env[i]));
 		if (!tmp->next)
 			return (NULL);
 		tmp = tmp->next;
@@ -38,59 +34,58 @@ static t_env	*init_handler(char **env)
 	return (myenv);
 }
 
-static void	delone_env(t_env *env, char *del)
+static t_env	*delone_env(t_env *env, char *del)
 {
 	t_env	*tmp;
 	t_env	*save;
-	int		x;
 
 	tmp = env;
-	x = 0;
+	save = NULL;
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->name, del, ft_strlen(del)))
 		{
 			save->next = tmp->next;
 			tmp->next = NULL;
-			if (x > 0)
-				tmp->all = NULL;
 			free_env(tmp);
+			tmp = save;
+			break ;
 		}
-		x++;
 		save = tmp;
 		tmp = tmp->next;
 	}
+	if (!tmp)
+		save = NULL;
+	return (save);
 }
 
-static void	addone_env(t_env *env, char *name, char *val)
+static t_env	*addone_env(t_env *env, char *name, char *val)
 {
 	t_env	*tmp;
 
 	tmp = env;
 	while (tmp)
 		tmp = tmp->next;
-	tmp = init_env(NULL, ft_strdup(name), ft_strdup(val), env->all);
+	tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
 	if (!tmp)
 		exit_free(NULL, "Error addone_env\n", 0);
+	return (tmp);
 }
 
 static t_env	*mod_env(t_env *env, char *name, char *val)
 {
 	t_env	*tmp;
-	char	*tofree;
 
 	tmp = env;
-	if (!name && !val)
-		return (env);
-	else if (name && val)
+	if (name && val)
 	{
 		while (tmp)
 		{
 			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
 			{
-				tofree = tmp->val;
-				tmp->val = val;
-				free(tofree);
+				free(tmp->val);
+				tmp->val = ft_strdup(val);
+				break ;
 			}
 			tmp = tmp->next;
 		}
@@ -100,11 +95,11 @@ static t_env	*mod_env(t_env *env, char *name, char *val)
 		while (tmp)
 		{
 			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
-				return (tmp);
+				break ;
 			tmp = tmp->next;
 		}
 	}
-	return (NULL);
+	return (tmp);
 }
 
 t_env	*handler(int opt, char **env, char *name, char *val)
@@ -120,9 +115,9 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 			exit_free(NULL, "Error in init_handler", 0);
 	}
 	else if (opt == 1)
-		addone_env(myenv, name, val);
+		res = addone_env(myenv, name, val);
 	else if (opt == 2)
-		delone_env(myenv, name);
+		res = delone_env(myenv, name);
 	else if (opt == 3)
 		res = mod_env(myenv, name, val);
 	else if (opt == 4)
