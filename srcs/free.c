@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 19:14:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:17:36 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,8 @@ void	free_env(t_env *env)
 {
 	t_env	*tmp;
 
-	if (env)
-	{
-		if (env->all)
-			free(env->all);
-	}
+	if (!env)
+		return ;
 	while (env)
 	{
 		if (env->name)
@@ -66,21 +63,23 @@ void	free_env(t_env *env)
 	}
 }
 
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+		free(tab[i++]);
+	free(tab);
+}
+
 void	exit_free(void *ptr, char *err, char type)
 {
+	handler(4, NULL, NULL, NULL);
 	if (type == 't')
 		free_token(ptr);
 	else if (type == 'c')
 		free_cmd(ptr);
 	printf("%s\n", err);
 	exit(1);
-}
-
-void	free_all(t_cmd *cmd)
-{
-	handler(4, NULL, NULL, NULL);
-	if (cmd)
-		free_cmd(cmd);
-	printf("exit success\n");
-	exit(EXIT_SUCCESS);
 }

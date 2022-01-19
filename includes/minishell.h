@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 14:23:38 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:32:30 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_cmd
 
 typedef struct s_env
 {
-	char			**all;
 	char			*name;
 	char			*val;
 	struct s_env	*next;
@@ -73,13 +72,13 @@ void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
 void	free_env(t_env *env);
 void	exit_free(void *ptr, char *err, char type);
-void	free_all(t_cmd *cmd);
+void	free_tab(char **tab);
 
-	/*
-	** usefull_pars.c
-	*/
+/*
+** usefull_pars.c
+*/
 
-	void skip_cot(char *str, int *i);
+void	skip_cot(char *str, int *i);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
 int		quot_status(char *str, int i);
@@ -96,13 +95,13 @@ t_token *cmd_redir(t_token **tmp);
 ** pars.c
 */
 
-void split_words(char *str);
+void	split_words(char *str);
 
 /*
 ** init.c
 */
 
-t_env	*init_env(t_env *next, char *name, char *val, char **all);
+t_env	*init_env(t_env *next, char *name, char *val);
 t_token *init_token(t_token *next, char *str, int type);
 t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
 void	add_token(t_token *token, t_token *new);
@@ -146,7 +145,7 @@ int	ex_pwd(t_cmd *cmd);
 ** utils.c
 */
 
-char	**get_env(char **env);
+char	**get_env(t_env *env);
 char	*get_value(char *ret);
 char	*get_name(char *ret);
 

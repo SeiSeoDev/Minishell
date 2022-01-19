@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 13:08:50 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:09:44 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	*init_env(t_env *next, char *name, char *val, char **all)
+t_env	*init_env(t_env *next, char *name, char *val)
 {
 	t_env	*env;
 
@@ -22,7 +22,6 @@ t_env	*init_env(t_env *next, char *name, char *val, char **all)
 	env->next = next;
 	env->name = name;
 	env->val = val;
-	env->all = all;
 	return (env);
 }
 

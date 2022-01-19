@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 18:53:32 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:05:43 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,8 @@ static char	*replace_str(char *str, char *old, char *new)
 	int		j;
 	int		k;
 
-	if (!new || !old)
-		return (NULL);
 	j = ft_strlen(old) + 1;
-	res = malloc(sizeof(char) * ((ft_strlen(str) - j) + (ft_strlen(new) - j)) + 1);
+	res = malloc(sizeof(char) * ((ft_strlen(str) - j) + (ft_strlen(new) + 1)));
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -78,8 +76,12 @@ static char	*replace_str(char *str, char *old, char *new)
 	while (str[k] && ft_strncmp(&str[i], old, ft_strlen(old)))
 		res[i++] = str[k++];
 	i--;
-	while (new[j])
-		res[i++] = new[j++];
+	if (new)
+	{
+		j = 0;
+		while (new[j])
+			res[i++] = new[j++];
+	}
 	k += ft_strlen(old);
 	while (str[k])
 		res[i++] = str[k++];
@@ -117,7 +119,11 @@ void	expend_words(t_token *token, t_token *tmp)
 				if (!util)
 					exit_free(token, "Error ...\n",'t');
 				var = handler(3, NULL, util, NULL);
-				tmp->str = replace_str(tmp->str, util, var->val);
+				printf("util=%s\n", util);
+				if (!var)
+					tmp->str = replace_str(tmp->str, util, NULL);
+				else
+					tmp->str = replace_str(tmp->str, util, var->val);
 				free(util);
 			}
 		}
