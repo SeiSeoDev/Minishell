@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 17:13:12 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:15:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ static t_env	*mod_env(t_env *env, char *name, char *val)
 			}
 			tmp = tmp->next;
 		}
+		if (tmp == NULL)
+			tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
 	}
 	else if (name)
 	{
