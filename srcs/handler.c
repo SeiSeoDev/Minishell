@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 18:15:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:24:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ static t_env	*init_handler(char **env)
 		return (NULL);
 	i = 0;
 	tmp = myenv;
-	while (env[i])
+	while (env[++i])
 	{
 		tmp->next = init_env(NULL, get_name(env[i]), get_value(env[i]));
 		if (!tmp->next)
 			return (NULL);
 		tmp = tmp->next;
-		i++;
 	}
 	return (myenv);
 }
