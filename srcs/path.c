@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/17 19:43:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 15:15:38 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,17 @@ int	check_is_path(char *str)
 int	ex_cd(t_cmd *cmd)
 {
 	t_env   *myenv = NULL;
+	char *old_pwd;
 
 	printf("?\n");
 	if (!cmd->arg->next || (cmd->arg->next->str && !ft_strcmp(cmd->arg->next->str, "~"))) // ICI
 	{
 		printf("get myenv:\n");
 		myenv = handler(3, NULL, "HOME", NULL);
+		old_pwd = handler(3, NULL, "PWD", NULL)->val;
 		printf("%s=%s\n", myenv->name, myenv->val);
-		check_is_path(myenv->val);
+
+		handler(3, NULL, "PWD", myenv->val);
 	}
 	// else if ()
 	// {

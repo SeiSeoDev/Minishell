@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 19:43:54 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 13:08:50 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir)
 	data->next = next;
 	data->redir = redir;
 	data->fdin = 0;
-	data->fdout = 0;
+	data->fdout = 1;
 	data->pid = 0;
 	return (data);
 }

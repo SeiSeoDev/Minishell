@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 16:29:33 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:31:33 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ void sig_handler(int sig)
 {
 	if (sig == SIGINT) 
 		printf("\nCTRL + C need to free stucts\n ");
-	if (sig == SIGQUIT)
+	else if (sig == SIGQUIT)
 		printf("CTRL + -\\ need to do nothing only catch");
+	//else
 	exit(EXIT_SUCCESS);
 }
 

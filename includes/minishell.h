@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/18 17:28:11 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 14:23:38 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 #include <signal.h>
-
+#include <sys/wait.h>
 #define STDIN	0
 #define STDOUT        1
 #define READ_END    0
@@ -125,8 +125,10 @@ t_env	*handler(int opt, char **env, char *name, char *val);
 ** echo.c
 */
 
-int	ex_echo(t_cmd *cmd);
-
+int		ex_echo(t_cmd *cmd);
+void	ex_env(t_cmd *cmd);
+void    ex_port(t_cmd *cmd);
+void    ex_unset(t_cmd *cmd);
 /*
 ** exec.c
 */
