@@ -3,22 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/12 16:28:14 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:00:05 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    exec(t_cmd *cmd)
+void	exec(t_cmd *cmd)
 {
-    printf("first\n");
-    if (cmd != NULL && cmd->arg != NULL)
-    {
-        printf("second\n");
-        if (ft_strcmp(cmd->arg->str, "echo"))
-            ex_echo(cmd);
-    }
+	int	cpid;
+
+	printf("Exec Start\n");
+	if (cmd)
+	{
+		cpid = fork();
+		if (cpid == 0)
+		{
+			printf("start exec command\n");
+			exit(cpid);
+		}
+		else
+		{
+			printf("next command : %d\n", cpid);
+		}
+	}
+	else
+	{
+		printf("\n");
+		//prompt;
+	}
 }
