@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/18 18:04:28 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 15:38:26 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,35 @@ static int	exe_cmd(t_cmd *cmd)
 	return (0);
 }
 
+void	fill_fd(t_cmd *cmd)
+{
+	int fd;
+
+	fd = 1;
+	printf ("REDIR : %s\n", cmd->redir->str);
+	printf ("INITIAL FD : %d\n", cmd->fdout);
+	if (cmd->redir->type == rout)
+	{	
+		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY, 0644);
+	}
+	else if (cmd->redir->type == rdout)
+	{	
+		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	}
+	cmd->fdout = fd;
+	fd = 0;
+	else if (cmd->redir->type == rin)
+	{
+		fd = open(cmd->redir->next->str,  O_RDONLY);
+	}
+	cmd->fdin = 0;
+}
+
 void    exec(t_cmd *cmd)
 {
+	if (cmd->redir)
+		fill_fd(cmd);
+	
 	if (cmd != NULL && cmd->arg != NULL)
 	{
 		printf("TEST : %s\n", cmd->arg->str);
@@ -151,6 +178,10 @@ void    exec(t_cmd *cmd)
 			ex_cd(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "pwd"))
 			ex_pwd(cmd);
+		else if (!ft_strcmp(cmd->arg->str, "env"))
+			ex_env(cmd);
+		else if (!ft_strcmp(cmd->arg->str, "unset"))
+			ex_unset(cmd);
 		else
 		{
 			if (!exe_cmd(cmd))
