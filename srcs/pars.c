@@ -6,59 +6,11 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/13 18:59:43 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:30:20 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_token	*cmd_arg(t_token **tmp)
-{
-	t_token *res;
-	t_token	*stop;
-
-	res = *tmp;
-	if (*tmp)
-	{
-		if ((*tmp)->type == pip)
-			return (NULL);
-		while ((*tmp)->next && (*tmp)->next->type != pip && (*tmp)->type != pip &&
-			(*tmp)->next->type != rin && (*tmp)->next->type != rout &&
-			(*tmp)->next->type != rdin && (*tmp)->next->type != rdout)
-			(*tmp) = (*tmp)->next;
-	}
-	stop = res;
-	while (stop != *tmp)
-		stop = stop->next;
-	if (*tmp)
-		*tmp = (*tmp)->next;
-	if (stop)
-		stop->next = NULL;
-	return (res);
-}
-
-t_token	*cmd_redir(t_token **tmp)
-{
-	t_token *res;
-	t_token	*stop;
-
-	res = *tmp;
-	if (*tmp)
-	{
-		if ((*tmp)->type == pip)
-			return (NULL);
-		while ((*tmp)->next && (*tmp)->type != pip && (*tmp)->next->type != pip)
-			(*tmp) = (*tmp)->next;
-	}
-	stop = res;
-	while (stop != *tmp)
-		stop = stop->next;
-	if (*tmp)
-		*tmp = (*tmp)->next;
-	if (stop)
-		stop->next = NULL;
-	return (res);
-}
 
 void	cmd_creat(t_token *token)
 {
@@ -91,7 +43,8 @@ void	cmd_creat(t_token *token)
 		}
 	}
 	print_cmd(res);
-	exec(res);
+	child(res);
+	//exec(res);
 }
 
 void	expension(t_token *token)
@@ -105,8 +58,6 @@ void	expension(t_token *token)
 			expend_words(token, tmp);
 		tmp = tmp->next;
 	}
-	// printf("Expension:\n");
-	// print_token(token);
 	cmd_creat(token);
 }
 
@@ -128,8 +79,6 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
-	// printf("Tokenize:\n");
-	// print_token(token);
 	expension(token);
 }
 
@@ -161,7 +110,5 @@ void	split_words(char *str)
 		if (!token)
 			exit_free(token, "error init token...\n", 't');
 	}
-	// printf("Split words:\n");
-	// print_token(tmp);
 	tokenize(tmp);
 }
