@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 16:42:02 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:12:44 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,19 +149,20 @@ void	fill_fd(t_cmd *cmd)
 	printf ("INITIAL FD : %d\n", cmd->fdout);
 	if (cmd->redir->type == rout)
 	{	
-		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY, 0644);
+		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	}
 	else if (cmd->redir->type == rdout)
 	{	
 		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	}
+	printf ("FINAL FD : %d\n", cmd->fdout);
 	cmd->fdout = fd;
 	fd = 0;
 	if (cmd->redir->type == rin)
 	{
 		fd = open(cmd->redir->next->str,  O_RDONLY);
 	}
-	cmd->fdin = 0;
+	cmd->fdin = fd;
 }
 
 void    exec(t_cmd *cmd)
@@ -212,16 +213,18 @@ void	child(t_cmd *cmd)
 	printf("ON A %d pipes\n", nb_pipe);
 
     int        *fd = malloc(sizeof(*fd) * 2 * nb_pipe);
-    pid_t    pid;
     int        status;
+	int *pitab;
+	int j;
+	pitab = malloc(nb_pipe * sizeof(int));
 	t_cmd	*tmp;
 	tmp = cmd;
 	
     for (int i = 0; i < nb_pipe; ++i)
     {
         pipe(&fd[i * 2]);
-        pid = fork();
-        if (pid == 0)
+		pitab[i] = fork();
+        if (pitab[i] == 0)
         {
             if (i != nb_pipe - 1)
                 dup2(fd[i * 2 + 1], STDOUT); //dup write end in stdout
@@ -232,8 +235,7 @@ void	child(t_cmd *cmd)
             exit(1);
         }
         else
-        {
-            waitpid(pid, &status, 0);
+        {	printf("cmd -> %s : pid -> %d\n", tmp->arg->str, pitab[i]);
             close(fd[i * 2 + 1]); //close write end
             if (i == nb_pipe - 1)
                 close(fd[i * 2]); //close read end
@@ -242,5 +244,19 @@ void	child(t_cmd *cmd)
         }
 		tmp = tmp->next;
     }
-
+		// j = nb_pipe;
+		// while (--j >= 0)
+		// {
+		// 	printf("W8 %d\n", pitab[j]);
+		// 	waitpid(pitab[j], &status, 0);
+		// 	printf("stop W8 %d\n", pitab[j]);
+		// }
+		j = 0;
+		while (j < nb_pipe)
+		{
+			printf("W8 %d\n", pitab[j]);
+			waitpid(pitab[j], &status, 0);
+			printf("stop W8 %d\n", pitab[j]);
+			j++;
+		}
 }
