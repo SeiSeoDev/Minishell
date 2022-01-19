@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 17:08:59 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:32:30 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
 void	free_env(t_env *env);
 void	exit_free(void *ptr, char *err, char type);
-void	free_all(t_cmd *cmd);
+void	free_tab(char **tab);
 
 /*
 ** usefull_pars.c
@@ -145,7 +145,7 @@ int	ex_pwd(t_cmd *cmd);
 ** utils.c
 */
 
-char	**get_env(char **env);
+char	**get_env(t_env *env);
 char	*get_value(char *ret);
 char	*get_name(char *ret);
 

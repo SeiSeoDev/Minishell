@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 16:42:02 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:34:16 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,15 @@ static int	exe_cmd(t_cmd *cmd)
 	t_env	*env;
 	char	**arg;
 	char	*exe;
+	char	**all;
 
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
 	arg = creat_arg(cmd);
 	exe = creat_exe(env, cmd);
-	if 	(execve(exe, arg, env->all) == -1)
+	all = get_env(env);
+	if 	(execve(exe, arg, all) == -1)
 	{
 		printf("command failed\n");
 	}
@@ -137,6 +139,8 @@ static int	exe_cmd(t_cmd *cmd)
 		free(arg);
 	if (exe)
 		free(exe);
+	if (all)
+		free(all);
 	return (0);
 }
 

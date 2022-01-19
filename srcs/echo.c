@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 16:40:44 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:15:27 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void    ex_env(t_cmd *cmd)
     char **env;
     int i;
 
-    env = handler(3, NULL, NULL, NULL)->all;
+    env = get_env(handler(3, NULL, NULL, NULL));
     i = 0;
     while (env[i])
     {
@@ -57,6 +57,7 @@ void    ex_env(t_cmd *cmd)
         write(cmd->fdout, "\n", 1);
         i++;
     }
+    free(env);
 }
 
 void    ex_port(t_cmd *cmd)
