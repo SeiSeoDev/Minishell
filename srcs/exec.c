@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 18:05:44 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/19 19:26:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,39 @@ static char *creat_exe(t_env *env, t_cmd *cmd)
 	return (NULL);
 }
 
+static int	exe_prog(t_cmd *cmd)
+{
+	t_env	*env;
+	char	**arg;
+	char	*exe;
+	char	**all;
+
+	env = handler(3, NULL, NULL, NULL);
+	if (!env)
+		return (0);
+	all = get_env(env);
+	env = handler(3, NULL, "PWD", NULL);
+	if (!env)
+		return (0);
+	arg = creat_arg(cmd);
+	exe = ft_strjoin(env->val, &cmd->arg->str[1]);
+	if 	(execve(exe, arg, all) == -1)
+	{
+		printf("command failed\n");
+	}
+	else
+	{
+		printf("command success\n");
+	}
+	if (arg)
+		free(arg);
+	if (exe)
+		free(exe);
+	if (all)
+		free(all);
+	return (0);
+}
+
 static int	exe_cmd(t_cmd *cmd)
 {
 	t_env	*env;
@@ -188,7 +221,9 @@ void    exec(t_cmd *cmd)
 			ex_unset(cmd);
 		else
 		{
-			if (!exe_cmd(cmd))
+			if (!ft_strncmp(cmd->arg->str, "./", 2))
+				exe_prog(cmd);
+			else if (!exe_cmd(cmd))
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
