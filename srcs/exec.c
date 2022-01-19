@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 15:38:26 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:32:19 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	fill_fd(t_cmd *cmd)
 	}
 	cmd->fdout = fd;
 	fd = 0;
-	else if (cmd->redir->type == rin)
+	if (cmd->redir->type == rin)
 	{
 		fd = open(cmd->redir->next->str,  O_RDONLY);
 	}

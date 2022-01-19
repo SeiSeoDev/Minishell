@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 14:03:32 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:40:59 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,5 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 		res = mod_env(myenv, name, val);
 	else if (opt == 4)
 		free_env(myenv);
-	else if (opt == 5)
-		res = myenv;
 	return (res);
 }
