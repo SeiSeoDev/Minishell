@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/20 16:44:24 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/20 18:33:22 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,27 +185,45 @@ static int	exe_cmd(t_cmd *cmd)
 
 void	fill_fd(t_cmd *cmd)
 {
-	int fd;
+	int	opout;
+	int	opin;
 
-	fd = 1;
 	printf ("REDIR : %s\n", cmd->redir->str);
-	printf ("INITIAL FD : %d\n", cmd->fdout);
+	printf ("INITIAL FDOUT : %d\n", cmd->fdout);
+	opout = 0;
 	if (cmd->redir->type == rout)
-	{	
-		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	{
+		if (opout == 1)
+			close(cmd->fdout);
+		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		opout = 1;
 	}
 	else if (cmd->redir->type == rdout)
 	{	
-		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (opout == 1)
+			close(cmd->fdout);
+		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		opout = 1;
 	}
-	printf ("FINAL FD : %d\n", cmd->fdout);
-	cmd->fdout = fd;
-	fd = 0;
+	printf ("FINAL FDOUT : %d\n", cmd->fdout);
+	printf ("REDIR : %s\n", cmd->redir->str);
+	printf ("INITIAL FDIN : %d\n", cmd->fdout);
+	opin = 0;
 	if (cmd->redir->type == rin)
 	{
-		fd = open(cmd->redir->next->str,  O_RDONLY);
+		if (opin == 1)
+			close(cmd->fdin);
+		cmd->fdin = open(cmd->redir->next->str,  O_RDONLY);
+		opin = 1;
 	}
-	cmd->fdin = fd;
+//	else if (cmd->redir->type == rin)
+//	{
+//		if (opin == 1)
+//			close(cmd->fdin);
+//		cmd->fdin = open(,  O_RDWR);
+//		opin = 1;
+//	}
+	printf ("FINAL FDIN : %d\n", cmd->fdout);
 }
 
 void    exec(t_cmd *cmd)
