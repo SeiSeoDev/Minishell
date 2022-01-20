@@ -6,7 +6,7 @@
 #    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/19 17:13:58 by tamigore         ###   ########.fr        #
+#    Updated: 2022/01/20 16:20:29 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,4 +66,4 @@ re: fclean all
 
 fsan: $(OBJS) $(HEADER)
 	make -C $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME) -lreadline -g3 -fsanitize=address
+	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME) -lreadline -g3 -fsanitize=address -fsanitize-blacklist=blacklist.txt

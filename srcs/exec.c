@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 19:29:06 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/20 16:44:24 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@ static int find_file(char *path)
 	int res;
 
 	if (path)
-		printf("%s <pathname>\n", path);
-	if (stat(path, &sb) == -1)
+		printf("%s <pathname> : ", path);
+	if (lstat(path, &sb) == -1)
+	{
+		printf("File does not exist\n");
 		return (0);
+	}
 	printf("Type de fichier : ");
 	res = (sb.st_mode & S_IFMT);
 	if (res == S_IFBLK)
@@ -39,20 +42,7 @@ static int find_file(char *path)
 	else if (res == S_IFSOCK)
 		printf("socket\n");
 	else
-	{
 		printf("inconnu ?\n");
-		return (0);
-	}
-	// printf("Numéro d'inœud :            %ld\n", (long)sb.st_ino);
-	// printf("Mode :                      %lo (octal)\n", (unsigned long)sb.st_mode);
-	// printf("Nombre de liens :           %ld\n", (long)sb.st_nlink);
-	// printf("Propriétaires :                    UID=%ld   GID=%ld\n", (long)sb.st_uid, (long)sb.st_gid);
-	// printf("Taille de bloc d’E/S :      %ld octets\n", (long)sb.st_blksize);
-	// printf("Taille du fichier :         %lld octets\n", (long long)sb.st_size);
-	// printf("Blocs alloués :             %lld\n", (long long)sb.st_blocks);
-	// printf("Dernier changement d’état : %s", ctime(&sb.st_ctime));
-	// printf("Dernier accès au fichier :  %s", ctime(&sb.st_atime));
-	// printf("Dernière modif du fichier:  %s", ctime(&sb.st_mtime));
 	return (1);
 }
 
@@ -99,14 +89,16 @@ static char *creat_exe(t_env *env, t_cmd *cmd)
 		if (env->val[i] == ':')
 		{
 			path = ft_strndup(&env->val[j], i - j);
+			if (!path)
+				return (NULL);
 			path = ft_free_join(path, "/", 1);
-			// printf("path=%s\n", path);
-			// printf("arg=%s\n", cmd->arg->str);
+			if (!path)
+				return (NULL);
 			exe = ft_strjoin(path, cmd->arg->str);
 			free(path);
-			path = NULL;
 			if (find_file(exe))
 				return (exe);
+			free(exe);
 			j = i + 1;
 		}
 		i++;
@@ -125,26 +117,29 @@ static int	exe_prog(t_cmd *cmd)
 	if (!env)
 		return (0);
 	all = get_env(env);
-	env = handler(3, NULL, "PWD", NULL);
-	if (!env)
+	if (!all)
 		return (0);
-	arg = creat_arg(cmd);
+	env = handler(3, NULL, "PWD", NULL);
 	exe = ft_strjoin(env->val, &cmd->arg->str[1]);
+	arg = creat_arg(cmd);
+	if (!env || !exe || !arg || !(find_file(exe)))
+	{
+		if (exe)
+			free(exe);
+		if (arg)
+			free(arg);
+		free_tab(all);
+		return (0);
+	}
+	if (!ft_strcmp(cmd->arg->str, "./minishell"))
+		handler(3, NULL, "SHLVL", "2");
 	if 	(execve(exe, arg, all) == -1)
-	{
 		printf("command failed\n");
-	}
-	else
-	{
-		printf("command success\n");
-	}
-	if (arg)
-		free(arg);
-	if (exe)
-		free(exe);
-	if (all)
-		free(all);
-	return (0);
+	free(arg);
+	free(exe);
+	free_tab(all);
+	printf("end\n");
+	return (1);
 }
 
 static int	exe_cmd(t_cmd *cmd)
@@ -157,16 +152,26 @@ static int	exe_cmd(t_cmd *cmd)
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
-	arg = creat_arg(cmd);
 	exe = creat_exe(env, cmd);
+	if (!exe)
+	{
+		printf("deadly ?\n");
+		return (0);
+	}
+	arg = creat_arg(cmd);
 	all = get_env(env);
+	if (!arg || !all)
+	{
+		free(exe);
+		if (all)
+			free_tab(all);
+		if (arg)
+			free(arg);
+		return (0);
+	}
 	if 	(execve(exe, arg, all) == -1)
 	{
 		printf("command failed\n");
-	}
-	else
-	{
-		printf("command success\n");
 	}
 	if (arg)
 		free(arg);
@@ -174,7 +179,8 @@ static int	exe_cmd(t_cmd *cmd)
 		free(exe);
 	if (all)
 		free(all);
-	return (0);
+	printf("end\n");
+	return (1);
 }
 
 void	fill_fd(t_cmd *cmd)
@@ -206,7 +212,6 @@ void    exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
-	
 	if (cmd != NULL && cmd->arg != NULL)
 	{
 		printf("TEST : %s\n", cmd->arg->str);
@@ -247,14 +252,14 @@ int		get_nbpipe(t_cmd *cmd)
 
 void	child(t_cmd *cmd)
 {
-	int *pipefd;
-	int *pitab;
-	int 		i;
-	int fd_in;
-	int status;
-	t_cmd *tmp;
+	int		*pipefd;
+	int		*pitab;
+	int		i;
+	int		fd_in;
+	int		status;
+	t_cmd	*tmp;
+	
 	tmp = cmd;
-
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
@@ -273,7 +278,7 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
 			exec(tmp);
-			exit(0);
+			exit_free(cmd, "child end", 'c');
 		}
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);
@@ -284,60 +289,9 @@ void	child(t_cmd *cmd)
 	close(fd_in);
     i = -1;
     while (++i < get_nbpipe(cmd))
-        waitpid(pitab[i], &status, 0);
+		waitpid(pitab[i], &status, 0);
+	free_cmd(cmd);
+	free(pipefd);
+	free(pitab);
+	printf("father end\n");
 }
-
-// void	child(t_cmd *cmd)
-// {
-// 	int        get_nbpipe(cmd);
-// 	get_nbpipe(cmd) = get_nbpipe(cmd);
-// 	printf("ON A %d pipes\n", get_nbpipe(cmd));
-
-//     int        *fd = malloc(sizeof(*fd) * 2 * get_nbpipe(cmd));
-//     int        status;
-// 	int *pitab;
-// 	int j;
-// 	pitab = malloc(get_nbpipe(cmd) * sizeof(int));
-// 	t_cmd	*tmp;
-// 	tmp = cmd;
-	
-//     for (int i = 0; i < get_nbpipe(cmd); ++i)
-//     {
-//         pipe(&fd[i * 2]);
-// 		pitab[i] = fork();
-//         if (pitab[i] == 0)
-//         {
-//             if (i != get_nbpipe(cmd) - 1)
-//                 dup2(fd[i * 2 + 1], STDOUT); //dup write end in stdout
-//             if (i > 0)
-//                 dup2(fd[(i - 1) * 2], STDIN); //dup read end of previous pipe in stdin
-// 			//printf("ON ME VOIT : %s\n", tmp->arg->str);
-//             exec(tmp);
-//             exit(1);
-//         }
-//         else
-//         {	printf("cmd -> %s : pid -> %d\n", tmp->arg->str, pitab[i]);
-//             close(fd[i * 2 + 1]); //close write end
-//             if (i == get_nbpipe(cmd) - 1)
-//                 close(fd[i * 2]); //close read end
-//             if (i > 0)
-//                 close(fd[(i - 1) * 2]); //close read end of previous pipe
-//         }
-// 		tmp = tmp->next;
-//     }
-// 		// j = get_nbpipe(cmd);
-// 		// while (--j >= 0)
-// 		// {
-// 		// 	printf("W8 %d\n", pitab[j]);
-// 		// 	waitpid(pitab[j], &status, 0);
-// 		// 	printf("stop W8 %d\n", pitab[j]);
-// 		// }
-// 		j = 0;
-// 		while (j < get_nbpipe(cmd))
-// 		{
-// 			printf("W8 %d\n", pitab[j]);
-// 			waitpid(pitab[j], &status, 0);
-// 			printf("stop W8 %d\n", pitab[j]);
-// 			j++;
-// 		}
-// }

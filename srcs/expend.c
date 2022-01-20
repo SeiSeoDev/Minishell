@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 18:05:43 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/20 16:07:02 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	expend_words(t_token *token, t_token *tmp)
 				if (!util)
 					exit_free(token, "Error ...\n",'t');
 				var = handler(3, NULL, util, NULL);
-				printf("util=%s\n", util);
+				// printf("util=%s\n", util);
 				if (!var)
 					tmp->str = replace_str(tmp->str, util, NULL);
 				else
