@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 17:09:44 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/20 17:12:39 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_token	*init_token(t_token *next, char *str, int type)
 {
 	t_token	*res;
 
-	res = (t_token *)malloc(sizeof(t_token));
+	res = malloc(sizeof(t_token));
 	if (!res)
 		return (NULL);
 	res->type = type;

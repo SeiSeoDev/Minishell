@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/21 16:25:42 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 07:45:23 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@ static int find_file(char *path)
 	int res;
 
 	if (path)
-		printf("%s <pathname>\n", path);
-	if (stat(path, &sb) == -1)
+		printf("%s <pathname> : ", path);
+	if (lstat(path, &sb) == -1)
+	{
+		printf("File does not exist\n");
 		return (0);
+	}
 	printf("Type de fichier : ");
 	res = (sb.st_mode & S_IFMT);
 	if (res == S_IFBLK)
@@ -39,20 +42,7 @@ static int find_file(char *path)
 	else if (res == S_IFSOCK)
 		printf("socket\n");
 	else
-	{
 		printf("inconnu ?\n");
-		return (0);
-	}
-	// printf("Numéro d'inœud :            %ld\n", (long)sb.st_ino);
-	// printf("Mode :                      %lo (octal)\n", (unsigned long)sb.st_mode);
-	// printf("Nombre de liens :           %ld\n", (long)sb.st_nlink);
-	// printf("Propriétaires :                    UID=%ld   GID=%ld\n", (long)sb.st_uid, (long)sb.st_gid);
-	// printf("Taille de bloc d’E/S :      %ld octets\n", (long)sb.st_blksize);
-	// printf("Taille du fichier :         %lld octets\n", (long long)sb.st_size);
-	// printf("Blocs alloués :             %lld\n", (long long)sb.st_blocks);
-	// printf("Dernier changement d’état : %s", ctime(&sb.st_ctime));
-	// printf("Dernier accès au fichier :  %s", ctime(&sb.st_atime));
-	// printf("Dernière modif du fichier:  %s", ctime(&sb.st_mtime));
 	return (1);
 }
 
@@ -99,19 +89,57 @@ static char *creat_exe(t_env *env, t_cmd *cmd)
 		if (env->val[i] == ':')
 		{
 			path = ft_strndup(&env->val[j], i - j);
+			if (!path)
+				return (NULL);
 			path = ft_free_join(path, "/", 1);
-			// printf("path=%s\n", path);
-			// printf("arg=%s\n", cmd->arg->str);
+			if (!path)
+				return (NULL);
 			exe = ft_strjoin(path, cmd->arg->str);
 			free(path);
-			path = NULL;
 			if (find_file(exe))
 				return (exe);
+			free(exe);
 			j = i + 1;
 		}
 		i++;
 	}
 	return (NULL);
+}
+
+static int	exe_prog(t_cmd *cmd)
+{
+	t_env	*env;
+	char	**arg;
+	char	*exe;
+	char	**all;
+
+	env = handler(3, NULL, NULL, NULL);
+	if (!env)
+		return (0);
+	all = get_env(env);
+	if (!all)
+		return (0);
+	env = handler(3, NULL, "PWD", NULL);
+	exe = ft_strjoin(env->val, &cmd->arg->str[1]);
+	arg = creat_arg(cmd);
+	if (!env || !exe || !arg || !(find_file(exe)))
+	{
+		if (exe)
+			free(exe);
+		if (arg)
+			free(arg);
+		free_tab(all);
+		return (0);
+	}
+	if (!ft_strcmp(cmd->arg->str, "./minishell"))
+		handler(3, NULL, "SHLVL", "2");
+	if 	(execve(exe, arg, all) == -1)
+		printf("command failed\n");
+	free(arg);
+	free(exe);
+	free_tab(all);
+	printf("end\n");
+	return (1);
 }
 
 static int	exe_cmd(t_cmd *cmd)
@@ -124,19 +152,26 @@ static int	exe_cmd(t_cmd *cmd)
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
-	arg = creat_arg(cmd);
 	exe = creat_exe(env, cmd);
-	env = handler(3, NULL, NULL, NULL);
+	if (!exe)
+	{
+		printf("deadly ?\n");
+		return (0);
+	}
+	arg = creat_arg(cmd);
 	all = get_env(env);
-	while (all[++i])
-		printf("PRINTED : %s\n", all[i]);
+	if (!arg || !all)
+	{
+		free(exe);
+		if (all)
+			free_tab(all);
+		if (arg)
+			free(arg);
+		return (0);
+	}
 	if 	(execve(exe, arg, all) == -1)
 	{
 		printf("command failed\n");
-	}
-	else
-	{
-		printf("command success\n");
 	}
 	if (arg)
 		free(arg);
@@ -144,32 +179,51 @@ static int	exe_cmd(t_cmd *cmd)
 		free(exe);
 	if (all)
 		free(all);
-	return (0);
+	printf("end\n");
+	return (1);
 }
 
 void	fill_fd(t_cmd *cmd)
 {
-	int fd;
+	int	opout;
+	int	opin;
 
-	fd = 1;
 	printf ("REDIR : %s\n", cmd->redir->str);
-	printf ("INITIAL FD : %d\n", cmd->fdout);
+	printf ("INITIAL FDOUT : %d\n", cmd->fdout);
+	opout = 0;
 	if (cmd->redir->type == rout)
-	{	
-		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	{
+		if (opout == 1)
+			close(cmd->fdout);
+		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		opout = 1;
 	}
 	else if (cmd->redir->type == rdout)
 	{	
-		fd = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (opout == 1)
+			close(cmd->fdout);
+		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		opout = 1;
 	}
-	printf ("FINAL FD : %d\n", cmd->fdout);
-	cmd->fdout = fd;
-	fd = 0;
+	printf ("FINAL FDOUT : %d\n", cmd->fdout);
+	printf ("REDIR : %s\n", cmd->redir->str);
+	printf ("INITIAL FDIN : %d\n", cmd->fdout);
+	opin = 0;
 	if (cmd->redir->type == rin)
 	{
-		fd = open(cmd->redir->next->str,  O_RDONLY);
+		if (opin == 1)
+			close(cmd->fdin);
+		cmd->fdin = open(cmd->redir->next->str,  O_RDONLY);
+		opin = 1;
 	}
-	cmd->fdin = fd;
+//	else if (cmd->redir->type == rin)
+//	{
+//		if (opin == 1)
+//			close(cmd->fdin);
+//		cmd->fdin = open(,  O_RDWR);
+//		opin = 1;
+//	}
+	printf ("FINAL FDIN : %d\n", cmd->fdout);
 }
 
 void    cleartest(t_cmd *cmd)
@@ -192,7 +246,6 @@ void    exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
-	
 	if (cmd != NULL && cmd->arg != NULL)
 	{
 		printf("TEST : %s\n", cmd->arg->str);
@@ -208,7 +261,9 @@ void    exec(t_cmd *cmd)
 			ex_unset(cmd);
 		else
 		{
-			if (!exe_cmd(cmd))
+			if (!ft_strncmp(cmd->arg->str, "./", 2))
+				exe_prog(cmd);
+			else if (!exe_cmd(cmd))
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
@@ -231,14 +286,14 @@ int		get_nbpipe(t_cmd *cmd)
 
 void	child(t_cmd *cmd)
 {
-	int *pipefd;
-	int *pitab;
-	int 		i;
-	int fd_in;
-	int status;
-	t_cmd *tmp;
+	int		*pipefd;
+	int		*pitab;
+	int		i;
+	int		fd_in;
+	int		status;
+	t_cmd	*tmp;
+	
 	tmp = cmd;
-
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
@@ -257,7 +312,7 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
 			exec(tmp);
-			exit(0);
+			exit_free(cmd, "child end", 'c');
 		}
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);
@@ -268,5 +323,9 @@ void	child(t_cmd *cmd)
 	close(fd_in);
     i = -1;
     while (++i < get_nbpipe(cmd))
-        waitpid(pitab[i], &status, 0);
+		waitpid(pitab[i], &status, 0);
+	free_cmd(cmd);
+	free(pipefd);
+	free(pitab);
+	printf("father end\n");
 }

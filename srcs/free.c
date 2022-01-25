@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 17:17:36 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/20 16:49:55 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@ void	free_token(t_token *token)
 		while (token)
 		{
 			if (token->str)
+			{
 				free(token->str);
+				printf(".");
+			}
 			tmp = token;
 			token = token->next;
 			free(tmp);
+			printf("token free\n");
 		}
 	}
 }
