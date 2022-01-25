@@ -6,11 +6,13 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 18:24:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 14:02:33 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_env *gl_env;
 
 static t_env	*init_handler(char **env)
 {
@@ -71,7 +73,7 @@ static t_env	*addone_env(t_env *env, char *name, char *val)
 	return (tmp);
 }
 
-static t_env	*mod_env(t_env *env, char *name, char *val)
+static t_env	*mod_env(t_env*env, char *name, char *val)
 {
 	t_env	*tmp;
 
@@ -84,6 +86,7 @@ static t_env	*mod_env(t_env *env, char *name, char *val)
 			{
 				free(tmp->val);
 				tmp->val = ft_strdup(val);
+				printf("env var: %s=%s\n", tmp->name, tmp->val);
 				break ;
 			}
 			tmp = tmp->next;
@@ -105,23 +108,22 @@ static t_env	*mod_env(t_env *env, char *name, char *val)
 
 t_env	*handler(int opt, char **env, char *name, char *val)
 {
-	static t_env	*myenv;
 	t_env			*res;
 
 	res = NULL;
 	if (opt == 0)
 	{
-		myenv = init_handler(env);
-		if (!myenv)
+		gl_env = init_handler(env);
+		if (!gl_env)
 			exit_free(NULL, "Error in init_handler", 0);
 	}
 	else if (opt == 1)
-		res = addone_env(myenv, name, val);
+		res = addone_env(gl_env, name, val);
 	else if (opt == 2)
-		res = delone_env(myenv, name);
+		res = delone_env(gl_env, name);
 	else if (opt == 3)
-		res = mod_env(myenv, name, val);
+		res = mod_env(gl_env, name, val);
 	else if (opt == 4)
-		free_env(myenv);
+		free_env(gl_env);
 	return (res);
 }

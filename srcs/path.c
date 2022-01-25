@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/25 12:09:21 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 12:39:55 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	ex_cd(t_cmd *cmd)
 	t_env   *myenv = NULL;
 	char *old_pwd;
 
-	printf("?\n");
 	if (!cmd->arg->next || (cmd->arg->next->str && !ft_strcmp(cmd->arg->next->str, "~"))) // ICI
 	{
 		printf("get myenv:\n");
@@ -34,7 +33,8 @@ int	ex_cd(t_cmd *cmd)
 		printf("OLD PWD %s\n", old_pwd);
 		printf("%s=%s\n", myenv->name, myenv->val);
 		handler(3, NULL, "PWD", myenv->val);
-		printf("HOME :%s\n", myenv->val);
+		myenv = handler(3, NULL, "PWD", NULL);
+		printf("PWD :%s\n", myenv->val);
 	}
 	// else if ()
 	// {

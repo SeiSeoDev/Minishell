@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/20 16:07:02 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 17:49:13 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ static char	*replace_str(char *str, char *old, char *new)
 	k = 0;
 	while (str[k] && ft_strncmp(&str[i], old, ft_strlen(old)))
 		res[i++] = str[k++];
-	i--;
+	if (i > 0)
+		i--;
 	if (new)
 	{
 		j = 0;
@@ -90,43 +91,88 @@ static char	*replace_str(char *str, char *old, char *new)
 	return (res);
 }
 
-void	expend_words(t_token *token, t_token *tmp)
+char	*del_unused_quot(char *str)
 {
+	char	*res;
+	char	quot;
 	int		i;
-	char	*util;
-	int		quot;
 	int		j;
-	t_env	*var;
+	int		len;
 
+	if (!str)
+		return (NULL);
 	i = 0;
-	while (tmp->str[i])
+	while (str[i])
 	{
-		if (tmp->str[i] == '$')
+		if (str[i] == '"' || str[i] == '\'')
 		{
-			i++;
-			j = i;
-			quot = quot_status(tmp->str, i);
-			if (quot == 2 || quot == 0)
+			quot = str[i];
+			j = i++;
+			while (str[i] && str[i] != quot)
+				i++;
+			if (str[i])
 			{
-				if (ft_strncmp(tmp->str, "$?", 2) == 0)
-					util = ft_strdup("$?");
-				else
+				while (j < i - 1)
 				{
-					while (ft_isalnum(tmp->str[i]) || tmp->str[i] == '_')
-						i++;
-					util = ft_strndup(&tmp->str[j], i - j);
+					str[j] = str[j + 1];
+					j++;
 				}
-				if (!util)
-					exit_free(token, "Error ...\n",'t');
-				var = handler(3, NULL, util, NULL);
-				// printf("util=%s\n", util);
-				if (!var)
-					tmp->str = replace_str(tmp->str, util, NULL);
-				else
-					tmp->str = replace_str(tmp->str, util, var->val);
-				free(util);
+				printf("str:%s| j:%s| i:%s\n", str, &str[j], &str[i]);
+				len = j - 1;
+				str[j++] = str[++i]; 
+				while (str[j])
+					str[j++] = str[++i];
+				str[j] = '\0';
+				i = len;
 			}
 		}
 		i++;
 	}
+	res = ft_strdup(str);
+	free(str);
+	return (res);
+}
+
+char	*expend_words(t_token *token, char *str)
+{
+	int		i;
+	char	*util;
+	int		j;
+	t_env	*var;
+	char	*res;
+
+	i = 0;
+	util = NULL;
+	res = str;
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			i++;
+			j = i;
+			if (quot_status(str, i) != 1)
+			{
+				if (ft_strncmp(str, "$?", 2) == 0)
+					util = ft_strdup("$?");
+				else
+				{
+					while (ft_isalnum(str[i]) || str[i] == '_')
+						i++;
+					util = ft_strndup(&str[j], i - j);
+				}
+				if (!util)
+					exit_free(token, "Error ...\n",'t');
+				var = handler(3, NULL, util, NULL);
+				if (!var)
+					res = replace_str(str, util, NULL);
+				else
+					res = replace_str(str, util, var->val);
+				if (util)
+					free(util);
+				util = NULL;
+			}
+		}
+		i++;
+	}
+	return (del_unused_quot(res));
 }

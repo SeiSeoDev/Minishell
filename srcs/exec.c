@@ -6,28 +6,28 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/25 12:14:18 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 18:07:38 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <time.h>
 
 static int find_file(char *path)
 {
 	struct stat sb;
 	int res;
 
-	if (path)
-		printf("%s <pathname> : ", path);
+	if (!path)
+		return (0);
+//		printf("%s <pathname> : ", path);
 	if (lstat(path, &sb) == -1)
 	{
-		printf("File does not exist\n");
+	//	printf("File does not exist\n");
 		return (0);
 	}
-	printf("Type de fichier : ");
+	//printf("Type de fichier : ");
 	res = (sb.st_mode & S_IFMT);
-	if (res == S_IFBLK)
+	/*if (res == S_IFBLK)
 		printf("périphérique de bloc\n");
 	else if (res == S_IFCHR)
 		printf("périphérique de caractère\n");
@@ -42,7 +42,7 @@ static int find_file(char *path)
 	else if (res == S_IFSOCK)
 		printf("socket\n");
 	else
-		printf("inconnu ?\n");
+		printf("inconnu ?\n");*/
 	return (1);
 }
 
@@ -132,13 +132,12 @@ static int	exe_prog(t_cmd *cmd)
 		return (0);
 	}
 	if (!ft_strcmp(cmd->arg->str, "./minishell"))
-		handler(3, NULL, "SHLVL", "2");
+		handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
 	if 	(execve(exe, arg, all) == -1)
 		printf("command failed\n");
 	free(arg);
 	free(exe);
 	free_tab(all);
-	printf("end\n");
 	return (1);
 }
 
@@ -186,47 +185,81 @@ static int	exe_cmd(t_cmd *cmd)
 	return (1);
 }
 
+void	heredoc(t_cmd *cmd, t_token *redir)
+{
+	char	*str;
+	t_token	*tmp;
+	int		quot;
+
+	tmp = cmd->arg;
+	while (tmp->next)
+		tmp = tmp->next;
+	quot = 0;
+	if (ft_strchr(redir->str, '"') || ft_strchr(redir->str, '\''))
+		quot = 1;
+	redir->str = del_unused_quot(redir->str);
+	str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
+	while (ft_strcmp(str, redir->str))
+	{
+		if (quot)
+			tmp->next = init_token(NULL, expend_words(tmp, str), 0);
+		else
+			tmp->next = init_token(NULL, ft_strdup(str), 0);
+		tmp = tmp->next;
+		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
+	}
+	tmp = cmd->arg;
+	while (tmp)
+	{
+		printf("token: str=%s, type=%d\n", tmp->str, tmp->type);
+		tmp = tmp->next;
+	}
+}
+
 void	fill_fd(t_cmd *cmd)
 {
 	int	opout;
 	int	opin;
+	t_token *token;
 
-	printf ("REDIR : %s\n", cmd->redir->str);
-	printf ("INITIAL FDOUT : %d\n", cmd->fdout);
+	token = cmd->redir;
 	opout = 0;
-	if (cmd->redir->type == rout)
-	{
-		if (opout == 1)
-			close(cmd->fdout);
-		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		opout = 1;
-	}
-	else if (cmd->redir->type == rdout)
-	{	
-		if (opout == 1)
-			close(cmd->fdout);
-		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		opout = 1;
-	}
-	printf ("FINAL FDOUT : %d\n", cmd->fdout);
-	printf ("REDIR : %s\n", cmd->redir->str);
-	printf ("INITIAL FDIN : %d\n", cmd->fdout);
 	opin = 0;
-	if (cmd->redir->type == rin)
+	while (token)
 	{
-		if (opin == 1)
-			close(cmd->fdin);
-		cmd->fdin = open(cmd->redir->next->str,  O_RDONLY);
-		opin = 1;
+		if (token->type == rout)
+		{
+			if (opout == 1)
+				close(cmd->fdout);
+			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			opout = 1;
+			token->fd = cmd->fdout;
+		}
+		else if (token->type == rdout)
+		{	
+			if (opout == 1)
+				close(cmd->fdout);
+			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			token->fd = cmd->fdout;
+			opout = 1;
+		}
+		else if (token->type == rin)
+		{
+			if (opin == 1)
+				close(cmd->fdin);
+			cmd->fdin = open(token->next->str,  O_RDONLY);
+			opin = 1;
+			token->fd = cmd->fdin;
+		}
+		else if (token->type == rdin)
+		{
+			if (opin == 1)
+				close(cmd->fdin);
+			heredoc(cmd, token->next);
+			opin = 0;
+		}
+		token = token->next;
 	}
-//	else if (cmd->redir->type == rin)
-//	{
-//		if (opin == 1)
-//			close(cmd->fdin);
-//		cmd->fdin = open(,  O_RDWR);
-//		opin = 1;
-//	}
-	printf ("FINAL FDIN : %d\n", cmd->fdout);
 }
 
 void    cleartest(t_cmd *cmd)
@@ -236,7 +269,6 @@ void    cleartest(t_cmd *cmd)
 	(void)cmd;
 	i = 0;
 	all = get_env(handler(3, NULL, NULL, NULL));
-	printf("OUAI\n");
 	while (all[i])
 	{
 		write(cmd->fdout, all[i], ft_strlen(all[i]));
@@ -245,13 +277,28 @@ void    cleartest(t_cmd *cmd)
 	}
 }
 
+void	close_fd(t_cmd *cmd)
+{
+	t_token *token;
+
+	token = cmd->redir;
+	while (token)
+	{
+		if (token->fd != 1 && token->fd != 0)
+			close(token->fd);
+		token = token->next;
+	}
+}
+
 void    exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
+	dup2(cmd->fdout, 1);
+	dup2(cmd->fdin, 0);
 	if (cmd != NULL && cmd->arg != NULL)
 	{
-		printf("TEST : %s\n", cmd->arg->str);
+
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "cd"))
@@ -270,6 +317,9 @@ void    exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
+	close(cmd->fdout);
+	close(cmd->fdin);
+	close_fd(cmd);
 }
 
 int		get_nbpipe(t_cmd *cmd)
@@ -315,7 +365,8 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
 			exec(tmp);
-			exit_free(cmd, "child end", 'c');
+			printf("hello\n");
+			exit_free(cmd, NULL, 'c');
 		}
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);
@@ -330,5 +381,4 @@ void	child(t_cmd *cmd)
 	free_cmd(cmd);
 	free(pipefd);
 	free(pitab);
-	printf("father end\n");
 }

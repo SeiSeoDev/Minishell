@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/25 12:07:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 17:46:54 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ int		quot_status(char *str, int i);
 ** expend.c
 */
 
-void	expend_words(t_token *token, t_token *tmp);
+char	*del_unused_quot(char *str);
+char	*expend_words(t_token *token, char *str);
 t_token *cmd_arg(t_token **tmp);
 t_token *cmd_redir(t_token **tmp);
 
@@ -131,9 +132,11 @@ int		ex_echo(t_cmd *cmd);
 void	ex_env(t_cmd *cmd);
 void    ex_port(t_cmd *cmd);
 void    ex_unset(t_cmd *cmd);
+
 /*
 ** exec.c
 */
+
 void	child(t_cmd *cmd);
 void	exec(t_cmd *cmd);
 
