@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 19:18:10 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:25:42 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,16 @@ static int	exe_cmd(t_cmd *cmd)
 	char	**arg;
 	char	*exe;
 	char	**all;
-
+	int i = -1;
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
 	arg = creat_arg(cmd);
 	exe = creat_exe(env, cmd);
+	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
+	while (all[++i])
+		printf("PRINTED : %s\n", all[i]);
 	if 	(execve(exe, arg, all) == -1)
 	{
 		printf("command failed\n");
@@ -167,6 +170,22 @@ void	fill_fd(t_cmd *cmd)
 		fd = open(cmd->redir->next->str,  O_RDONLY);
 	}
 	cmd->fdin = fd;
+}
+
+void    cleartest(t_cmd *cmd)
+{
+	int i;
+	char **all;
+	(void)cmd;
+	i = 0;
+	all = get_env(handler(3, NULL, NULL, NULL));
+	printf("OUAI\n");
+	while (all[i])
+	{
+		write(cmd->fdout, all[i], ft_strlen(all[i]));
+		write(cmd->fdout, "\n", 1);
+		i++;
+	}
 }
 
 void    exec(t_cmd *cmd)
@@ -251,58 +270,3 @@ void	child(t_cmd *cmd)
     while (++i < get_nbpipe(cmd))
         waitpid(pitab[i], &status, 0);
 }
-
-// void	child(t_cmd *cmd)
-// {
-// 	int        get_nbpipe(cmd);
-// 	get_nbpipe(cmd) = get_nbpipe(cmd);
-// 	printf("ON A %d pipes\n", get_nbpipe(cmd));
-
-//     int        *fd = malloc(sizeof(*fd) * 2 * get_nbpipe(cmd));
-//     int        status;
-// 	int *pitab;
-// 	int j;
-// 	pitab = malloc(get_nbpipe(cmd) * sizeof(int));
-// 	t_cmd	*tmp;
-// 	tmp = cmd;
-	
-//     for (int i = 0; i < get_nbpipe(cmd); ++i)
-//     {
-//         pipe(&fd[i * 2]);
-// 		pitab[i] = fork();
-//         if (pitab[i] == 0)
-//         {
-//             if (i != get_nbpipe(cmd) - 1)
-//                 dup2(fd[i * 2 + 1], STDOUT); //dup write end in stdout
-//             if (i > 0)
-//                 dup2(fd[(i - 1) * 2], STDIN); //dup read end of previous pipe in stdin
-// 			//printf("ON ME VOIT : %s\n", tmp->arg->str);
-//             exec(tmp);
-//             exit(1);
-//         }
-//         else
-//         {	printf("cmd -> %s : pid -> %d\n", tmp->arg->str, pitab[i]);
-//             close(fd[i * 2 + 1]); //close write end
-//             if (i == get_nbpipe(cmd) - 1)
-//                 close(fd[i * 2]); //close read end
-//             if (i > 0)
-//                 close(fd[(i - 1) * 2]); //close read end of previous pipe
-//         }
-// 		tmp = tmp->next;
-//     }
-// 		// j = get_nbpipe(cmd);
-// 		// while (--j >= 0)
-// 		// {
-// 		// 	printf("W8 %d\n", pitab[j]);
-// 		// 	waitpid(pitab[j], &status, 0);
-// 		// 	printf("stop W8 %d\n", pitab[j]);
-// 		// }
-// 		j = 0;
-// 		while (j < get_nbpipe(cmd))
-// 		{
-// 			printf("W8 %d\n", pitab[j]);
-// 			waitpid(pitab[j], &status, 0);
-// 			printf("stop W8 %d\n", pitab[j]);
-// 			j++;
-// 		}
-// }
