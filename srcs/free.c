@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/20 16:49:55 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 08:34:54 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ void	free_token(t_token *token)
 			if (token->str)
 			{
 				free(token->str);
-				printf(".");
 			}
 			tmp = token;
 			token = token->next;
 			free(tmp);
-			printf("token free\n");
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/25 07:45:23 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 11:58:43 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ static int find_file(char *path)
 	int res;
 
 	if (path)
-		printf("%s <pathname> : ", path);
+//		printf("%s <pathname> : ", path);
 	if (lstat(path, &sb) == -1)
 	{
-		printf("File does not exist\n");
+	//	printf("File does not exist\n");
 		return (0);
 	}
-	printf("Type de fichier : ");
+	//printf("Type de fichier : ");
 	res = (sb.st_mode & S_IFMT);
-	if (res == S_IFBLK)
+	/*if (res == S_IFBLK)
 		printf("périphérique de bloc\n");
 	else if (res == S_IFCHR)
 		printf("périphérique de caractère\n");
@@ -42,7 +42,7 @@ static int find_file(char *path)
 	else if (res == S_IFSOCK)
 		printf("socket\n");
 	else
-		printf("inconnu ?\n");
+		printf("inconnu ?\n");*/
 	return (1);
 }
 
@@ -148,7 +148,6 @@ static int	exe_cmd(t_cmd *cmd)
 	char	**arg;
 	char	*exe;
 	char	**all;
-	int i = -1;
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
@@ -187,34 +186,38 @@ void	fill_fd(t_cmd *cmd)
 {
 	int	opout;
 	int	opin;
+	t_token *token;
 
-	printf ("REDIR : %s\n", cmd->redir->str);
-	printf ("INITIAL FDOUT : %d\n", cmd->fdout);
+	token = cmd->redir;
 	opout = 0;
-	if (cmd->redir->type == rout)
+	while (token)
 	{
-		if (opout == 1)
-			close(cmd->fdout);
-		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		opout = 1;
-	}
-	else if (cmd->redir->type == rdout)
-	{	
-		if (opout == 1)
-			close(cmd->fdout);
-		cmd->fdout = open(cmd->redir->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		opout = 1;
-	}
-	printf ("FINAL FDOUT : %d\n", cmd->fdout);
-	printf ("REDIR : %s\n", cmd->redir->str);
-	printf ("INITIAL FDIN : %d\n", cmd->fdout);
-	opin = 0;
-	if (cmd->redir->type == rin)
-	{
-		if (opin == 1)
-			close(cmd->fdin);
-		cmd->fdin = open(cmd->redir->next->str,  O_RDONLY);
-		opin = 1;
+		if (token->type == rout)
+		{
+			if (opout == 1)
+				close(cmd->fdout);
+			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			opout = 1;
+			token->fd = cmd->fdout;
+		}
+		else if (token->type == rdout)
+		{	
+			if (opout == 1)
+				close(cmd->fdout);
+			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			token->fd = cmd->fdout;
+			opout = 1;
+		}
+		opin = 0;
+		if (token->type == rin)
+		{
+			if (opin == 1)
+				close(cmd->fdin);
+			cmd->fdin = open(token->next->str,  O_RDONLY);
+			token->fd = cmd->fdin;
+			opin = 1;
+		}
+		token = token->next;
 	}
 //	else if (cmd->redir->type == rin)
 //	{
@@ -223,7 +226,6 @@ void	fill_fd(t_cmd *cmd)
 //		cmd->fdin = open(,  O_RDWR);
 //		opin = 1;
 //	}
-	printf ("FINAL FDIN : %d\n", cmd->fdout);
 }
 
 void    cleartest(t_cmd *cmd)
@@ -242,13 +244,28 @@ void    cleartest(t_cmd *cmd)
 	}
 }
 
+void	close_fd(t_cmd *cmd)
+{
+	t_token *token;
+
+	token = cmd->redir;
+	while (token)
+	{
+		if (token->fd != 1 && token->fd != 0)
+			close(token->fd);
+		token = token->next;
+	}
+}
+
 void    exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
+	dup2(cmd->fdout, 1);
+	dup2(cmd->fdin, 0);
 	if (cmd != NULL && cmd->arg != NULL)
 	{
-		printf("TEST : %s\n", cmd->arg->str);
+
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "cd"))
@@ -259,7 +276,7 @@ void    exec(t_cmd *cmd)
 			ex_env(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "unset"))
 			ex_unset(cmd);
-		else
+			else
 		{
 			if (!ft_strncmp(cmd->arg->str, "./", 2))
 				exe_prog(cmd);
@@ -267,6 +284,9 @@ void    exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
+	close(cmd->fdout);
+	close(cmd->fdin);
+	close_fd(cmd);
 }
 
 int		get_nbpipe(t_cmd *cmd)
@@ -312,7 +332,7 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
 			exec(tmp);
-			exit_free(cmd, "child end", 'c');
+			exit_free(cmd, NULL, 'c');
 		}
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);
@@ -327,5 +347,5 @@ void	child(t_cmd *cmd)
 	free_cmd(cmd);
 	free(pipefd);
 	free(pitab);
-	printf("father end\n");
+	//printf("father end\n");
 }
