@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/25 07:45:23 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 12:14:18 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ static int	exe_cmd(t_cmd *cmd)
 	char	**arg;
 	char	*exe;
 	char	**all;
-	int i = -1;
+
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
@@ -159,6 +159,9 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	arg = creat_arg(cmd);
+	env = handler(3, NULL, NULL, NULL);
+	if (!env)
+		return (0);
 	all = get_env(env);
 	if (!arg || !all)
 	{

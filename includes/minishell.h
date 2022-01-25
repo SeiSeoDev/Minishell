@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/25 07:45:21 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 12:07:48 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#define STDIN	0
-#define STDOUT        1
-#define READ_END    0
-#define WRTIE_END    1
+#define STDIN		0
+#define STDOUT		1
+#define READ_END	0
+#define WRTIE_END	1
 
 typedef enum s_type
 {

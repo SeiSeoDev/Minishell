@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 16:37:07 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 12:09:21 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,13 @@ int	ex_cd(t_cmd *cmd)
 		old_pwd = handler(3, NULL, "PWD", NULL)->val;
 		printf("OLD PWD %s\n", old_pwd);
 		printf("%s=%s\n", myenv->name, myenv->val);
-
 		handler(3, NULL, "PWD", myenv->val);
+		printf("HOME :%s\n", myenv->val);
 	}
 	// else if ()
 	// {
 		
 	// }
-	printf("HOME :%s\n", myenv->val);
 	return (0);
 }
 
