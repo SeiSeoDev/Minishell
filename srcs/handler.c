@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/26 16:53:57 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 17:06:42 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,15 +86,14 @@ static t_env	*mod_env(t_env*env, char *name, char *val)
 			{
 				free(tmp->val);
 				tmp->val = ft_strdup(val);
-				printf("env var: %s=%s\n", tmp->name, tmp->val);
+				break ;
+			}
+			if (!tmp->next)
+			{
+				tmp->next = init_env(NULL, ft_strdup(name), ft_strdup(val));
 				break ;
 			}
 			tmp = tmp->next;
-		}
-		if (tmp == NULL)
-		{
-			tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
-			printf("env var: %s=%s\n", tmp->name, tmp->val);
 		}
 	}
 	else if (name)
@@ -103,7 +102,6 @@ static t_env	*mod_env(t_env*env, char *name, char *val)
 		{
 			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
 			{
-			//	printf("AAAAAH : %s\n", tmp->val);
 				break ;
 			}
 			tmp = tmp->next;

@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 16:49:12 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 17:05:07 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int find_file(char *path)
 {
-	struct stat sb;
-//	int res;
+	struct stat	sb;
+	//int			res;
 
 	if (!path)
 		return (0);
@@ -26,8 +26,8 @@ static int find_file(char *path)
 		return (0);
 	}
 	//printf("Type de fichier : ");
-	//res = (sb.st_mode & S_IFMT);
-	/*if (res == S_IFBLK)
+	/*res = (sb.st_mode & S_IFMT);
+	if (res == S_IFBLK)
 		printf("périphérique de bloc\n");
 	else if (res == S_IFCHR)
 		printf("périphérique de caractère\n");

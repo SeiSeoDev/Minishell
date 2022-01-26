@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 16:50:07 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 17:03:55 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,8 @@ char **get_separation(char *str)
 {
     static char *tab[2];
     char *tmp;
-    int i;
 
     tmp = str;
-    i = 0;
     tab[0] = str;
     while (*tmp != '=')
         tmp++;

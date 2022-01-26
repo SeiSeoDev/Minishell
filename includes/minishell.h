@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/26 16:28:24 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:42:03 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-#include <signal.h>
-#include <sys/wait.h>
+# include <signal.h>
+# include <sys/wait.h>
 
 #define STDIN		0
 #define STDOUT		1
