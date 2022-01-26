@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/20 17:21:52 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/25 17:47:53 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	expension(t_token *token)
 	while (tmp)
 	{
 		if (tmp->type == word || tmp->type == fd)
-			expend_words(token, tmp);
+			tmp->str = expend_words(tmp, tmp->str);
 		tmp = tmp->next;
 	}
 	cmd_creat(token);

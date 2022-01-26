@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/25 09:14:03 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 15:51:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	handler(0, env, NULL, NULL);
+	myenv = handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
 	myenv = handler(3, NULL, NULL, NULL);
 	while (myenv)
 	{

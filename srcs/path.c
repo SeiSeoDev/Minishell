@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/01/26 14:13:14 by dasanter         ###   ########.fr       */
+=======
+/*   Updated: 2022/01/25 12:39:55 by tamigore         ###   ########.fr       */
+>>>>>>> 8b2c1e91cd45f91254b26ae63792cc010a96422c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +23,7 @@ int	ex_cd(t_cmd *cmd)
 	char buf[4096];
 	char *str;
 
+<<<<<<< HEAD
 	str = NULL;
 	if (cmd->arg->next == NULL)
 		str = ft_strdup(handler(3, NULL, "HOME", NULL)->val);
@@ -41,6 +46,24 @@ int	ex_cd(t_cmd *cmd)
 		handler(3, NULL, "PWD", getcwd(buf, 4096));
 	}
 	return (1);
+=======
+	if (!cmd->arg->next || (cmd->arg->next->str && !ft_strcmp(cmd->arg->next->str, "~"))) // ICI
+	{
+		printf("get myenv:\n");
+		myenv = handler(3, NULL, "HOME", NULL);
+		old_pwd = handler(3, NULL, "PWD", NULL)->val;
+		printf("OLD PWD %s\n", old_pwd);
+		printf("%s=%s\n", myenv->name, myenv->val);
+		handler(3, NULL, "PWD", myenv->val);
+		myenv = handler(3, NULL, "PWD", NULL);
+		printf("PWD :%s\n", myenv->val);
+	}
+	// else if ()
+	// {
+		
+	// }
+	return (0);
+>>>>>>> 8b2c1e91cd45f91254b26ae63792cc010a96422c
 }
 
 int	ex_pwd(t_cmd *cmd)

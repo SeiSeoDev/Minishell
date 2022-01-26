@@ -6,19 +6,19 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 15:44:59 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:28:58 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <time.h>
 
 static int find_file(char *path)
 {
 	struct stat sb;
 	int res;
 
-	if (path)
+	if (!path)
+		return (0);
 //		printf("%s <pathname> : ", path);
 	if (lstat(path, &sb) == -1)
 	{
@@ -132,13 +132,12 @@ static int	exe_prog(t_cmd *cmd)
 		return (0);
 	}
 	if (!ft_strcmp(cmd->arg->str, "./minishell"))
-		handler(3, NULL, "SHLVL", "2");
+		handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
 	if 	(execve(exe, arg, all) == -1)
 		printf("command failed\n");
 	free(arg);
 	free(exe);
 	free_tab(all);
-	printf("end\n");
 	return (1);
 }
 
@@ -148,6 +147,7 @@ static int	exe_cmd(t_cmd *cmd)
 	char	**arg;
 	char	*exe;
 	char	**all;
+
 	env = handler(3, NULL, "PATH", NULL);
 	if (!env)
 		return (0);
@@ -159,6 +159,8 @@ static int	exe_cmd(t_cmd *cmd)
 	}
 	arg = creat_arg(cmd);
 	env = handler(3, NULL, NULL, NULL);
+	if (!env)
+		return (0);
 	all = get_env(env);
 	if (!arg || !all)
 	{
@@ -183,6 +185,37 @@ static int	exe_cmd(t_cmd *cmd)
 	return (1);
 }
 
+void	heredoc(t_cmd *cmd, t_token *redir)
+{
+	char	*str;
+	t_token	*tmp;
+	int		quot;
+
+	tmp = cmd->arg;
+	while (tmp->next)
+		tmp = tmp->next;
+	quot = 0;
+	if (ft_strchr(redir->str, '"') || ft_strchr(redir->str, '\''))
+		quot = 1;
+	redir->str = del_unused_quot(redir->str);
+	str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
+	while (ft_strcmp(str, redir->str))
+	{
+		if (quot)
+			tmp->next = init_token(NULL, expend_words(tmp, str), 0);
+		else
+			tmp->next = init_token(NULL, ft_strdup(str), 0);
+		tmp = tmp->next;
+		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
+	}
+	tmp = cmd->arg;
+	while (tmp)
+	{
+		printf("token: str=%s, type=%d\n", tmp->str, tmp->type);
+		tmp = tmp->next;
+	}
+}
+
 void	fill_fd(t_cmd *cmd)
 {
 	int	opout;
@@ -191,6 +224,7 @@ void	fill_fd(t_cmd *cmd)
 
 	token = cmd->redir;
 	opout = 0;
+	opin = 0;
 	while (token)
 	{
 		if (token->type == rout)
@@ -209,24 +243,23 @@ void	fill_fd(t_cmd *cmd)
 			token->fd = cmd->fdout;
 			opout = 1;
 		}
-		opin = 0;
-		if (token->type == rin)
+		else if (token->type == rin)
 		{
 			if (opin == 1)
 				close(cmd->fdin);
 			cmd->fdin = open(token->next->str,  O_RDONLY);
-			token->fd = cmd->fdin;
 			opin = 1;
+			token->fd = cmd->fdin;
+		}
+		else if (token->type == rdin)
+		{
+			if (opin == 1)
+				close(cmd->fdin);
+			heredoc(cmd, token->next);
+			opin = 0;
 		}
 		token = token->next;
 	}
-//	else if (cmd->redir->type == rin)
-//	{
-//		if (opin == 1)
-//			close(cmd->fdin);
-//		cmd->fdin = open(,  O_RDWR);
-//		opin = 1;
-//	}
 }
 
 void    cleartest(t_cmd *cmd)
@@ -236,7 +269,6 @@ void    cleartest(t_cmd *cmd)
 	(void)cmd;
 	i = 0;
 	all = get_env(handler(3, NULL, NULL, NULL));
-	printf("OUAI\n");
 	while (all[i])
 	{
 		write(cmd->fdout, all[i], ft_strlen(all[i]));
@@ -279,8 +311,11 @@ char    **exec(t_cmd *cmd)
 			ex_env(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "unset"))
 			ex_unset(cmd);
+<<<<<<< HEAD
 		else if (!ft_strcmp(cmd->arg->str, "export"))
 			ex_port(cmd);
+=======
+>>>>>>> 8b2c1e91cd45f91254b26ae63792cc010a96422c
 		else
 		{
 			if (!ft_strncmp(cmd->arg->str, "./", 2))
@@ -361,9 +396,8 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2]);
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
-			new_env = exec(tmp);
-			handler(4, NULL, NULL, NULL);
-			handler(0, new_env, NULL, NULL);
+			exec(tmp);
+			printf("hello\n");
 			exit_free(cmd, NULL, 'c');
 
 		}
@@ -380,5 +414,4 @@ void	child(t_cmd *cmd)
 	free_cmd(cmd);
 	free(pipefd);
 	free(pitab);
-	//printf("father end\n");
 }
