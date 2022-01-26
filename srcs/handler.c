@@ -89,11 +89,12 @@ static t_env	*mod_env(t_env*env, char *name, char *val)
 				printf("env var: %s=%s\n", tmp->name, tmp->val);
 				break ;
 			}
+			if (!tmp->next)
+			{
+				tmp->next = init_env(NULL, ft_strdup(name), ft_strdup(val));
+				break ;
+			}
 			tmp = tmp->next;
-		}
-		if (tmp == NULL)
-		{
-			tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
 		}
 	}
 	else if (name)
@@ -102,7 +103,6 @@ static t_env	*mod_env(t_env*env, char *name, char *val)
 		{
 			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
 			{
-			//	printf("AAAAAH : %s\n", tmp->val);
 				break ;
 			}
 			tmp = tmp->next;

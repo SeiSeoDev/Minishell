@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 16:29:59 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:49:10 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int find_file(char *path)
 {
-	struct stat sb;
-	int res;
+	struct stat	sb;
+	int			res;
 
 	if (!path)
 		return (0);
@@ -27,7 +27,7 @@ static int find_file(char *path)
 	}
 	//printf("Type de fichier : ");
 	res = (sb.st_mode & S_IFMT);
-	/*if (res == S_IFBLK)
+	if (res == S_IFBLK)
 		printf("périphérique de bloc\n");
 	else if (res == S_IFCHR)
 		printf("périphérique de caractère\n");
@@ -42,7 +42,7 @@ static int find_file(char *path)
 	else if (res == S_IFSOCK)
 		printf("socket\n");
 	else
-		printf("inconnu ?\n");*/
+		printf("inconnu ?\n");
 	return (1);
 }
 
