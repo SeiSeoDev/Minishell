@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 16:28:58 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:29:59 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,11 +311,8 @@ char    **exec(t_cmd *cmd)
 			ex_env(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "unset"))
 			ex_unset(cmd);
-<<<<<<< HEAD
 		else if (!ft_strcmp(cmd->arg->str, "export"))
 			ex_port(cmd);
-=======
->>>>>>> 8b2c1e91cd45f91254b26ae63792cc010a96422c
 		else
 		{
 			if (!ft_strncmp(cmd->arg->str, "./", 2))
@@ -369,7 +366,6 @@ void	child(t_cmd *cmd)
 	int		i;
 	int		fd_in;
 	int		status;
-	char	**new_env;
 	t_cmd	*tmp;
 	
 	tmp = cmd;
