@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/25 11:58:43 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 15:44:59 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	arg = creat_arg(cmd);
+	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
 	if (!arg || !all)
 	{
@@ -257,7 +258,7 @@ void	close_fd(t_cmd *cmd)
 	}
 }
 
-void    exec(t_cmd *cmd)
+char    **exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
@@ -269,14 +270,18 @@ void    exec(t_cmd *cmd)
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "cd"))
+		{
 			ex_cd(cmd);
+		}
 		else if (!ft_strcmp(cmd->arg->str, "pwd"))
 			ex_pwd(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "env"))
 			ex_env(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "unset"))
 			ex_unset(cmd);
-			else
+		else if (!ft_strcmp(cmd->arg->str, "export"))
+			ex_port(cmd);
+		else
 		{
 			if (!ft_strncmp(cmd->arg->str, "./", 2))
 				exe_prog(cmd);
@@ -284,9 +289,10 @@ void    exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
-	close(cmd->fdout);
-	close(cmd->fdin);
+
 	close_fd(cmd);
+
+	return (get_env(handler(3, NULL, NULL, NULL)));
 }
 
 int		get_nbpipe(t_cmd *cmd)
@@ -304,6 +310,23 @@ int		get_nbpipe(t_cmd *cmd)
 	return (i);
 }
 
+int		is_built(t_cmd *cmd)
+{
+	if (!ft_strcmp(cmd->arg->str, "echo"))
+		return (1);
+	else if (!ft_strcmp(cmd->arg->str, "cd"))
+		return (1);
+	else if (!ft_strcmp(cmd->arg->str, "pwd"))
+		return (1);
+	else if (!ft_strcmp(cmd->arg->str, "env"))
+		return (1);
+	else if (!ft_strcmp(cmd->arg->str, "unset"))
+		return (1);
+	else if (!ft_strcmp(cmd->arg->str, "export"))
+		return (1);
+	return (0);
+}
+
 void	child(t_cmd *cmd)
 {
 	int		*pipefd;
@@ -311,6 +334,7 @@ void	child(t_cmd *cmd)
 	int		i;
 	int		fd_in;
 	int		status;
+	char	**new_env;
 	t_cmd	*tmp;
 	
 	tmp = cmd;
@@ -318,6 +342,12 @@ void	child(t_cmd *cmd)
 	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
 	i = 0;
+	if (get_nbpipe(cmd) == 1 && is_built(cmd))
+	{
+		printf("dqwdqdqw\n");
+		exec(cmd);
+		return;
+	}
 	while (i < get_nbpipe(cmd))
 	{
 		pipe(&pipefd[i * 2]);
@@ -331,8 +361,11 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2]);
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
-			exec(tmp);
+			new_env = exec(tmp);
+			handler(4, NULL, NULL, NULL);
+			handler(0, new_env, NULL, NULL);
 			exit_free(cmd, NULL, 'c');
+
 		}
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);

@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/25 07:45:21 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/25 14:51:33 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <fcntl.h>
 #include <signal.h>
 #include <sys/wait.h>
-
+#include <time.h>
 #define STDIN	0
 #define STDOUT        1
 #define READ_END    0
@@ -135,7 +135,7 @@ void    ex_unset(t_cmd *cmd);
 ** exec.c
 */
 void	child(t_cmd *cmd);
-void	exec(t_cmd *cmd);
+char	**exec(t_cmd *cmd);
 
 /*
 ** path.c

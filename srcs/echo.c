@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 17:15:27 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:01:19 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,73 @@ void    ex_env(t_cmd *cmd)
     free(env);
 }
 
+int     get_equalpos(char *str)
+{
+    int i;
+    int ret;
+
+    ret = 0;
+    i = 0;
+    while (str[i])
+    {
+        if (str[i] == '=')
+        {
+            ret = i;
+            return (ret);
+        }
+        i++;
+    }
+    return (ret);
+}
+
+char **get_separation(char *str)
+{
+    static char *tab[2];
+    char *tmp;
+    int i;
+
+    tmp = str;
+    i = 0;
+    tab[0] = str;
+    while (*tmp != '=')
+        tmp++;
+    *tmp = 0;
+    tmp++;
+    tab[1] = tmp;
+    return (tab);
+}
+
 void    ex_port(t_cmd *cmd)
 {
-    (void)cmd;
+    char *arg;
+    char **tab;
+
+    if (cmd->arg->next)
+        arg=cmd->arg->next->str;
+    else
+    {
+        ex_env(cmd);
+        return;
+    }
+    if (arg && get_equalpos(arg))
+    {
+        tab = get_separation(arg);
+        // printf("TEST : |%s|\n", tab[0]);
+        // printf("TEST : |%s|\n", tab[1]);
+        handler(3, NULL, tab[0], tab[1]);
+    }
+    return;
 }
 
 void    ex_unset(t_cmd *cmd)
 {
+    t_token *tmp;
     if (!cmd->arg->next)
         ft_putstr_fd("unset: not enough arguments\n", 2);
-    handler(2, NULL, cmd->arg->next->str, NULL);
+    tmp = cmd->arg->next;
+    while (tmp)
+    {
+        handler(2, NULL, tmp->str, NULL);
+        tmp = tmp->next;
+    }
 }

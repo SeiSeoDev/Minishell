@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/19 18:24:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/26 15:49:15 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,25 @@ static t_env	*mod_env(t_env *env, char *name, char *val)
 			{
 				free(tmp->val);
 				tmp->val = ft_strdup(val);
+			//	printf("AAAAAH : %s\n", tmp->val);
 				break ;
 			}
 			tmp = tmp->next;
 		}
 		if (tmp == NULL)
+		{
 			tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
+		}
 	}
 	else if (name)
 	{
 		while (tmp)
 		{
 			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
+			{
+			//	printf("AAAAAH : %s\n", tmp->val);
 				break ;
+			}
 			tmp = tmp->next;
 		}
 	}

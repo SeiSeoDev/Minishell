@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/20 17:12:39 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/26 15:48:14 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_env	*init_env(t_env *next, char *name, char *val)
 	env->next = next;
 	env->name = name;
 	env->val = val;
+	printf("%s - %s\n", env->name, env->val);
 	return (env);
 }
 
