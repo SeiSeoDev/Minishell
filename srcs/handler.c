@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/26 16:27:37 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 16:53:57 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static t_env	*mod_env(t_env*env, char *name, char *val)
 		if (tmp == NULL)
 		{
 			tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
+			printf("env var: %s=%s\n", tmp->name, tmp->val);
 		}
 	}
 	else if (name)
