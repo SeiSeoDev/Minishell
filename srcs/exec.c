@@ -185,16 +185,40 @@ static int	exe_cmd(t_cmd *cmd)
 	return (1);
 }
 
-void	heredoc(t_cmd *cmd, t_token *redir)
+char	*link_here(char *res, char *str)
+{
+	int		i;
+	int		j;
+	char	*link;
+
+	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 2));
+	i = 0;
+	j = 0;
+	if (res)
+	{
+		while (res[i])
+			link[j++] = res[i++];
+	}
+	link[j++] = '\n';
+	if (str)
+	{
+		i = 0;
+		while (str[i])
+			link[j++] = str[i++];
+	}
+	link[j] = '\0';
+	free(res);
+	return (link);
+}
+
+char	*heredoc(t_token *redir)
 {
 	char	*str;
-	t_token	*tmp;
+	char	*res;
 	int		quot;
 
-	tmp = cmd->arg;
-	while (tmp->next)
-		tmp = tmp->next;
 	quot = 0;
+	res = NULL;
 	if (ft_strchr(redir->str, '"') || ft_strchr(redir->str, '\''))
 		quot = 1;
 	redir->str = del_unused_quot(redir->str);
@@ -202,24 +226,19 @@ void	heredoc(t_cmd *cmd, t_token *redir)
 	while (ft_strcmp(str, redir->str))
 	{
 		if (quot)
-			tmp->next = init_token(NULL, expend_words(tmp, str), 0);
+			res = link_here(res, expend_words(NULL, str));
 		else
-			tmp->next = init_token(NULL, ft_strdup(str), 0);
-		tmp = tmp->next;
+			res = link_here(res, str);
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 	}
-	tmp = cmd->arg;
-	while (tmp)
-	{
-		printf("token: str=%s, type=%d\n", tmp->str, tmp->type);
-		tmp = tmp->next;
-	}
+	return (res);
 }
 
 void	fill_fd(t_cmd *cmd)
 {
-	int	opout;
-	int	opin;
+	int		opout;
+	int		opin;
+	char	*doc;
 	t_token *token;
 
 	token = cmd->redir;
@@ -255,7 +274,9 @@ void	fill_fd(t_cmd *cmd)
 		{
 			if (opin == 1)
 				close(cmd->fdin);
-			heredoc(cmd, token->next);
+			doc = heredoc(token->next);
+			if (!doc)
+				exit_free(cmd, "heredoc failure\n", 'c');
 			opin = 0;
 		}
 		token = token->next;
