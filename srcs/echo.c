@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 17:03:55 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 18:45:38 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,25 @@ int     ex_echo(t_cmd *cmd)
 	int n;
 	t_token *arg;
 
-	arg = cmd->arg->next;
-	n = 0;
-	if (test_error(cmd))
-		return (-1);
-	if (!ft_strcmp(arg->str, "-n"))
-	{
-		n = 1;
-		arg = arg->next;
-	}
-	while (arg)
-	{
-		ft_putstr_fd(arg->str, cmd->fdout);
-		arg = arg->next;
-		if (arg)
-			ft_putstr_fd(" ", cmd->fdout);
-	}
-	if (!n)
-		write(cmd->fdout, "\n", 1);
-	return (1);
+    arg = cmd->arg->next;
+    n = 0;
+    if (test_error(cmd))
+        return (-1);
+    if (arg && !ft_strcmp(arg->str, "-n"))
+    {
+        n = 1;
+        arg = arg->next;
+    }
+    while (arg)
+    {
+        ft_putstr_fd(arg->str, cmd->fdout);
+        arg = arg->next;
+        if (arg)
+            ft_putstr_fd(" ", cmd->fdout);
+    }
+    if (!n)
+        write(cmd->fdout, "\n", 1);
+    return (1);
 }
 
 void    ex_env(t_cmd *cmd)

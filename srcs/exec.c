@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 17:05:07 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/27 11:36:58 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,26 +248,18 @@ void	fill_fd(t_cmd *cmd)
 	{
 		if (token->type == rout)
 		{
-			if (opout == 1)
-				close(cmd->fdout);
 			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			opout = 1;
+			printf("open fd : %d\n", cmd->fdout);
 			token->fd = cmd->fdout;
 		}
 		else if (token->type == rdout)
 		{	
-			if (opout == 1)
-				close(cmd->fdout);
 			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
 			token->fd = cmd->fdout;
-			opout = 1;
 		}
 		else if (token->type == rin)
 		{
-			if (opin == 1)
-				close(cmd->fdin);
 			cmd->fdin = open(token->next->str,  O_RDONLY);
-			opin = 1;
 			token->fd = cmd->fdin;
 		}
 		else if (token->type == rdin)
@@ -306,7 +298,10 @@ void	close_fd(t_cmd *cmd)
 	while (token)
 	{
 		if (token->fd != 1 && token->fd != 0)
+		{
 			close(token->fd);
+			printf("close fd -> %d", token->fd);
+		}
 		token = token->next;
 	}
 }
@@ -315,8 +310,6 @@ char    **exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
-	dup2(cmd->fdout, 1);
-	dup2(cmd->fdin, 0);
 	if (cmd != NULL && cmd->arg != NULL)
 	{
 
@@ -342,9 +335,8 @@ char    **exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
-
+	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
-
 	return (get_env(handler(3, NULL, NULL, NULL)));
 }
 
@@ -396,7 +388,6 @@ void	child(t_cmd *cmd)
 	i = 0;
 	if (get_nbpipe(cmd) == 1 && is_built(cmd))
 	{
-		printf("dqwdqdqw\n");
 		exec(cmd);
 		return;
 	}
@@ -414,7 +405,6 @@ void	child(t_cmd *cmd)
 			close(pipefd[i * 2 + 1]);
 			close(fd_in);
 			exec(tmp);
-			printf("hello\n");
 			exit_free(cmd, NULL, 'c');
 
 		}
