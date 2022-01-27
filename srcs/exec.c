@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 11:36:58 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:25:36 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,6 +286,7 @@ char    **exec(t_cmd *cmd)
 {
 	if (cmd->redir)
 		fill_fd(cmd);
+	dup2(fd_in, STDIN_FILENO);
 	if (cmd != NULL && cmd->arg != NULL)
 	{
 
