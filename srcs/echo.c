@@ -14,117 +14,130 @@
 
 int test_error(t_cmd *cmd)
 {
-    (void)cmd;
-    return (0);
+	(void)cmd;
+	return (0);
 }
 
 int     ex_echo(t_cmd *cmd)
 {
-    int n;
-    t_token *arg;
+	int n;
+	t_token *arg;
 
-    arg = cmd->arg->next;
-    n = 0;
-    if (test_error(cmd))
-        return (-1);
-    if (!ft_strcmp(arg->str, "-n"))
-    {
-        n = 1;
-        arg = arg->next;
-    }
-    while (arg)
-    {
-        ft_putstr_fd(arg->str, cmd->fdout);
-        arg = arg->next;
-        if (arg)
-            ft_putstr_fd(" ", cmd->fdout);
-    }
-    if (!n)
-        write(cmd->fdout, "\n", 1);
-    return (1);
+	arg = cmd->arg->next;
+	n = 0;
+	if (test_error(cmd))
+		return (-1);
+	if (!ft_strcmp(arg->str, "-n"))
+	{
+		n = 1;
+		arg = arg->next;
+	}
+	while (arg)
+	{
+		ft_putstr_fd(arg->str, cmd->fdout);
+		arg = arg->next;
+		if (arg)
+			ft_putstr_fd(" ", cmd->fdout);
+	}
+	if (!n)
+		write(cmd->fdout, "\n", 1);
+	return (1);
 }
 
 void    ex_env(t_cmd *cmd)
 {
-    char **env;
-    int i;
+	char **env;
+	int i;
 
-    env = get_env(handler(3, NULL, NULL, NULL));
-    i = 0;
-    while (env[i])
-    {
-        ft_putstr_fd(env[i], cmd->fdout);
-        write(cmd->fdout, "\n", 1);
-        i++;
-    }
-    free(env);
+	env = get_env(handler(3, NULL, NULL, NULL));
+	i = 0;
+	while (env[i])
+	{
+		ft_putstr_fd(env[i], cmd->fdout);
+		write(cmd->fdout, "\n", 1);
+		i++;
+	}
+	free(env);
 }
 
-int     get_equalpos(char *str)
+int		get_equalpos(char *str)
 {
-    int i;
-    int ret;
+	int	i;
 
-    ret = 0;
-    i = 0;
-    while (str[i])
-    {
-        if (str[i] == '=')
-        {
-            ret = i;
-            return (ret);
-        }
-        i++;
-    }
-    return (ret);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+			return (1);
+		else if (str[i] == '+' && str[i + 1] == '=')
+			return (2);
+		i++;
+	}
+	return (0);
 }
 
-char **get_separation(char *str)
+char	**get_separation(char *str)
 {
-    static char *tab[2];
-    char *tmp;
+	static char	*tab[2];
+	char		*tmp;
+	int			i;
 
-    tmp = str;
-    tab[0] = str;
-    while (*tmp != '=')
-        tmp++;
-    *tmp = 0;
-    tmp++;
-    tab[1] = tmp;
-    return (tab);
+	tmp = str;
+	i = 0;
+	tab[0] = &tmp[i];
+	while (tmp[i] && tmp[i] != '=' && tmp[i] != '+')
+		i++;
+	if (tmp[i] == '+' && tmp[i + 1] == '=')
+	{
+		tmp[i++] = 0;
+		tmp[i++] = 0;
+	}
+	else if (tmp[i] == '=')
+		tmp[i++] = 0;
+	tab[1] = &tmp[i];
+	return (tab);
 }
 
-void    ex_port(t_cmd *cmd)
+void	ex_port(t_cmd *cmd)
 {
-    char *arg;
-    char **tab;
+	char	*arg;
+	char	**tab;
 
-    if (cmd->arg->next)
-        arg=cmd->arg->next->str;
-    else
-    {
-        ex_env(cmd);
-        return;
-    }
-    if (arg && get_equalpos(arg))
-    {
-        tab = get_separation(arg);
-        // printf("TEST : |%s|\n", tab[0]);
-        // printf("TEST : |%s|\n", tab[1]);
-        handler(3, NULL, tab[0], tab[1]);
-    }
-    return;
+	if (cmd->arg->next)
+		arg=cmd->arg->next->str;
+	else
+	{
+		ex_env(cmd);
+		return;
+	}
+	if (arg && get_equalpos(arg) == 1)
+	{
+		tab = get_separation(arg);
+		// printf("TEST : |%s|\n", tab[0]);
+		// printf("TEST : |%s|\n", tab[1]);
+		handler(3, NULL, tab[0], tab[1]);
+	}
+	else if (arg && get_equalpos(arg) == 2)
+	{
+		tab = get_separation(arg);
+		// printf("TEST : |%s|\n", tab[0]);
+		// printf("TEST : |%s|\n", tab[1]);
+		handler(5, NULL, tab[0], tab[1]);
+	}
+	else
+		exit_free(cmd, "minishell: export: identifiant non valable\n", 'c');
+	return;
 }
 
 void    ex_unset(t_cmd *cmd)
 {
-    t_token *tmp;
-    if (!cmd->arg->next)
-        ft_putstr_fd("unset: not enough arguments\n", 2);
-    tmp = cmd->arg->next;
-    while (tmp)
-    {
-        handler(2, NULL, tmp->str, NULL);
-        tmp = tmp->next;
-    }
+	t_token	*tmp;
+	if (!cmd->arg->next)
+		ft_putstr_fd("unset: not enough arguments\n", 2);
+	tmp = cmd->arg->next;
+	while (tmp)
+	{
+		handler(2, NULL, tmp->str, NULL);
+		tmp = tmp->next;
+	}
 }
