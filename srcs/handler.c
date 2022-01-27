@@ -73,7 +73,7 @@ static t_env	*addone_env(t_env *env, char *name, char *val)
 	return (tmp);
 }
 
-static t_env	*mod_env(t_env*env, char *name, char *val)
+static t_env	*mod_env(t_env*env, char *name, char *val, int add)
 {
 	t_env	*tmp;
 
@@ -84,8 +84,13 @@ static t_env	*mod_env(t_env*env, char *name, char *val)
 		{
 			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
 			{
-				free(tmp->val);
-				tmp->val = ft_strdup(val);
+				if (add == 1)
+					tmp->val = ft_free_join(tmp->val, val, 1);
+				else
+				{
+					free(tmp->val);
+					tmp->val = ft_strdup(val);
+				}
 				break ;
 			}
 			if (!tmp->next)
@@ -126,8 +131,10 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 	else if (opt == 2)
 		res = delone_env(gl_env, name);
 	else if (opt == 3)
-		res = mod_env(gl_env, name, val);
+		res = mod_env(gl_env, name, val, 0);
 	else if (opt == 4)
 		free_env(gl_env);
+	else if (opt == 5)
+		res = mod_env(gl_env, name, val, 1);
 	return (res);
 }
