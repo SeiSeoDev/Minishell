@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 10:42:26 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/27 11:36:58 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,7 @@ void	fill_fd(t_cmd *cmd)
 		if (token->type == rout)
 		{
 			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			printf("OUVERT : %d\n", cmd->fdout);
+			printf("open fd : %d\n", cmd->fdout);
 			token->fd = cmd->fdout;
 		}
 		else if (token->type == rdout)
