@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/25 17:47:53 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 15:53:38 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	cmd_creat(t_token *token)
 				exit_free(res, "Error init_cmd...\n",'c');
 			}
 			data = data->next;
+			data->redir = NULL;
+			data->arg = NULL;
 			tofree = tmp;
 			tmp = tmp->next;
 			tofree->next = NULL;
@@ -42,8 +44,30 @@ void	cmd_creat(t_token *token)
 		}
 		else
 		{
-			data->arg = cmd_arg(&tmp);
-			data->redir = cmd_redir(&tmp);
+			if (tmp->type == rdin || tmp->type == rdout || tmp->type == rin || tmp->type == rout)
+			{
+				if (!data->redir)
+					data->redir = cmd_redir(&tmp);
+				else
+				{
+					tofree = data->redir;
+					while (tofree->next)
+						tofree = tofree->next;
+					tofree->next = cmd_redir(&tmp);
+				}
+			}
+			else
+			{
+				if (!data->arg)
+					data->arg = cmd_arg(&tmp);
+				else
+				{
+					tofree = data->arg;
+					while (tofree->next)
+						tofree = tofree->next;
+					tofree->next = cmd_arg(&tmp);
+				}
+			}
 		}
 	}
 	print_cmd(res);
@@ -61,12 +85,13 @@ void	expension(t_token *token)
 			tmp->str = expend_words(tmp, tmp->str);
 		tmp = tmp->next;
 	}
+	print_token(token);
 	cmd_creat(token);
 }
 
 void	tokenize(t_token *token)
 {
-	t_token *tmp;
+	t_token	*tmp;
 	int		l;
 	int		f;
 
