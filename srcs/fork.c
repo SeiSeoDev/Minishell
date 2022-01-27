@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:01:00 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 19:09:06 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static int	get_nbpipe(t_cmd *cmd)
 
 static int	is_built(t_cmd *cmd)
 {
+	if (!cmd || !cmd->arg)
+		return (0);
 	if (!ft_strcmp(cmd->arg->str, "echo"))
 		return (1);
 	else if (!ft_strcmp(cmd->arg->str, "cd"))

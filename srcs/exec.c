@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 17:01:53 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 19:06:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ static int	exe_cmd(t_cmd *cmd)
 	if (exe)
 		free(exe);
 	if (all)
-		free(all);
+		free_tab(all);
 	printf("end\n");
 	return (1);
 }
@@ -183,5 +183,5 @@ char    **exec(t_cmd *cmd)
 	}
 	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
-	return (get_env(handler(3, NULL, NULL, NULL)));
+	return (NULL);
 }
