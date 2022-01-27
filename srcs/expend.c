@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/25 17:49:13 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 15:46:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_token *cmd_arg(t_token **tmp)
 	{
 		if ((*tmp)->type == pip)
 			return (NULL);
-		while ((*tmp)->next && (*tmp)->next->type != pip && (*tmp)->type != pip &&
+		while ((*tmp)->next && (*tmp)->next->type != pip &&
 			   (*tmp)->next->type != rin && (*tmp)->next->type != rout &&
 			   (*tmp)->next->type != rdin && (*tmp)->next->type != rdout)
 			(*tmp) = (*tmp)->next;
@@ -47,7 +47,7 @@ t_token *cmd_redir(t_token **tmp)
 	{
 		if ((*tmp)->type == pip)
 			return (NULL);
-		while ((*tmp)->next && (*tmp)->type != pip && (*tmp)->next->type != pip)
+		while ((*tmp)->next && (*tmp)->next->type != word && (*tmp)->next->type != pip)
 			(*tmp) = (*tmp)->next;
 	}
 	stop = res;
