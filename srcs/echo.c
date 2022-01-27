@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 17:03:55 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/26 18:45:38 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int     ex_echo(t_cmd *cmd)
     n = 0;
     if (test_error(cmd))
         return (-1);
-    if (!ft_strcmp(arg->str, "-n"))
+    if (arg && !ft_strcmp(arg->str, "-n"))
     {
         n = 1;
         arg = arg->next;
@@ -98,20 +98,25 @@ void    ex_port(t_cmd *cmd)
 {
     char *arg;
     char **tab;
+    t_token *tmp;
 
-    if (cmd->arg->next)
-        arg=cmd->arg->next->str;
+    tmp = cmd->arg->next;
+    if (tmp)
+        arg=tmp->str;
     else
     {
         ex_env(cmd);
         return;
     }
-    if (arg && get_equalpos(arg))
+    while (tmp != NULL && arg && get_equalpos(arg))
     {
         tab = get_separation(arg);
         // printf("TEST : |%s|\n", tab[0]);
         // printf("TEST : |%s|\n", tab[1]);
         handler(3, NULL, tab[0], tab[1]);
+        tmp = tmp->next;
+        if (tmp)
+            arg = tmp->str;
     }
     return;
 }
