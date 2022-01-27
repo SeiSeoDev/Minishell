@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 16:30:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:55:32 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*del_unused_quot(char *str)
 					str[j] = str[j + 1];
 					j++;
 				}
-				printf("str:%s| j:%s| i:%s\n", str, &str[j], &str[i]);
+				// printf("str:%s| j:%s| i:%s\n", str, &str[j], &str[i]);
 				len = j - 1;
 				str[j++] = str[++i]; 
 				while (str[j])

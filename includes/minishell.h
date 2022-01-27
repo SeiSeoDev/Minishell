@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:01:36 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:47:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ typedef struct s_token
 typedef struct s_cmd
 {
 	t_token			*arg; // while arg exec(arg) arg = arg->next
-	t_token			*redir; // after > | < | >> 
+	t_token			*redir; // after > | < | >> | <<
 	int				fdin; // a remplir avec l entree
 	int				fdout; // ou est ce que j ecris/transmet
-	int				pid;
+	int				pid; // to kill process
 	struct s_cmd	*next;
 }	t_cmd;
 

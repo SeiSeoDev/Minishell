@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 16:55:53 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:53:52 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,31 @@
 
 void	parsing_error(t_cmd *cmd)
 {
-	t_cmd   *tmp;
-	
-	tmp = cmd;
-	if (tmp)
+	t_token	*red;
+	t_token	*arg;
+
+	arg = cmd->arg;
+	red = cmd->redir;
+	if (red)
 	{
-		while (tmp->redir)
+		while (red)
 		{
-			if (tmp->redir->type == word || tmp->redir->type == pip)
+			if (red->type == word || red->type == pip)
 				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
-			else if (tmp->redir->type > 3 && (!tmp->redir->next ||  tmp->redir->next->type > 3))
+			else if (red->type > 3 && (!red->next || red->next->type > 3))
 				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
-			else if (tmp->redir->type == rdout && (!tmp->redir->next || tmp->redir->next->type != lim))
+			else if (red->type == rdout && (!red->next || red->next->type != lim))
 				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
+			red = red->next;
+		}
+	}
+	if (arg)
+	{
+		while (arg)
+		{
+			if (arg->type != word)
+				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
+			arg = arg->next;
 		}
 	}
 }
