@@ -6,45 +6,11 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 15:20:21 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/27 19:13:16 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int find_file(char *path)
-{
-	struct stat	sb;
-	//int			res;
-
-	if (!path)
-		return (0);
-//		printf("%s <pathname> : ", path);
-	if (lstat(path, &sb) == -1)
-	{
-	//	printf("File does not exist\n");
-		return (0);
-	}
-	//printf("Type de fichier : ");
-	/*res = (sb.st_mode & S_IFMT);
-	if (res == S_IFBLK)
-		printf("périphérique de bloc\n");
-	else if (res == S_IFCHR)
-		printf("périphérique de caractère\n");
-	else if (res == S_IFDIR)
-		printf("répertoire\n");
-	else if (res == S_IFIFO)
-		printf("FIFO/tube\n");
-	else if (res == S_IFLNK)
-		printf("lien symbolique\n");
-	else if (res == S_IFREG)
-		printf("fichier ordinaire\n");
-	else if (res == S_IFSOCK)
-		printf("socket\n");
-	else
-		printf("inconnu ?\n");*/
-	return (1);
-}
 
 static char	**creat_arg(t_cmd *cmd)
 {
@@ -180,130 +146,9 @@ static int	exe_cmd(t_cmd *cmd)
 	if (exe)
 		free(exe);
 	if (all)
-		free(all);
+		free_tab(all);
 	printf("end\n");
 	return (1);
-}
-
-char	*link_here(char *res, char *str)
-{
-	int		i;
-	int		j;
-	char	*link;
-
-	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 2));
-	i = 0;
-	j = 0;
-	if (res)
-	{
-		while (res[i])
-			link[j++] = res[i++];
-	}
-	link[j++] = '\n';
-	if (str)
-	{
-		i = 0;
-		while (str[i])
-			link[j++] = str[i++];
-	}
-	link[j] = '\0';
-	free(res);
-	return (link);
-}
-
-char	*heredoc(t_token *redir)
-{
-	char	*str;
-	char	*res;
-	int		quot;
-
-	quot = 0;
-	res = NULL;
-	if (ft_strchr(redir->str, '"') || ft_strchr(redir->str, '\''))
-		quot = 1;
-	redir->str = del_unused_quot(redir->str);
-	str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
-	while (ft_strcmp(str, redir->str))
-	{
-		if (quot)
-			res = link_here(res, expend_words(NULL, str));
-		else
-			res = link_here(res, str);
-		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
-	}
-	return (res);
-}
-
-void	fill_fd(t_cmd *cmd)
-{
-	int		opout;
-	int		opin;
-	char	*doc;
-	t_token *token;
-
-	token = cmd->redir;
-	opout = 0;
-	opin = 0;
-	while (token)
-	{
-		if (token->type == rout)
-		{
-			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			printf("open fd : %d\n", cmd->fdout);
-			token->fd = cmd->fdout;
-		}
-		else if (token->type == rdout)
-		{	
-			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			token->fd = cmd->fdout;
-		}
-		else if (token->type == rin)
-		{
-			cmd->fdin = open(token->next->str,  O_RDONLY);
-			token->fd = cmd->fdin;
-		}
-		else if (token->type == rdin)
-		{
-			if (opin == 1)
-				close(cmd->fdin);
-			doc = heredoc(token->next);
-			if (!doc)
-				exit_free(cmd, "heredoc failure\n", 'c');
-			opin = 0;
-		}
-		token = token->next;
-	}
-}
-
-void    cleartest(t_cmd *cmd)
-{
-	int i;
-	char **all;
-	(void)cmd;
-	i = 0;
-	all = get_env(handler(3, NULL, NULL, NULL));
-	while (all[i])
-	{
-		write(cmd->fdout, all[i], ft_strlen(all[i]));
-		write(cmd->fdout, "\n", 1);
-		i++;
-	}
-}
-
-void	close_fd(t_cmd *cmd)
-{
-	t_token *token;
-
-	token = cmd->redir;
-	while (token)
-	{
-		if (token->fd != 1 && token->fd != 0)
-		{
-			close(token->fd);
-			printf("close fd -> %d\n", token->fd);
-		}
-		token = token->next;
-	}
 }
 
 char    **exec(t_cmd *cmd)
@@ -338,88 +183,5 @@ char    **exec(t_cmd *cmd)
 	}
 	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
-	return (get_env(handler(3, NULL, NULL, NULL)));
-}
-
-int		get_nbpipe(t_cmd *cmd)
-{
-	int i;
-	t_cmd *tmp;
-
-	i = 0;
-	tmp = cmd;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return (i);
-}
-
-int		is_built(t_cmd *cmd)
-{
-	if (!ft_strcmp(cmd->arg->str, "echo"))
-		return (1);
-	else if (!ft_strcmp(cmd->arg->str, "cd"))
-		return (1);
-	else if (!ft_strcmp(cmd->arg->str, "pwd"))
-		return (1);
-	else if (!ft_strcmp(cmd->arg->str, "env"))
-		return (1);
-	else if (!ft_strcmp(cmd->arg->str, "unset"))
-		return (1);
-	else if (!ft_strcmp(cmd->arg->str, "export"))
-		return (1);
-	return (0);
-}
-
-void	child(t_cmd *cmd)
-{
-	int		*pipefd;
-	int		*pitab;
-	int		i;
-	int		fd_in;
-	int		status;
-	t_cmd	*tmp;
-	
-	tmp = cmd;
-	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
-	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
-	fd_in = dup(STDIN_FILENO);
-	i = 0;
-	if (get_nbpipe(cmd) == 1 && is_built(cmd))
-	{
-		exec(cmd);
-		return;
-	}
-	while (i < get_nbpipe(cmd))
-	{
-		pipe(&pipefd[i * 2]);
-		pitab[i] = fork();
-		if (pitab[i] == 0)
-		{
-			if (i != 0)
-				dup2(fd_in, STDIN_FILENO);
-			if ((i + 1) != get_nbpipe(cmd))
-				dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
-			close(pipefd[i * 2]);
-			close(pipefd[i * 2 + 1]);
-			close(fd_in);
-			exec(tmp);
-			exit_free(cmd, NULL, 'c');
-
-		}
-		dup2(pipefd[i * 2], fd_in);
-		close(pipefd[i * 2]);
-		close(pipefd[i * 2 + 1]);
-		i++;
-		tmp = tmp->next;
-	}
-	close(fd_in);
-    i = -1;
-    while (++i < get_nbpipe(cmd))
-		waitpid(pitab[i], &status, 0);
-	free_cmd(cmd);
-	free(pipefd);
-	free(pitab);
+	return (NULL);
 }

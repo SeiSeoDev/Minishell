@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 15:53:38 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:54:47 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void	cmd_creat(t_token *token)
 				exit_free(res, "Error init_cmd...\n",'c');
 			}
 			data = data->next;
-			data->redir = NULL;
-			data->arg = NULL;
 			tofree = tmp;
 			tmp = tmp->next;
 			tofree->next = NULL;
@@ -70,6 +68,7 @@ void	cmd_creat(t_token *token)
 			}
 		}
 	}
+	parsing_error(res);
 	print_cmd(res);
 	child(res);
 }
@@ -85,7 +84,7 @@ void	expension(t_token *token)
 			tmp->str = expend_words(tmp, tmp->str);
 		tmp = tmp->next;
 	}
-	print_token(token);
+	// print_token(token);
 	cmd_creat(token);
 }
 

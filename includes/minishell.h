@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/26 16:42:03 by user42           ###   ########.fr       */
+/*   Updated: 2022/01/27 17:47:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@
 typedef enum s_type
 {
 	word, // "whatever"
+	fd,	// >> "this"
+	lim, // << "this"
 	pip, // |
 	rin, // <
 	rdin, // <<
 	rout, // >
 	rdout, // >>
-	fd,	// >> "this"
-	lim, // << "this"
 }	t_type;
 
 typedef struct s_token
@@ -53,10 +53,10 @@ typedef struct s_token
 typedef struct s_cmd
 {
 	t_token			*arg; // while arg exec(arg) arg = arg->next
-	t_token			*redir; // after > | < | >> 
+	t_token			*redir; // after > | < | >> | <<
 	int				fdin; // a remplir avec l entree
 	int				fdout; // ou est ce que j ecris/transmet
-	int				pid;
+	int				pid; // to kill process
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -92,8 +92,6 @@ int		quot_status(char *str, int i);
 
 char	*del_unused_quot(char *str);
 char	*expend_words(t_token *token, char *str);
-t_token *cmd_arg(t_token **tmp);
-t_token *cmd_redir(t_token **tmp);
 
 /*
 ** pars.c
@@ -137,7 +135,6 @@ void    ex_unset(t_cmd *cmd);
 ** exec.c
 */
 
-void	child(t_cmd *cmd);
 char	**exec(t_cmd *cmd);
 
 /*
@@ -154,5 +151,27 @@ int	ex_pwd(t_cmd *cmd);
 char	**get_env(t_env *env);
 char	*get_value(char *ret);
 char	*get_name(char *ret);
+
+/*
+** cmd.c
+*/
+
+void	parsing_error(t_cmd *cmd);
+t_token *cmd_arg(t_token **tmp);
+t_token *cmd_redir(t_token **tmp);
+
+/*
+** redir.c
+*/
+
+int		find_file(char *path);
+void	fill_fd(t_cmd *cmd);
+void	close_fd(t_cmd *cmd);
+
+/*
+** fork.c
+*/
+
+void	child(t_cmd *cmd);
 
 #endif

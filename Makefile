@@ -6,7 +6,7 @@
 #    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/20 17:24:28 by tamigore         ###   ########.fr        #
+#    Updated: 2022/01/27 17:00:55 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,10 @@ SOURCES =	minishell.c		\
 			echo.c			\
 			exec.c			\
 			path.c			\
-			utils.c			
+			utils.c			\
+			cmd.c			\
+			redir.c			\
+			fork.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 

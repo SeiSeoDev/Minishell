@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/26 17:06:42 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/27 18:28:54 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static t_env	*mod_env(t_env*env, char *name, char *val, int add)
 	{
 		while (tmp)
 		{
-			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
+			if (!ft_strcmp(name, tmp->name))
 			{
 				if (add == 1)
 					tmp->val = ft_free_join(tmp->val, val, 1);
@@ -105,7 +105,7 @@ static t_env	*mod_env(t_env*env, char *name, char *val, int add)
 	{
 		while (tmp)
 		{
-			if (!ft_strncmp(name, tmp->name, ft_strlen(name)))
+			if (!ft_strcmp(name, tmp->name))
 			{
 				break ;
 			}
