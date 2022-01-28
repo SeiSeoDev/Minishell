@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 19:13:16 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:04:16 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,14 +147,16 @@ static int	exe_cmd(t_cmd *cmd)
 		free(exe);
 	if (all)
 		free_tab(all);
-	printf("end\n");
 	return (1);
 }
 
-char    **exec(t_cmd *cmd)
+void	exec(t_cmd *cmd)
 {
+	char	*doc;
+
+	doc = NULL;
 	if (cmd->redir)
-		fill_fd(cmd);
+		doc = fill_fd(cmd);
 	dup2(cmd->fdin, STDIN_FILENO);
 	if (cmd != NULL && cmd->arg != NULL)
 	{
@@ -162,9 +164,7 @@ char    **exec(t_cmd *cmd)
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "cd"))
-		{
 			ex_cd(cmd);
-		}
 		else if (!ft_strcmp(cmd->arg->str, "pwd"))
 			ex_pwd(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "env"))
@@ -183,5 +183,5 @@ char    **exec(t_cmd *cmd)
 	}
 	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
-	return (NULL);
+	printf("end exec\n");
 }

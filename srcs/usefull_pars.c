@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 18:49:12 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:06:10 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,20 @@ void	get_type(t_token *tmp, int *l, int *f)
 		}
 		else
 			tmp->type = word;
+	}
+}
+
+void	token_syntax(t_token *token)
+{
+	t_token	*tmp;
+
+	tmp = token;
+	while (tmp)
+	{
+		if (tmp->type == pip && !tmp->next)
+			exit_free(token, "minishell: syntax error near unexpected token\n", 't');
+		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
+			exit_free(token, "minishell: syntax error near unexpected token\n", 't');
+		tmp = tmp->next;
 	}
 }

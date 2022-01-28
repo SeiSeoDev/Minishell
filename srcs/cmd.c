@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:53:52 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 15:44:58 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	parsing_error(t_cmd *cmd)
 		{
 			if (red->type == word || red->type == pip)
 				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
-			else if (red->type > 3 && (!red->next || red->next->type > 3))
+			else if (red->type > 3 && (!red->next || red->next->type > 3) )
 				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
 			else if (red->type == rdout && (!red->next || red->next->type != lim))
 				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 16:58:39 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 14:42:46 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ static char	*heredoc(t_token *redir)
 			res = link_here(res, str);
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 	}
+	if (!res)
+		res = ft_strdup("");
 	return (res);
 }
 
@@ -77,16 +79,12 @@ void	close_fd(t_cmd *cmd)
 	}
 }
 
-void	fill_fd(t_cmd *cmd)
+char	*fill_fd(t_cmd *cmd)
 {
-	int		opout;
-	int		opin;
 	char	*doc;
 	t_token *token;
 
 	token = cmd->redir;
-	opout = 0;
-	opin = 0;
 	while (token)
 	{
 		if (token->type == rout)
@@ -107,15 +105,16 @@ void	fill_fd(t_cmd *cmd)
 		}
 		else if (token->type == rdin)
 		{
-			if (opin == 1)
-				close(cmd->fdin);
+			printf("heredoc\n");
 			doc = heredoc(token->next);
 			if (!doc)
 				exit_free(cmd, "heredoc failure\n", 'c');
-			opin = 0;
+			return (doc);
+			
 		}
 		token = token->next;
 	}
+	return (NULL);
 }
 
 int	find_file(char *path)

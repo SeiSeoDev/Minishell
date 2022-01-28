@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 19:11:13 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:05:15 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void	loop(void)
 {
-	char *str;
+	char 	*str;
 
 	str = NULL;
 	while (1)
 	{
 		str = readline("\e[1m\e[31m\002""Minishell : ""\001\e[0m\002");
-		// printf("%s\n", str);
 		add_history(str);
 		split_words(str);
+		free(str);
 	}
 }
 

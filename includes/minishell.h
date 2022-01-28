@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:47:57 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:03:19 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void	skip_cot(char *str, int *i);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
 int		quot_status(char *str, int i);
+void	token_syntax(t_token *token);
 
 /*
 ** expend.c
@@ -135,7 +136,7 @@ void    ex_unset(t_cmd *cmd);
 ** exec.c
 */
 
-char	**exec(t_cmd *cmd);
+void	exec(t_cmd *cmd);
 
 /*
 ** path.c
@@ -165,7 +166,7 @@ t_token *cmd_redir(t_token **tmp);
 */
 
 int		find_file(char *path);
-void	fill_fd(t_cmd *cmd);
+char	*fill_fd(t_cmd *cmd);
 void	close_fd(t_cmd *cmd);
 
 /*

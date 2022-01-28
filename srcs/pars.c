@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:54:47 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:04:49 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
+	token_syntax(token);
 	expension(token);
 }
 
