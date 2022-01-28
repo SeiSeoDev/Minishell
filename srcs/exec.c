@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/28 16:09:53 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:40:47 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,35 +39,32 @@ static char	**creat_arg(t_cmd *cmd)
 	return (arg);
 }
 
-static char *creat_exe(t_env *env, t_cmd *cmd)
+static char	*creat_exe(t_env *env, t_cmd *cmd)
 {
-	char	*path;
 	char	*exe;
 	int		i;
 	int		j;
-	
+
 	if (!env->val)
 		return (NULL);
-	i = 0;
-	j = i;
-	while (env->val[i])
+	i = -1;
+	j = i + 1;
+	while (env->val[++i])
 	{
 		if (env->val[i] == ':')
 		{
-			path = ft_strndup(&env->val[j], i - j);
-			if (!path)
+			exe = ft_strndup(&env->val[j], i - j);
+			if (!exe)
 				return (NULL);
-			path = ft_free_join(path, "/", 1);
-			if (!path)
+			exe = ft_free_join(exe, "/", 1);
+			if (!exe)
 				return (NULL);
-			exe = ft_strjoin(path, cmd->arg->str);
-			free(path);
+			exe = ft_free_join(exe, cmd->arg->str, 1);
 			if (find_file(exe))
 				return (exe);
 			free(exe);
 			j = i + 1;
 		}
-		i++;
 	}
 	return (NULL);
 }
@@ -98,7 +95,10 @@ static int	exe_prog(t_cmd *cmd)
 		return (0);
 	}
 	if (!ft_strcmp(cmd->arg->str, "./minishell"))
+	{
+		printf("+1\n");
 		handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
+	}
 	if 	(execve(exe, arg, all) == -1)
 		printf("command failed\n");
 	free(arg);
@@ -151,14 +151,25 @@ static int	exe_cmd(t_cmd *cmd)
 void	exec(t_cmd *cmd)
 {
 	char	*doc;
+	int		pipfd[2];
 
 	doc = NULL;
 	if (cmd->redir)
+	{
 		doc = fill_fd(cmd);
+		if (doc)
+		{
+			if (pipe(pipfd) == -1)
+				exfree(cmd, "pipe failed\n", 'c');
+			write(pipfd[1], doc, ft_strlen(doc));
+			dup2(pipfd[0], cmd->fdin);
+			free(doc);
+			close(pipfd[1]);
+		}
+	}
 	dup2(cmd->fdin, STDIN_FILENO);
 	if (cmd != NULL && cmd->arg != NULL)
 	{
-
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "cd"))
@@ -182,5 +193,4 @@ void	exec(t_cmd *cmd)
 	}
 	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
-	printf("end exec\n");
 }

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:04:49 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:21:04 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	cmd_creat(t_token *token)
 
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
-		exit_free(token, "Error init cmd\n", 't');
+		exfree(token, "Error init cmd\n", 't');
 	res = data;
 	tmp = token;
 	while (tmp)
@@ -32,7 +32,7 @@ void	cmd_creat(t_token *token)
 			if (!data->next)
 			{
 				free_token(token);
-				exit_free(res, "Error init_cmd...\n",'c');
+				exfree(res, "Error init_cmd...\n",'c');
 			}
 			data = data->next;
 			tofree = tmp;
@@ -42,7 +42,8 @@ void	cmd_creat(t_token *token)
 		}
 		else
 		{
-			if (tmp->type == rdin || tmp->type == rdout || tmp->type == rin || tmp->type == rout)
+			if (tmp->type == rdin || tmp->type == rdout || tmp->type == rin ||
+				tmp->type == rout)
 			{
 				if (!data->redir)
 					data->redir = cmd_redir(&tmp);
@@ -136,7 +137,7 @@ void	split_words(char *str)
 			token = token->next;
 		}
 		if (!token)
-			exit_free(token, "error init token...\n", 't');
+			exfree(token, "error init token...\n", 't');
 	}
 	tokenize(tmp);
 }

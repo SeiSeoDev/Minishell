@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 18:57:34 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:14:27 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*expend_words(t_token *token, char *str)
 					util = ft_strndup(&str[j], i - j);
 				}
 				if (!util)
-					exit_free(token, "Error ...\n",'t');
+					exfree(token, "Error ...\n",'t');
 				var = handler(3, NULL, util, NULL);
 				if (!var)
 					res = replace_str(str, util, NULL);

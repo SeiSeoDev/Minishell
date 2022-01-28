@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 14:42:46 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:14:16 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,8 @@ char	*fill_fd(t_cmd *cmd)
 			printf("heredoc\n");
 			doc = heredoc(token->next);
 			if (!doc)
-				exit_free(cmd, "heredoc failure\n", 'c');
+				exfree(cmd, "heredoc failure\n", 'c');
 			return (doc);
-			
 		}
 		token = token->next;
 	}

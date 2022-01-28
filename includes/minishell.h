@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:03:19 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:13:24 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_env
 void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
 void	free_env(t_env *env);
-void	exit_free(void *ptr, char *err, char type);
+void	exfree(void *ptr, char *err, char type);
 void	free_tab(char **tab);
 
 /*

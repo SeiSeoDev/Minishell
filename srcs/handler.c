@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 18:28:54 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:15:12 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static t_env	*addone_env(t_env *env, char *name, char *val)
 		tmp = tmp->next;
 	tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
 	if (!tmp)
-		exit_free(NULL, "Error addone_env\n", 0);
+		exfree(NULL, "Error addone_env\n", 0);
 	return (tmp);
 }
 
@@ -124,7 +124,7 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 	{
 		gl_env = init_handler(env);
 		if (!gl_env)
-			exit_free(NULL, "Error in init_handler", 0);
+			exfree(NULL, "Error in init_handler", 0);
 	}
 	else if (opt == 1)
 		res = addone_env(gl_env, name, val);
