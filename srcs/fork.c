@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 19:09:06 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 14:28:10 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ void	child(t_cmd *cmd)
 			close(fd_in);
 			exec(tmp);
 			exit_free(cmd, NULL, 'c');
-
 		}
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);

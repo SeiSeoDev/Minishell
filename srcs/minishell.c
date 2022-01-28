@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 19:11:13 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:08:25 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,14 @@ void sig_handler(int sig)
 {
 	if (sig == SIGINT) 
 	{
-		printf("\nCTRL + C need to free stucts\n ");
+		printf("\nCTRL + C print a prompt new line ");
+		exit(EXIT_SUCCESS);
+
 	}
 	else if (sig == SIGQUIT)
+	{
 		printf("CTRL + -\\ need to do nothing only catch");
-	//else
-	exit(EXIT_SUCCESS);
+	}
 }
 
 int	main(int ac, char **av, char **env)
