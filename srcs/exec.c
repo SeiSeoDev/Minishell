@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/28 16:04:16 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:09:53 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,9 +138,7 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	if 	(execve(exe, arg, all) == -1)
-	{
 		printf("command failed\n");
-	}
 	if (arg)
 		free(arg);
 	if (exe)
@@ -175,6 +173,7 @@ void	exec(t_cmd *cmd)
 			ex_port(cmd);
 		else
 		{
+			dup2(cmd->fdout, STDOUT_FILENO);
 			if (!ft_strncmp(cmd->arg->str, "./", 2))
 				exe_prog(cmd);
 			else if (!exe_cmd(cmd))
