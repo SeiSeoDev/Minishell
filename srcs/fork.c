@@ -27,22 +27,22 @@ static int	get_nbpipe(t_cmd *cmd)
 	return (i);
 }
 
-static int	is_built(t_cmd *cmd)
+int	is_built(t_cmd *cmd)
 {
 	if (!cmd || !cmd->arg)
 		return (0);
 	if (!ft_strcmp(cmd->arg->str, "echo"))
 		return (1);
 	else if (!ft_strcmp(cmd->arg->str, "cd"))
-		return (1);
+		return (2);
 	else if (!ft_strcmp(cmd->arg->str, "pwd"))
-		return (1);
+		return (3);
 	else if (!ft_strcmp(cmd->arg->str, "env"))
-		return (1);
+		return (4);
 	else if (!ft_strcmp(cmd->arg->str, "unset"))
-		return (1);
+		return (5);
 	else if (!ft_strcmp(cmd->arg->str, "export"))
-		return (1);
+		return (6);
 	return (0);
 }
 

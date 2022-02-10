@@ -159,12 +159,15 @@ void	exec(t_cmd *cmd)
 		doc = fill_fd(cmd);
 		if (doc)
 		{
-			if (pipe(pipfd) == -1)
-				exfree(cmd, "pipe failed\n", 'c');
-			write(pipfd[1], doc, ft_strlen(doc));
-			dup2(pipfd[0], cmd->fdin);
+			if (!(is_built(cmd)))
+			{
+				if (pipe(pipfd) == -1)
+					exfree(cmd, "pipe failed\n", 'c');
+				write(pipfd[1], doc, ft_strlen(doc));
+				dup2(pipfd[0], cmd->fdin);
+				close(pipfd[1]);
+			}
 			free(doc);
-			close(pipfd[1]);
 		}
 	}
 	dup2(cmd->fdin, STDIN_FILENO);

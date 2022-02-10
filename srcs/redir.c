@@ -26,13 +26,13 @@ static char	*link_here(char *res, char *str)
 		while (res[i])
 			link[j++] = res[i++];
 	}
-	link[j++] = '\n';
 	if (str)
 	{
 		i = 0;
 		while (str[i])
 			link[j++] = str[i++];
 	}
+	link[j++] = '\n';
 	link[j] = '\0';
 	free(res);
 	return (link);
@@ -59,7 +59,7 @@ static char	*heredoc(t_token *redir)
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 	}
 	if (!res)
-		res = ft_strdup("");
+		res = ft_strdup("\n");
 	return (res);
 }
 

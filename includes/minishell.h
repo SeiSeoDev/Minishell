@@ -13,52 +13,88 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include "libft.h"
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <signal.h>
 # include <sys/wait.h>
 
-#define STDIN		0
-#define STDOUT		1
-#define READ_END	0
-#define WRTIE_END	1
+# define STDIN		0
+# define STDOUT		1
+# define READ_END	0
+# define WRTIE_END	1
 
 typedef enum s_type
 {
-	word, // "whatever"
-	fd,	// >> "this"
-	lim, // << "this"
-	pip, // |
-	rin, // <
-	rdin, // <<
-	rout, // >
-	rdout, // >>
+	word,
+	fd,
+	lim,
+	pip,
+	rin,
+	rdin,
+	rout,
+	rdout,
 }	t_type;
+
+/*	FOR EASY PARSING
+**	typedef enum s_type
+**	{
+**		word, "whatever"
+**		fd, >> "this"
+**		lim, << "this"
+**		pip, |
+**		rin, <
+**		rdin, <<
+**		rout, >
+**		rdout, >>
+**	}	t_type;
+*/
 
 typedef struct s_token
 {
-	int				type; // t_type
-	char			*str; // "str"
+	int				type;
+	char			*str;
 	int				fd;
 	struct s_token	*next;
 }	t_token;
 
+/* TO PARS THE INSTRUCTIONS
+**	typedef struct s_token
+**	{
+**		int				type; t_type for parsing
+**		char			*str; "str" that need to be expend depending on type
+**		int				fd;	for signal across child and parents
+**		struct s_token	*next;
+**	}	t_token;
+*/
+
 typedef struct s_cmd
 {
-	t_token			*arg; // while arg exec(arg) arg = arg->next
-	t_token			*redir; // after > | < | >> | <<
-	int				fdin; // a remplir avec l entree
-	int				fdout; // ou est ce que j ecris/transmet
-	int				pid; // to kill process
+	t_token			*arg;
+	t_token			*redir;
+	int				fdin;
+	int				fdout;
+	int				pid;
 	struct s_cmd	*next;
 }	t_cmd;
+
+/*	TO CREAT A COMMAND
+**	typedef struct s_cmd
+**	{
+**		t_token			*arg; while arg exec(arg) arg = arg->next
+**		t_token			*redir; after > | < | >> | <<
+**		int				fdin; a remplir avec l entree
+**		int				fdout; ou est ce que j ecris/transmet
+**		int				pid; to kill process
+**		struct s_cmd	*next;
+**	}	t_cmd;
+*/
 
 typedef struct s_env
 {
@@ -66,6 +102,15 @@ typedef struct s_env
 	char			*val;
 	struct s_env	*next;
 }	t_env;
+
+/*	TO BUILT ENV
+**	typedef struct s_env
+**	{
+**		char			*name; name of the env var
+**		char			*val; value of this env var
+**		struct s_env	*next;
+**	}	t_env;
+*/
 
 /*
 ** free.c
@@ -173,6 +218,7 @@ void	close_fd(t_cmd *cmd);
 ** fork.c
 */
 
+int		is_built(t_cmd *cmd);
 void	child(t_cmd *cmd);
 
 #endif

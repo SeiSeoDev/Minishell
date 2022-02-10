@@ -39,7 +39,7 @@ int	get_equalpos(char *str)
 			return (1);
 		else if (str[i] == '+' && str[i + 1] == '=')
 			return (2);
-		if ((str[i] >= 0 && str[i] < 42) || (str[i] >= 123 && str[i] <= 127)
+		if ((str[i] >= 0 && str[i] < 42) || (str[i] >= 123)
 			|| (str[i] >= 44 && str[i] <= 47) || (str[i] >= 58 && str[i] <= 60)
 			|| (str[i] >= 62 && str[i] <= 64) || (str[i] >= 91 && str[i] <= 96))
 			return (0);
