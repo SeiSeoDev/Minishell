@@ -150,7 +150,7 @@ void	split_words(char *str);
 */
 
 t_env	*init_env(t_env *next, char *name, char *val);
-t_token *init_token(t_token *next, char *str, int type);
+t_token	*init_token(t_token *next, char *str, int type);
 t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
 void	add_token(t_token *token, t_token *new);
 void	del_token(t_token **token, t_token *del);
@@ -174,8 +174,8 @@ t_env	*handler(int opt, char **env, char *name, char *val);
 
 int		ex_echo(t_cmd *cmd);
 void	ex_env(t_cmd *cmd);
-void    ex_port(t_cmd *cmd);
-void    ex_unset(t_cmd *cmd);
+void	ex_port(t_cmd *cmd);
+void	ex_unset(t_cmd *cmd);
 
 /*
 ** exec.c
@@ -187,8 +187,8 @@ void	exec(t_cmd *cmd);
 ** path.c
 */
 
-int	ex_cd(t_cmd *cmd);
-int	ex_pwd(t_cmd *cmd);
+int		ex_cd(t_cmd *cmd);
+int		ex_pwd(t_cmd *cmd);
 
 /*
 ** utils.c
@@ -203,8 +203,8 @@ char	*get_name(char *ret);
 */
 
 void	parsing_error(t_cmd *cmd);
-t_token *cmd_arg(t_token **tmp);
-t_token *cmd_redir(t_token **tmp);
+t_token	*cmd_arg(t_token **tmp);
+t_token	*cmd_redir(t_token **tmp);
 
 /*
 ** redir.c
@@ -220,5 +220,8 @@ void	close_fd(t_cmd *cmd);
 
 int		is_built(t_cmd *cmd);
 void	child(t_cmd *cmd);
+
+t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token);
+void	cmd_add(t_token **tmp, t_cmd *data);
 
 #endif

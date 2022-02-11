@@ -119,10 +119,7 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	exe = creat_exe(env, cmd);
 	if (!exe)
-	{
-		printf("deadly ?\n");
 		return (0);
-	}
 	arg = creat_arg(cmd);
 	env = handler(3, NULL, NULL, NULL);
 	if (!env)
@@ -138,7 +135,7 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	if 	(execve(exe, arg, all) == -1)
-		printf("command failed\n");
+		exfree(cmd, "command failed\n", 'c');
 	if (arg)
 		free(arg);
 	if (exe)

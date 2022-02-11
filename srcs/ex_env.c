@@ -78,34 +78,27 @@ void	ex_port(t_cmd *cmd)
 	if (cmd->arg->next)
 		arg = cmd->arg->next;
 	else
-	{
-		ex_env(cmd);
-		return;
-	}
+		return (ex_env(cmd));
 	while (arg)
 	{
 		if (arg->str && get_equalpos(arg->str) == 1)
 		{
 			tab = get_separation(arg->str);
-			// printf("TEST : |%s|\n", tab[0]);
-			// printf("TEST : |%s|\n", tab[1]);
 			handler(3, NULL, tab[0], tab[1]);
 		}
 		else if (arg->str && get_equalpos(arg->str) == 2)
 		{
 			tab = get_separation(arg->str);
-			// printf("TEST : |%s|\n", tab[0]);
-			// printf("TEST : |%s|\n", tab[1]);
 			handler(5, NULL, tab[0], tab[1]);
 		}
 		else
 			exfree(cmd, "minishell: export: identifiant non valable\n", 'c');
 		arg = arg->next;
 	}
-	return;
+	return ;
 }
 
-void    ex_unset(t_cmd *cmd)
+void	ex_unset(t_cmd *cmd)
 {
 	t_token	*tmp;
 

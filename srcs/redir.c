@@ -59,7 +59,7 @@ static char	*heredoc(t_token *redir)
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 	}
 	if (!res)
-		res = ft_strdup("\n");
+		res = ft_strdup("");
 	return (res);
 }
 
@@ -72,8 +72,8 @@ void	close_fd(t_cmd *cmd)
 	{
 		if (token->fd != 1 && token->fd != 0)
 		{
-			close(token->fd);
 			printf("close fd -> %d", token->fd);
+			close(token->fd);
 		}
 		token = token->next;
 	}
@@ -90,7 +90,6 @@ char	*fill_fd(t_cmd *cmd)
 		if (token->type == rout)
 		{
 			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			printf("open fd : %d\n", cmd->fdout);
 			token->fd = cmd->fdout;
 		}
 		else if (token->type == rdout)
@@ -101,11 +100,11 @@ char	*fill_fd(t_cmd *cmd)
 		else if (token->type == rin)
 		{
 			cmd->fdin = open(token->next->str,  O_RDONLY);
+			if (cmd->fdin)
 			token->fd = cmd->fdin;
 		}
 		else if (token->type == rdin)
 		{
-			printf("heredoc\n");
 			doc = heredoc(token->next);
 			if (!doc)
 				exfree(cmd, "heredoc failure\n", 'c');
@@ -119,33 +118,31 @@ char	*fill_fd(t_cmd *cmd)
 int	find_file(char *path)
 {
 	struct stat	sb;
-	//int			res;
-
+/*
+**	int			res;
+*/
 	if (!path)
 		return (0);
-//		printf("%s <pathname> : ", path);
 	if (lstat(path, &sb) == -1)
-	{
-	//	printf("File does not exist\n");
 		return (0);
-	}
-	//printf("Type de fichier : ");
-	/*res = (sb.st_mode & S_IFMT);
-	if (res == S_IFBLK)
-		printf("périphérique de bloc\n");
-	else if (res == S_IFCHR)
-		printf("périphérique de caractère\n");
-	else if (res == S_IFDIR)
-		printf("répertoire\n");
-	else if (res == S_IFIFO)
-		printf("FIFO/tube\n");
-	else if (res == S_IFLNK)
-		printf("lien symbolique\n");
-	else if (res == S_IFREG)
-		printf("fichier ordinaire\n");
-	else if (res == S_IFSOCK)
-		printf("socket\n");
-	else
-		printf("inconnu ?\n");*/
+/*	printf("Type de fichier : ");
+**	res = (sb.st_mode & S_IFMT);
+**	if (res == S_IFBLK)
+**		printf("périphérique de bloc\n");
+**	else if (res == S_IFCHR)
+**		printf("périphérique de caractère\n");
+**	else if (res == S_IFDIR)
+**		printf("répertoire\n");
+**	else if (res == S_IFIFO)
+**		printf("FIFO/tube\n");
+**	else if (res == S_IFLNK)
+**		printf("lien symbolique\n");
+**	else if (res == S_IFREG)
+**		printf("fichier ordinaire\n");
+**	else if (res == S_IFSOCK)
+**		printf("socket\n");
+**	else
+**		printf("inconnu ?\n");
+*/
 	return (1);
 }

@@ -36,9 +36,10 @@ static char	*replace_str(char *str, char *old, char *new)
 			res[i++] = new[j++];
 	}
 	k += ft_strlen(old);
-	while (str[k])
-		res[i++] = str[k++];
-	res[i] = '\0';
+	// while (str[k])
+	// 	res[i++] = str[k++];
+	ft_strcat(&res[i], &str[k]);
+	//res[i] = '\0';
 	free(str);
 	return (res);
 }
@@ -69,7 +70,6 @@ char	*del_unused_quot(char *str)
 					str[j] = str[j + 1];
 					j++;
 				}
-				// printf("str:%s| j:%s| i:%s\n", str, &str[j], &str[i]);
 				len = j - 1;
 				while (str[j])
 					str[j++] = str[++i];
@@ -95,33 +95,28 @@ char	*expend_words(t_token *token, char *str)
 	i = 0;
 	util = NULL;
 	res = str;
-	while (str[i])
+	while (res[i])
 	{
-		if (str[i] == '$')
+		if (res[i] == '$' && quot_status(res, i) != 1)
 		{
-			i++;
 			j = i;
-			if (quot_status(str, i) != 1)
+			if (ft_strncmp(&res[i], "$?", 2) == 0)
+				util = ft_strdup("$?");
+			else
 			{
-				if (ft_strncmp(str, "$?", 2) == 0)
-					util = ft_strdup("$?");
-				else
-				{
-					while (ft_isalnum(str[i]) || str[i] == '_')
-						i++;
-					util = ft_strndup(&str[j], i - j);
-				}
-				if (!util)
-					exfree(token, "Error ...\n",'t');
-				var = handler(3, NULL, util, NULL);
-				if (!var)
-					res = replace_str(str, util, NULL);
-				else
-					res = replace_str(str, util, var->val);
-				if (util)
-					free(util);
-				util = NULL;
+				while (ft_isalnum(str[i]) || str[i] == '_')
+					i++;
+				util = ft_strndup(&str[j + 1], (i + 1 - j));
 			}
+			if (!util)
+				exfree(token, "Error in expend words...\n",'t');
+			var = handler(3, NULL, util, NULL);
+			if (!var)
+				res = replace_str(str, util, NULL);
+			else
+				res = replace_str(str, util, var->val);
+			free(util);
+			printf("res = %s\n", res);
 		}
 		i++;
 	}

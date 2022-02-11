@@ -17,7 +17,6 @@ void	cmd_creat(t_token *token)
 	t_cmd	*data;
 	t_cmd	*res;
 	t_token	*tmp;
-	t_token	*tofree;
 
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
@@ -28,46 +27,11 @@ void	cmd_creat(t_token *token)
 	{
 		if (tmp->type == pip)
 		{
-			data->next = init_cmd(NULL, NULL, NULL);
-			if (!data->next)
-			{
-				free_token(token);
-				exfree(res, "Error init_cmd...\n",'c');
-			}
+			data->next = cmd_init(res, &tmp, token);
 			data = data->next;
-			tofree = tmp;
-			tmp = tmp->next;
-			tofree->next = NULL;
-			free_token(tofree);
 		}
 		else
-		{
-			if (tmp->type == rdin || tmp->type == rdout || tmp->type == rin ||
-				tmp->type == rout)
-			{
-				if (!data->redir)
-					data->redir = cmd_redir(&tmp);
-				else
-				{
-					tofree = data->redir;
-					while (tofree->next)
-						tofree = tofree->next;
-					tofree->next = cmd_redir(&tmp);
-				}
-			}
-			else
-			{
-				if (!data->arg)
-					data->arg = cmd_arg(&tmp);
-				else
-				{
-					tofree = data->arg;
-					while (tofree->next)
-						tofree = tofree->next;
-					tofree->next = cmd_arg(&tmp);
-				}
-			}
-		}
+			cmd_add(&tmp, data);
 	}
 	parsing_error(res);
 	print_cmd(res);
@@ -85,7 +49,6 @@ void	expension(t_token *token)
 			tmp->str = expend_words(tmp, tmp->str);
 		tmp = tmp->next;
 	}
-	// print_token(token);
 	cmd_creat(token);
 }
 
@@ -114,7 +77,7 @@ void	tokenize(t_token *token)
 void	split_words(char *str)
 {
 	t_token	*token;
-	t_token *tmp;
+	t_token	*tmp;
 	int		i;
 	int		last;
 
@@ -124,8 +87,6 @@ void	split_words(char *str)
 	while (str[i])
 	{
 		split(str, &i, &last);
-		if (i == last)
-			continue ;
 		if (!token)
 		{
 			token = init_token(NULL, ft_strndup(&str[last], i - last), 0);
