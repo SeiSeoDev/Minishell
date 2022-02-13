@@ -67,7 +67,7 @@ static t_env	*addone_env(t_env *env, char *name, char *val)
 		tmp = tmp->next;
 	tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
 	if (!tmp)
-		exfree(NULL, "Error addone_env\n", 0);
+		exfree(NULL, "Error addone_env\n", 0, 1);
 	return (tmp);
 }
 
@@ -110,7 +110,7 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 	{
 		myenv = init_handler(env);
 		if (!myenv)
-			exfree(NULL, "Error in init_handler", 0);
+			exfree(NULL, "Error in init_handler", 0, 1);
 	}
 	else if (opt == 1)
 		res = addone_env(myenv, name, val);

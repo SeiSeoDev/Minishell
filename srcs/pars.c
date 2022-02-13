@@ -20,7 +20,7 @@ void	cmd_creat(t_token *token)
 
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
-		exfree(token, "Error init cmd\n", 't');
+		exfree(token, "Error init cmd\n", 't', 1);
 	res = data;
 	tmp = token;
 	while (tmp)
@@ -98,7 +98,7 @@ void	split_words(char *str)
 			token = token->next;
 		}
 		if (!token)
-			exfree(token, "error init token...\n", 't');
+			exfree(token, "error init token...\n", 't', 1);
 	}
 	tokenize(tmp);
 }

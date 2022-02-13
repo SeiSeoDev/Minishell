@@ -52,7 +52,7 @@ t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token)
 	if (!data)
 	{
 		free_token(token);
-		exfree(res, "init token failled\n", 'c');
+		exfree(res, "init token failled\n", 'c', 1);
 	}
 	use = *tmp;
 	*tmp = (*tmp)->next;

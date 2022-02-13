@@ -114,9 +114,9 @@ void	token_syntax(t_token *token)
 	while (tmp)
 	{
 		if (tmp->type == pip && !tmp->next)
-			exfree(token, "minishell: syntax error near unexpected token\n", 't');
+			exfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
 		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
-			exfree(token, "minishell: syntax error near unexpected token\n", 't');
+			exfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
 		tmp = tmp->next;
 	}
 }

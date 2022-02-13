@@ -22,11 +22,11 @@ void	parsing_error(t_cmd *cmd)
 		while (red)
 		{
 			if (red->type == word || red->type == pip)
-				exfree(cmd, "syntax error near unexpected token\n", 'c');
+				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
 			else if (red->type > 3 && (!red->next || red->next->type > 3))
-				exfree(cmd, "syntax error near unexpected token\n", 'c');
+				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
 			else if (red->type == rdout && (!red->next))
-				exfree(cmd, "syntax error near unexpected token\n", 'c');
+				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
 			red = red->next;
 		}
 	}

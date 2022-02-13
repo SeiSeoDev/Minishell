@@ -75,13 +75,14 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-void	exfree(void *ptr, char *err, char type)
+void	exfree(void *ptr, char *err, char type, int num)
 {
 	handler(4, NULL, NULL, NULL);
 	if (type == 't')
 		free_token(ptr);
 	else if (type == 'c')
 		free_cmd(ptr);
-	printf("%s\n", err);
-	exit(1);
+	if (err)
+		printf("%s\n", err);
+	exit(num);
 }

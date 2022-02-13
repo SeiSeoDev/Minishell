@@ -61,31 +61,31 @@ void	child(t_cmd *cmd)
 	fd_in = dup(STDIN_FILENO);
 	i = 0;
 	if (get_nbpipe(cmd) == 1 && is_built(cmd))
-	{
 		exec(cmd);
-		return;
-	}
-	while (i < get_nbpipe(cmd))
+	else
 	{
-		pipe(&pipefd[i * 2]);
-		pitab[i] = fork();
-		if (pitab[i] == 0)
+		while (i < get_nbpipe(cmd))
 		{
-			if (i != 0)
-				dup2(fd_in, STDIN_FILENO);
-			if ((i + 1) != get_nbpipe(cmd))
-				dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
+			pipe(&pipefd[i * 2]);
+			pitab[i] = fork();
+			if (pitab[i] == 0)
+			{
+				if (i != 0)
+					dup2(fd_in, STDIN_FILENO);
+				if ((i + 1) != get_nbpipe(cmd))
+					dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
+				close(pipefd[i * 2]);
+				close(pipefd[i * 2 + 1]);
+				close(fd_in);
+				exec(tmp);
+				exfree(cmd, NULL, 'c', 1);
+			}
+			dup2(pipefd[i * 2], fd_in);
 			close(pipefd[i * 2]);
 			close(pipefd[i * 2 + 1]);
-			close(fd_in);
-			exec(tmp);
-			exfree(cmd, NULL, 'c');
+			i++;
+			tmp = tmp->next;
 		}
-		dup2(pipefd[i * 2], fd_in);
-		close(pipefd[i * 2]);
-		close(pipefd[i * 2 + 1]);
-		i++;
-		tmp = tmp->next;
 	}
 	close(fd_in);
     i = -1;

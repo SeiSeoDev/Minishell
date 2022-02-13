@@ -135,7 +135,7 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	if 	(execve(exe, arg, all) == -1)
-		exfree(cmd, "command failed\n", 'c');
+		exfree(cmd, "command failed\n", 'c', 1);
 	if (arg)
 		free(arg);
 	if (exe)
@@ -159,7 +159,7 @@ void	exec(t_cmd *cmd)
 			if (!(is_built(cmd)))
 			{
 				if (pipe(pipfd) == -1)
-					exfree(cmd, "pipe failed\n", 'c');
+					exfree(cmd, "pipe failed\n", 'c', 1);
 				write(pipfd[1], doc, ft_strlen(doc));
 				dup2(pipfd[0], cmd->fdin);
 				close(pipfd[1]);

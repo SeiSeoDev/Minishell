@@ -119,7 +119,7 @@ typedef struct s_env
 void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
 void	free_env(t_env *env);
-void	exfree(void *ptr, char *err, char type);
+void	exfree(void *ptr, char *err, char typ, int num);
 void	free_tab(char **tab);
 
 /*

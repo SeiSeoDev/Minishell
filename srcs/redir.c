@@ -107,7 +107,7 @@ char	*fill_fd(t_cmd *cmd)
 		{
 			doc = heredoc(token->next);
 			if (!doc)
-				exfree(cmd, "heredoc failure\n", 'c');
+				exfree(cmd, "heredoc failure\n", 'c', 1);
 			return (doc);
 		}
 		token = token->next;

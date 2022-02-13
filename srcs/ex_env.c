@@ -92,7 +92,7 @@ void	ex_port(t_cmd *cmd)
 			handler(5, NULL, tab[0], tab[1]);
 		}
 		else
-			exfree(cmd, "minishell: export: identifiant non valable\n", 'c');
+			exfree(cmd, "minishell: export: identifiant non valable\n", 'c', 1);
 		arg = arg->next;
 	}
 	return ;
