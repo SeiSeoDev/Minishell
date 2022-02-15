@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 07:19:20 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 08:20:55 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,28 +45,31 @@ int	is_built(t_cmd *cmd)
 		return (5);
 	else if (!ft_strcmp(cmd->arg->str, "export"))
 		return (6);
+	else if (!ft_strcmp(cmd->arg->str, "exit"))
+		return (7);
 	return (0);
 }
 void sig_handler2(int sig)
 {
-	if (gl_state == 0)
+	if (sig == SIGINT && gl_state == 0)
 	{
 		ft_putchar_fd('\n', 1);
 		rl_replace_line("", 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (gl_state == 1)
+	else if (sig == SIGINT && gl_state == 1)
 	{
 		ft_putchar_fd('\n', 1);
 		rl_redisplay();
 	}
-	else if (sig == SIGQUIT)
+	else if (gl_state == 1)
 	{
-		printf("\nIS CHILD\n");
-		printf("CTRL + -\\ need to do nothing only catch");
-		exit(EXIT_SUCCESS);
+		//need pid to kill the child process
+		ft_putstr_fd("Quit (core dumped)\n", 2);
 	}
+	else
+		ft_putstr_fd("\b\b  \b\b", 1);
 }
 
 void	child(t_cmd *cmd)
@@ -94,6 +97,7 @@ void	child(t_cmd *cmd)
 			pitab[i] = fork();
 			if (pitab[i] == 0)
 			{
+				signal(SIGQUIT, SIG_DFL);
 				if (i != 0)
 					dup2(fd_in, STDIN_FILENO);
 				if ((i + 1) != get_nbpipe(cmd))

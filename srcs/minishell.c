@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 07:20:49 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 07:48:39 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	loop(void)
 
 void sig_handler(int sig)
 {
+		printf("TEST\n");
 	if (sig == SIGINT) 
 	{
 		rl_replace_line("", 0);
@@ -92,8 +93,7 @@ void sig_handler(int sig)
 	}
 	else if (sig == SIGQUIT)
 	{
-		printf("CTRL + -\\ need to do nothing only catch");
-		exit(EXIT_SUCCESS);
+		return;
 	}
 }
 
@@ -116,7 +116,7 @@ int	main(int ac, char **av, char **env)
 	}
 	printf("PID : %d\n", getpid());
 	signal(SIGINT, sig_handler2);
-	signal(SIGQUIT, sig_handler);
+	signal(SIGQUIT, sig_handler2);
 	loop();
 	return (1);
 }

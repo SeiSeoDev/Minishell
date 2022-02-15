@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 07:19:51 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 07:36:58 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,12 @@ static int	exe_cmd(t_cmd *cmd)
 	return (1);
 }
 
+void	ex_hit(t_cmd *cmd)
+{
+	(void)cmd;
+	exit(EXIT_SUCCESS);
+}
+
 void	exec(t_cmd *cmd)
 {
 	char	*doc;
@@ -182,6 +188,8 @@ void	exec(t_cmd *cmd)
 			ex_unset(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "export"))
 			ex_port(cmd);
+		else if (!ft_strcmp(cmd->arg->str, "exit"))
+			ex_hit(cmd);
 		else
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
