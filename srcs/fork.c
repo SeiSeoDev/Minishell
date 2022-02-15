@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:22:17 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/15 12:03:50 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	gl_state = 0;
 
 static int	get_nbpipe(t_cmd *cmd)
 {
@@ -43,7 +45,31 @@ int	is_built(t_cmd *cmd)
 		return (5);
 	else if (!ft_strcmp(cmd->arg->str, "export"))
 		return (6);
+	else if (!ft_strcmp(cmd->arg->str, "exit"))
+		return (7);
 	return (0);
+}
+void sig_handler2(int sig)
+{
+	if (sig == SIGINT && gl_state == 0)
+	{
+		ft_putchar_fd('\n', 1);
+		rl_replace_line("", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (sig == SIGINT && gl_state == 1)
+	{
+		ft_putchar_fd('\n', 1);
+		rl_redisplay();
+	}
+	else if (gl_state == 1)
+	{
+		//need pid to kill the child process
+		ft_putstr_fd("Quit (core dumped)\n", 2);
+	}
+	else
+		ft_putstr_fd("\b\b  \b\b", 1);
 }
 
 void	child(t_cmd *cmd)
@@ -56,6 +82,7 @@ void	child(t_cmd *cmd)
 	t_cmd	*tmp;
 	
 	tmp = cmd;
+	gl_state = 1;
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
@@ -70,6 +97,7 @@ void	child(t_cmd *cmd)
 			pitab[i] = fork();
 			if (pitab[i] == 0)
 			{
+				signal(SIGQUIT, SIG_DFL);
 				if (i != 0)
 					dup2(fd_in, STDIN_FILENO);
 				if ((i + 1) != get_nbpipe(cmd))
@@ -91,6 +119,7 @@ void	child(t_cmd *cmd)
     i = -1;
     while (++i < get_nbpipe(cmd))
 		waitpid(pitab[i], &status, 0);
+	gl_state = 0;
 	free_cmd(cmd);
 	free(pipefd);
 	free(pitab);

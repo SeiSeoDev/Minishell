@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 11:55:56 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/15 12:03:09 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,12 @@ static int	exe_cmd(t_cmd *cmd)
 	return (1);
 }
 
+void	ex_hit(t_cmd *cmd)
+{
+	(void)cmd;
+	exit(EXIT_SUCCESS);
+}
+
 void	exec(t_cmd *cmd)
 {
 	char	*doc;
@@ -182,6 +188,8 @@ void	exec(t_cmd *cmd)
 			ex_unset(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "export"))
 			ex_port(cmd);
+		else if (!ft_strcmp(cmd->arg->str, "exit"))
+			ex_hit(cmd);
 		else
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
