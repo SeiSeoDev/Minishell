@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 12:03:09 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/15 15:33:29 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	exec(t_cmd *cmd)
 {
 	char	*doc;
 	int		pipfd[2];
+	int		fdok;
 
 	doc = NULL;
 	if (cmd->redir)
@@ -174,7 +175,8 @@ void	exec(t_cmd *cmd)
 		}
 	}
 	dup2(cmd->fdin, STDIN_FILENO);
-	if (cmd != NULL && cmd->arg != NULL)
+	fdok = isntopen(cmd);
+	if (cmd != NULL && cmd->arg != NULL && !fdok)
 	{
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
@@ -190,7 +192,7 @@ void	exec(t_cmd *cmd)
 			ex_port(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "exit"))
 			ex_hit(cmd);
-		else
+		else if (!fdok)
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
 			if (!ft_strncmp(cmd->arg->str, "./", 2))

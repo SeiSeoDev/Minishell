@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 07:20:11 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 15:19:22 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ t_token	*cmd_redir(t_token **tmp);
 int		find_file(char *path);
 char	*fill_fd(t_cmd *cmd);
 void	close_fd(t_cmd *cmd);
+int		isntopen(t_cmd *cmd);
 
 /*
 ** fork.c
