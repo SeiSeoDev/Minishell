@@ -3,18 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/02/09 14:23:22 by dasanter         ###   ########.fr       */
+=======
+/*   Updated: 2022/01/28 16:09:57 by tamigore         ###   ########.fr       */
+>>>>>>> 37c8f47f5b7c4ef4115724007198a2a87387bd0d
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	cmd_add(t_token **tmp, t_cmd *data)
+{
+	t_token *use;
+
+	if ((*tmp)->type == rdin || (*tmp)->type == rdout || (*tmp)->type == rin
+		|| (*tmp)->type == rout)
+	{
+		if (!data->redir)
+			data->redir = cmd_redir(tmp);
+		else
+		{
+			use = data->redir;
+			while (use->next)
+				use = use->next;
+			use->next = cmd_redir(tmp);
+		}
+	}
+	else
+	{
+		if (!data->arg)
+			data->arg = cmd_arg(tmp);
+		else
+		{
+			use = data->arg;
+			while (use->next)
+				use = use->next;
+			use->next = cmd_arg(tmp);
+		}
+	}
+}
+
+t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token)
+{
+	t_token *use;
+	t_cmd	*data;
+
+	data = init_cmd(NULL, NULL, NULL);
+	if (!data)
+	{
+		free_token(token);
+		exfree(res, "init token failled\n", 'c', 1);
+	}
+	use = *tmp;
+	*tmp = (*tmp)->next;
+	use->next = NULL;
+	free_token(use);
+	return (data);
+}
+
 void	loop(void)
 {
-	char *str;
+	char 	*str;
 
 	str = NULL;
 	while (1)
@@ -28,6 +81,7 @@ void	loop(void)
 		}
 		add_history(str);
 		split_words(str);
+		free(str);
 	}
 }
 

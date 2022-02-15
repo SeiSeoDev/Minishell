@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/25 08:34:54 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:14:49 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,14 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-void	exit_free(void *ptr, char *err, char type)
+void	exfree(void *ptr, char *err, char type, int num)
 {
 	handler(4, NULL, NULL, NULL);
 	if (type == 't')
 		free_token(ptr);
 	else if (type == 'c')
 		free_cmd(ptr);
-	printf("%s\n", err);
-	exit(1);
+	if (err)
+		printf("%s\n", err);
+	exit(num);
 }

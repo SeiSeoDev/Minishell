@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:53:52 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:26:18 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,27 @@
 void	parsing_error(t_cmd *cmd)
 {
 	t_token	*red;
-	t_token	*arg;
 
-	arg = cmd->arg;
 	red = cmd->redir;
 	if (red)
 	{
 		while (red)
 		{
 			if (red->type == word || red->type == pip)
-				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
+				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
 			else if (red->type > 3 && (!red->next || red->next->type > 3))
-				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
-			else if (red->type == rdout && (!red->next || red->next->type != lim))
-				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
+				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+			else if (red->type == rdout && (!red->next))
+				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
 			red = red->next;
-		}
-	}
-	if (arg)
-	{
-		while (arg)
-		{
-			if (arg->type != word)
-				exit_free(cmd, "minishell: syntax error near unexpected token\n", 'c');
-			arg = arg->next;
 		}
 	}
 }
 
 t_token	*cmd_arg(t_token **tmp)
 {
-	t_token *res;
-	t_token *stop;
+	t_token	*res;
+	t_token	*stop;
 
 	res = *tmp;
 	if (*tmp)
@@ -68,15 +57,16 @@ t_token	*cmd_arg(t_token **tmp)
 
 t_token	*cmd_redir(t_token **tmp)
 {
-	t_token *res;
-	t_token *stop;
+	t_token	*res;
+	t_token	*stop;
 
 	res = *tmp;
 	if (*tmp)
 	{
 		if ((*tmp)->type == pip)
 			return (NULL);
-		while ((*tmp)->next && (*tmp)->next->type != word && (*tmp)->next->type != pip)
+		while ((*tmp)->next && (*tmp)->next->type != word
+			&& (*tmp)->next->type != pip)
 			(*tmp) = (*tmp)->next;
 	}
 	stop = res;

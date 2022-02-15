@@ -3,51 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/27 19:13:04 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:34:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int test_error(t_cmd *cmd)
+void	ex_env(t_cmd *cmd)
 {
-	(void)cmd;
-	return (0);
-}
-
-int     ex_echo(t_cmd *cmd)
-{
-	int n;
-	t_token *arg;
-
-    arg = cmd->arg->next;
-    n = 0;
-    if (test_error(cmd))
-        return (-1);
-    if (arg && !ft_strcmp(arg->str, "-n"))
-    {
-        n = 1;
-        arg = arg->next;
-    }
-    while (arg)
-    {
-        ft_putstr_fd(arg->str, cmd->fdout);
-        arg = arg->next;
-        if (arg)
-            ft_putstr_fd(" ", cmd->fdout);
-    }
-    if (!n)
-        write(cmd->fdout, "\n", 1);
-    return (1);
-}
-
-void    ex_env(t_cmd *cmd)
-{
-	char **env;
-	int i;
+	char	**env;
+	int		i;
 
 	env = get_env(handler(3, NULL, NULL, NULL));
 	i = 0;
@@ -60,7 +28,7 @@ void    ex_env(t_cmd *cmd)
 	free(env);
 }
 
-int		get_equalpos(char *str)
+int	get_equalpos(char *str)
 {
 	int	i;
 
@@ -71,9 +39,9 @@ int		get_equalpos(char *str)
 			return (1);
 		else if (str[i] == '+' && str[i + 1] == '=')
 			return (2);
-		if ((str[i] >= 0 && str[i] < 42) || (str[i] >= 123 && str[i] <= 127) ||
-				(str[i] >= 44 && str[i] <= 47) || (str[i] >= 58 && str[i] <= 60) ||
-				(str[i] >= 62 && str[i] <= 64) || (str[i] >= 91 && str[i] <= 96))
+		if ((str[i] >= 0 && str[i] < 42) || (str[i] >= 123)
+			|| (str[i] >= 44 && str[i] <= 47) || (str[i] >= 58 && str[i] <= 60)
+			|| (str[i] >= 62 && str[i] <= 64) || (str[i] >= 91 && str[i] <= 96))
 			return (0);
 		i++;
 	}
@@ -110,34 +78,27 @@ void	ex_port(t_cmd *cmd)
 	if (cmd->arg->next)
 		arg = cmd->arg->next;
 	else
-	{
-		ex_env(cmd);
-		return;
-	}
+		return (ex_env(cmd));
 	while (arg)
 	{
 		if (arg->str && get_equalpos(arg->str) == 1)
 		{
 			tab = get_separation(arg->str);
-			// printf("TEST : |%s|\n", tab[0]);
-			// printf("TEST : |%s|\n", tab[1]);
 			handler(3, NULL, tab[0], tab[1]);
 		}
 		else if (arg->str && get_equalpos(arg->str) == 2)
 		{
 			tab = get_separation(arg->str);
-			// printf("TEST : |%s|\n", tab[0]);
-			// printf("TEST : |%s|\n", tab[1]);
 			handler(5, NULL, tab[0], tab[1]);
 		}
 		else
-			exit_free(cmd, "minishell: export: identifiant non valable\n", 'c');
+			exfree(cmd, "minishell: export: identifiant non valable\n", 'c', 1);
 		arg = arg->next;
 	}
-	return;
+	return ;
 }
 
-void    ex_unset(t_cmd *cmd)
+void	ex_unset(t_cmd *cmd)
 {
 	t_token	*tmp;
 

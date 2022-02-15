@@ -1,23 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/26 16:30:36 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/01/28 16:49:56 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	ex_echo(t_cmd *cmd)
+{
+	int		n;
+	t_token	*arg;
+
+	arg = cmd->arg->next;
+	n = 0;
+	if (arg && !ft_strcmp(arg->str, "-n"))
+	{
+		n = 1;
+		arg = arg->next;
+	}
+	while (arg)
+	{
+		ft_putstr_fd(arg->str, cmd->fdout);
+		arg = arg->next;
+		if (arg)
+			ft_putstr_fd(" ", cmd->fdout);
+	}
+	if (!n)
+		write(cmd->fdout, "\n", 1);
+	return (1);
+}
+
 int	ex_cd(t_cmd *cmd)
 {
-	//t_env   *myenv = NULL;
-	//char *old_pwd;
-	char buf[4096];
-	char *str;
+	char	buf[4096];
+	char	*str;
 
 	str = NULL;
 	if (cmd->arg->next == NULL)
@@ -32,7 +54,6 @@ int	ex_cd(t_cmd *cmd)
 		str = ft_strjoin(handler(3, NULL, "HOME", NULL)->val, "/");
 		str = ft_strjoin(str, cmd->arg->next->str);
 	}
-	printf("OUAI : %s\n", str);
 	if (chdir(str) == -1)
 		return (0); // rajouter le msg d erreur
 	else
@@ -45,7 +66,8 @@ int	ex_cd(t_cmd *cmd)
 
 int	ex_pwd(t_cmd *cmd)
 {
-	t_env   *myenv;
+	t_env	*myenv;
+
 	(void)cmd;
 	myenv = handler(3, NULL, "PWD", NULL);
 	write(1, myenv->val, ft_strlen(myenv->val));

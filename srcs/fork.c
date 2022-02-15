@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/09 13:48:37 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 07:19:20 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,22 @@ static int	get_nbpipe(t_cmd *cmd)
 	return (i);
 }
 
-static int	is_built(t_cmd *cmd)
+int	is_built(t_cmd *cmd)
 {
 	if (!cmd || !cmd->arg)
 		return (0);
 	if (!ft_strcmp(cmd->arg->str, "echo"))
 		return (1);
 	else if (!ft_strcmp(cmd->arg->str, "cd"))
-		return (1);
+		return (2);
 	else if (!ft_strcmp(cmd->arg->str, "pwd"))
-		return (1);
+		return (3);
 	else if (!ft_strcmp(cmd->arg->str, "env"))
-		return (1);
+		return (4);
 	else if (!ft_strcmp(cmd->arg->str, "unset"))
-		return (1);
+		return (5);
 	else if (!ft_strcmp(cmd->arg->str, "export"))
-		return (1);
+		return (6);
 	return (0);
 }
 void sig_handler2(int sig)
@@ -85,32 +85,31 @@ void	child(t_cmd *cmd)
 	fd_in = dup(STDIN_FILENO);
 	i = 0;
 	if (get_nbpipe(cmd) == 1 && is_built(cmd))
-	{
 		exec(cmd);
-		return;
-	}
-	while (i < get_nbpipe(cmd))
+	else
 	{
-		pipe(&pipefd[i * 2]);
-		pitab[i] = fork();
-		if (pitab[i] == 0)
+		while (i < get_nbpipe(cmd))
 		{
-			signal(SIGINT, sig_handler2);
-			if (i != 0)
-				dup2(fd_in, STDIN_FILENO);
-			if ((i + 1) != get_nbpipe(cmd))
-				dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
+			pipe(&pipefd[i * 2]);
+			pitab[i] = fork();
+			if (pitab[i] == 0)
+			{
+				if (i != 0)
+					dup2(fd_in, STDIN_FILENO);
+				if ((i + 1) != get_nbpipe(cmd))
+					dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
+				close(pipefd[i * 2]);
+				close(pipefd[i * 2 + 1]);
+				close(fd_in);
+				exec(tmp);
+				exfree(cmd, NULL, 'c', 1);
+			}
+			dup2(pipefd[i * 2], fd_in);
 			close(pipefd[i * 2]);
 			close(pipefd[i * 2 + 1]);
-			close(fd_in);
-			exec(tmp);
-			exit_free(cmd, NULL, 'c');
+			i++;
+			tmp = tmp->next;
 		}
-		dup2(pipefd[i * 2], fd_in);
-		close(pipefd[i * 2]);
-		close(pipefd[i * 2 + 1]);
-		i++;
-		tmp = tmp->next;
 	}
 	close(fd_in);
     i = -1;

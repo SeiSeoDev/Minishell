@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 16:58:39 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:14:16 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ static char	*link_here(char *res, char *str)
 		while (res[i])
 			link[j++] = res[i++];
 	}
-	link[j++] = '\n';
 	if (str)
 	{
 		i = 0;
 		while (str[i])
 			link[j++] = str[i++];
 	}
+	link[j++] = '\n';
 	link[j] = '\0';
 	free(res);
 	return (link);
@@ -58,6 +58,8 @@ static char	*heredoc(t_token *redir)
 			res = link_here(res, str);
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 	}
+	if (!res)
+		res = ft_strdup("");
 	return (res);
 }
 
@@ -70,29 +72,24 @@ void	close_fd(t_cmd *cmd)
 	{
 		if (token->fd != 1 && token->fd != 0)
 		{
-			close(token->fd);
 			printf("close fd -> %d", token->fd);
+			close(token->fd);
 		}
 		token = token->next;
 	}
 }
 
-void	fill_fd(t_cmd *cmd)
+char	*fill_fd(t_cmd *cmd)
 {
-	int		opout;
-	int		opin;
 	char	*doc;
 	t_token *token;
 
 	token = cmd->redir;
-	opout = 0;
-	opin = 0;
 	while (token)
 	{
 		if (token->type == rout)
 		{
 			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			printf("open fd : %d\n", cmd->fdout);
 			token->fd = cmd->fdout;
 		}
 		else if (token->type == rdout)
@@ -103,51 +100,49 @@ void	fill_fd(t_cmd *cmd)
 		else if (token->type == rin)
 		{
 			cmd->fdin = open(token->next->str,  O_RDONLY);
+			if (cmd->fdin)
 			token->fd = cmd->fdin;
 		}
 		else if (token->type == rdin)
 		{
-			if (opin == 1)
-				close(cmd->fdin);
 			doc = heredoc(token->next);
 			if (!doc)
-				exit_free(cmd, "heredoc failure\n", 'c');
-			opin = 0;
+				exfree(cmd, "heredoc failure\n", 'c', 1);
+			return (doc);
 		}
 		token = token->next;
 	}
+	return (NULL);
 }
 
 int	find_file(char *path)
 {
 	struct stat	sb;
-	//int			res;
-
+/*
+**	int			res;
+*/
 	if (!path)
 		return (0);
-//		printf("%s <pathname> : ", path);
 	if (lstat(path, &sb) == -1)
-	{
-	//	printf("File does not exist\n");
 		return (0);
-	}
-	//printf("Type de fichier : ");
-	/*res = (sb.st_mode & S_IFMT);
-	if (res == S_IFBLK)
-		printf("périphérique de bloc\n");
-	else if (res == S_IFCHR)
-		printf("périphérique de caractère\n");
-	else if (res == S_IFDIR)
-		printf("répertoire\n");
-	else if (res == S_IFIFO)
-		printf("FIFO/tube\n");
-	else if (res == S_IFLNK)
-		printf("lien symbolique\n");
-	else if (res == S_IFREG)
-		printf("fichier ordinaire\n");
-	else if (res == S_IFSOCK)
-		printf("socket\n");
-	else
-		printf("inconnu ?\n");*/
+/*	printf("Type de fichier : ");
+**	res = (sb.st_mode & S_IFMT);
+**	if (res == S_IFBLK)
+**		printf("périphérique de bloc\n");
+**	else if (res == S_IFCHR)
+**		printf("périphérique de caractère\n");
+**	else if (res == S_IFDIR)
+**		printf("répertoire\n");
+**	else if (res == S_IFIFO)
+**		printf("FIFO/tube\n");
+**	else if (res == S_IFLNK)
+**		printf("lien symbolique\n");
+**	else if (res == S_IFREG)
+**		printf("fichier ordinaire\n");
+**	else if (res == S_IFSOCK)
+**		printf("socket\n");
+**	else
+**		printf("inconnu ?\n");
+*/
 	return (1);
 }

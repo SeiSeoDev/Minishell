@@ -6,7 +6,7 @@
 #    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/27 17:00:55 by tamigore         ###   ########.fr        #
+#    Updated: 2022/01/28 16:36:24 by tamigore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,9 @@ SOURCES =	minishell.c		\
 			print.c			\
 			expend.c		\
 			handler.c		\
-			echo.c			\
+			ex_env.c		\
 			exec.c			\
-			path.c			\
+			ex_built.c		\
 			utils.c			\
 			cmd.c			\
 			redir.c			\
