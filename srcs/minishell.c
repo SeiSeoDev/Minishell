@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/28 16:08:25 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/09 14:23:22 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ void	loop(void)
 	{
 		str = readline("\e[1m\e[31m\002""Minishell : ""\001\e[0m\002");
 		// printf("%s\n", str);
+		if (str == NULL)
+		{
+			ft_putchar_fd('\n', 1);
+			loop();
+		}
 		add_history(str);
 		split_words(str);
 	}
@@ -30,13 +35,15 @@ void sig_handler(int sig)
 {
 	if (sig == SIGINT) 
 	{
-		printf("\nCTRL + C print a prompt new line ");
-		exit(EXIT_SUCCESS);
-
+		rl_replace_line("", 0);
+		printf("\nIS PARENT\n");
+		rl_on_new_line();
+		rl_redisplay();
 	}
 	else if (sig == SIGQUIT)
 	{
 		printf("CTRL + -\\ need to do nothing only catch");
+		exit(EXIT_SUCCESS);
 	}
 }
 
@@ -57,7 +64,8 @@ int	main(int ac, char **av, char **env)
 		printf("%s=%s\n", myenv->name, myenv->val);
 		myenv = myenv->next;
 	}
-	signal(SIGINT, sig_handler);
+	printf("PID : %d\n", getpid());
+	signal(SIGINT, sig_handler2);
 	signal(SIGQUIT, sig_handler);
 	loop();
 	return (1);

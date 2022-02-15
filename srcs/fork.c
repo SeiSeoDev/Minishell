@@ -6,11 +6,13 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 14:28:10 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/09 13:48:37 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	gl_state = 0;
 
 static int	get_nbpipe(t_cmd *cmd)
 {
@@ -45,6 +47,27 @@ static int	is_built(t_cmd *cmd)
 		return (1);
 	return (0);
 }
+void sig_handler2(int sig)
+{
+	if (gl_state == 0)
+	{
+		ft_putchar_fd('\n', 1);
+		rl_replace_line("", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (gl_state == 1)
+	{
+		ft_putchar_fd('\n', 1);
+		rl_redisplay();
+	}
+	else if (sig == SIGQUIT)
+	{
+		printf("\nIS CHILD\n");
+		printf("CTRL + -\\ need to do nothing only catch");
+		exit(EXIT_SUCCESS);
+	}
+}
 
 void	child(t_cmd *cmd)
 {
@@ -56,6 +79,7 @@ void	child(t_cmd *cmd)
 	t_cmd	*tmp;
 	
 	tmp = cmd;
+	gl_state = 1;
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
@@ -71,6 +95,7 @@ void	child(t_cmd *cmd)
 		pitab[i] = fork();
 		if (pitab[i] == 0)
 		{
+			signal(SIGINT, sig_handler2);
 			if (i != 0)
 				dup2(fd_in, STDIN_FILENO);
 			if ((i + 1) != get_nbpipe(cmd))
@@ -91,6 +116,7 @@ void	child(t_cmd *cmd)
     i = -1;
     while (++i < get_nbpipe(cmd))
 		waitpid(pitab[i], &status, 0);
+	gl_state = 0;
 	free_cmd(cmd);
 	free(pipefd);
 	free(pitab);

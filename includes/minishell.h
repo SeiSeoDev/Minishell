@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/27 17:47:57 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/01/28 17:54:09 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,5 +173,9 @@ void	close_fd(t_cmd *cmd);
 */
 
 void	child(t_cmd *cmd);
+void define_sig(int isparent);
+void sig_handler(int sig);
+void sig_handler2(int sig);
+
 
 #endif
