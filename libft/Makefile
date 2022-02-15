@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tamigore <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/08 15:04:29 by tamigore          #+#    #+#              #
-#    Updated: 2021/10/24 18:28:26 by tamigore         ###   ########.fr        #
+#    Updated: 2022/02/15 11:54:35 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,8 @@ SRC/O = ft_atoi.c		\
 		ft_free_rmstr.c	\
 		ft_free_rmchar.c\
 		ft_calloc.c		\
-		ft_count_char.c
+		ft_count_char.c	\
+		ft_free_tab.c
 
 SRC/I = ft_isalnum.c	\
 		ft_isalpha.c	\

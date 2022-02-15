@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/08 18:31:48 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/17 14:58:29 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 11:54:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ char			*ft_free_rmstr(char *str, int i, int j);
 
 char			*ft_free_rmchar(char *str, char c);
 int				ft_count_char(char *str, char c);
-
+void			ft_free_tab(char **tab);
 char			*ft_free_join(char *s1, char *s2, int x);
 
 #endif

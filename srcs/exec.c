@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/28 17:40:47 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/15 11:55:56 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static int	exe_prog(t_cmd *cmd)
 			free(exe);
 		if (arg)
 			free(arg);
-		free_tab(all);
+		ft_free_tab(all);
 		return (0);
 	}
 	if (!ft_strcmp(cmd->arg->str, "./minishell"))
@@ -103,7 +103,7 @@ static int	exe_prog(t_cmd *cmd)
 		printf("command failed\n");
 	free(arg);
 	free(exe);
-	free_tab(all);
+	ft_free_tab(all);
 	return (1);
 }
 
@@ -129,7 +129,7 @@ static int	exe_cmd(t_cmd *cmd)
 	{
 		free(exe);
 		if (all)
-			free_tab(all);
+			ft_free_tab(all);
 		if (arg)
 			free(arg);
 		return (0);
@@ -141,7 +141,7 @@ static int	exe_cmd(t_cmd *cmd)
 	if (exe)
 		free(exe);
 	if (all)
-		free_tab(all);
+		ft_free_tab(all);
 	return (1);
 }
 

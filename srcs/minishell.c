@@ -106,6 +106,12 @@ int	main(int ac, char **av, char **env)
 		printf("%s=%s\n", myenv->name, myenv->val);
 		myenv = myenv->next;
 	}
+	ctrfree(NULL, strerror(127), 0, 127);
+	myenv = handler(3, NULL, "?", NULL);
+	printf("$?=%s\n", myenv->val);
+	ctrfree(NULL, strerror(125), 0, 125);
+	myenv = handler(3, NULL, "?", NULL);
+	printf("$?=%s\n", myenv->val);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	loop();

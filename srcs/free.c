@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:14:49 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/15 12:00:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,23 @@ void	free_env(t_env *env)
 	}
 }
 
-void	free_tab(char **tab)
+void	ctrfree(void *ptr, char *err, char type, int num)
 {
-	int	i;
+	char	*str;
 
-	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
+	if (type == 't')
+		free_token(ptr);
+	else if (type == 'c')
+		free_cmd(ptr);
+	if (err)
+		printf("%s\n", err);
+	str = ft_itoa(num);
+	handler(3, NULL, "?", str);
+	if (str)
+		free(str);
+/*
+**	perror(strerror(num));
+*/
 }
 
 void	exfree(void *ptr, char *err, char type, int num)
