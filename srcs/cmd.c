@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:26:18 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/16 12:03:35 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parsing_error(t_cmd *cmd)
+t_cmd	*parsing_error(t_cmd *cmd)
 {
 	t_token	*red;
 
@@ -22,14 +22,24 @@ void	parsing_error(t_cmd *cmd)
 		while (red)
 		{
 			if (red->type == word || red->type == pip)
-				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+			{
+				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				return (NULL);
+			}
 			else if (red->type > 3 && (!red->next || red->next->type > 3))
-				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+			{
+				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				return (NULL);
+			}
 			else if (red->type == rdout && (!red->next))
-				exfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+			{
+				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				return (NULL);
+			}
 			red = red->next;
 		}
 	}
+	return (cmd);
 }
 
 t_token	*cmd_arg(t_token **tmp)

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 12:00:48 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/16 12:07:00 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,14 @@ void	free_env(t_env *env)
 
 void	ctrfree(void *ptr, char *err, char type, int num)
 {
-	char	*str;
-
 	if (type == 't')
 		free_token(ptr);
 	else if (type == 'c')
 		free_cmd(ptr);
 	if (err)
 		printf("%s\n", err);
-	str = ft_itoa(num);
-	handler(3, NULL, "?", str);
-	if (str)
-		free(str);
-/*
-**	perror(strerror(num));
-*/
+	errno = num;
+	ptr = NULL;
 }
 
 void	exfree(void *ptr, char *err, char type, int num)
@@ -93,5 +86,6 @@ void	exfree(void *ptr, char *err, char type, int num)
 		free_cmd(ptr);
 	if (err)
 		printf("%s\n", err);
+	ptr = NULL;
 	exit(num);
 }

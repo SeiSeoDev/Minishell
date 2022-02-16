@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:15:12 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/15 17:45:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,11 @@ static t_env	*mod_env(t_env *env, char *name, char *val, int add)
 			return (tmp);
 		}
 		if (!tmp->next)
-			break ;
+		{
+			if (name && val)
+				tmp->next = init_env(NULL, ft_strdup(name), ft_strdup(val));
+			return (tmp->next);
+		}
 		tmp = tmp->next;
 	}
 	if (!tmp)

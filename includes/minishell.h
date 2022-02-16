@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 07:20:11 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/16 12:04:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <errno.h>
 
 # define STDIN		0
 # define STDOUT		1
@@ -131,14 +132,14 @@ void	skip_cot(char *str, int *i);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
 int		quot_status(char *str, int i);
-void	token_syntax(t_token *token);
+t_token	*token_syntax(t_token *token);
 
 /*
 ** expend.c
 */
 
 char	*del_unused_quot(char *str);
-char	*expend_words(t_token *token, char *str);
+char	*expend_words(char *str);
 
 /*
 ** pars.c
@@ -203,7 +204,7 @@ char	*get_name(char *ret);
 ** cmd.c
 */
 
-void	parsing_error(t_cmd *cmd);
+t_cmd	*parsing_error(t_cmd *cmd);
 t_token	*cmd_arg(t_token **tmp);
 t_token	*cmd_redir(t_token **tmp);
 
@@ -221,10 +222,9 @@ void	close_fd(t_cmd *cmd);
 
 int		is_built(t_cmd *cmd);
 void	child(t_cmd *cmd);
-void define_sig(int isparent);
-void sig_handler(int sig);
-void sig_handler2(int sig);
-
+void	define_sig(int isparent);
+void	sig_handler(int sig);
+void	sig_handler2(int sig);
 
 t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token);
 void	cmd_add(t_token **tmp, t_cmd *data);

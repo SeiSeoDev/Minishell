@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 12:03:09 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/16 12:06:30 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ static int	exe_prog(t_cmd *cmd)
 		handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
 	}
 	if 	(execve(exe, arg, all) == -1)
-		printf("command failed\n");
+		exfree(cmd, "command failed\n", 'c', 127);
 	free(arg);
 	free(exe);
 	ft_free_tab(all);
-	return (1);
+	return (0);
 }
 
 static int	exe_cmd(t_cmd *cmd)
@@ -135,14 +135,14 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	if 	(execve(exe, arg, all) == -1)
-		exfree(cmd, "command failed\n", 'c', 1);
+		exfree(cmd, "command failed\n", 'c', 127);
 	if (arg)
 		free(arg);
 	if (exe)
 		free(exe);
 	if (all)
 		ft_free_tab(all);
-	return (1);
+	return (0);
 }
 
 void	ex_hit(t_cmd *cmd)
