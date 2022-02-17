@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ex_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/28 16:34:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:13:21 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,16 @@ void	ex_env(t_cmd *cmd)
 
 	env = get_env(handler(3, NULL, NULL, NULL));
 	i = 0;
-	while (env[i])
+	if (env)
 	{
-		ft_putstr_fd(env[i], cmd->fdout);
-		write(cmd->fdout, "\n", 1);
-		i++;
+		while (env[i])
+		{
+			ft_putstr_fd(env[i], cmd->fdout);
+			write(cmd->fdout, "\n", 1);
+			i++;
+		}
+		ft_free_tab(env);
 	}
-	free(env);
 }
 
 int	get_equalpos(char *str)

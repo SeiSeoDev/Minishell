@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:15:12 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:00:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,20 @@ static t_env	*init_handler(char **env)
 	return (myenv);
 }
 
-static t_env	*delone_env(t_env *env, char *del)
+static t_env	*delone_env(t_env **env, char *del)
 {
 	t_env	*tmp;
 	t_env	*save;
 
-	tmp = env;
+	tmp = *env;
 	save = NULL;
+	if (*env && (!ft_strncmp((*env)->name, del, ft_strlen(del))))
+	{
+		*env = (*env)->next;
+		tmp->next = NULL;
+		free_env(tmp);
+		return (*env);
+	}
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->name, del, ft_strlen(del)))
@@ -92,11 +99,18 @@ static t_env	*mod_env(t_env *env, char *name, char *val, int add)
 			return (tmp);
 		}
 		if (!tmp->next)
-			break ;
+		{
+			if (name && val)
+				tmp->next = init_env(NULL, ft_strdup(name), ft_strdup(val));
+			return (tmp->next);
+		}
 		tmp = tmp->next;
 	}
 	if (!tmp)
+	{
 		tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
+		printf("LOL\n");
+	}
 	return (tmp);
 }
 
@@ -115,7 +129,7 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 	else if (opt == 1)
 		res = addone_env(myenv, name, val);
 	else if (opt == 2)
-		res = delone_env(myenv, name);
+		res = delone_env(&myenv, name);
 	else if (opt == 3)
 		res = mod_env(myenv, name, val, 0);
 	else if (opt == 4)

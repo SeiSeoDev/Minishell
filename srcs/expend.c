@@ -3,59 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   expend.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:14:27 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/16 10:46:30 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*replace_str(char *str, char *old, char *new)
-{
-	char	*res;
-	int		i;
-	int		j;
-	int		k;
-
-	j = ft_strlen(old) + 1;
-	res = malloc(sizeof(char) * ((ft_strlen(str) - j) + (ft_strlen(new) + 1)));
-	if (!res)
-		return (NULL);
-	i = 0;
-	k = 0;
-	while (str[k] && ft_strncmp(&str[i], old, ft_strlen(old)))
-		res[i++] = str[k++];
-	if (i > 0)
-		i--;
-	if (new)
-	{
-		j = 0;
-		while (new[j])
-			res[i++] = new[j++];
-	}
-	k += ft_strlen(old);
-	ft_strcat(&res[i], &str[k]);
-	free(str);
-	return (res);
-}
-
-void del_unquot_extra(char *str, int *i, int *j)
+void del_unquot_extra(char *str, int *i, int *j, char q)
 {
 	int len;
 	
-	if (str[*i])
+	if (str[*j] == q && str[*i] == q)
 	{
-		while (*j < *i - 1)
+		while (str[*j])
 		{
 			str[*j] = str[*j + 1];
 			(*j)++;
 		}
-		len = *j - 1;
-		while (str[*j])
-			str[(*j)++] = str[++(*i)];
-		str[*j] = '\0';
+		len = --(*i) - 1;
+		while (str[*i])
+		{
+			str[*i] = str[*i + 1];
+			(*i)++;
+		}
+		str[*i- 1] = '\0';
 		*i = len;
 	}
 }
@@ -68,6 +42,8 @@ char	*del_unused_quot(char *str)
 	int		j;
 
 	i = 0;
+	if (!str)
+		return (NULL);
 	while (str[i])
 	{
 		if (str[i] == '"' || str[i] == '\'')
@@ -76,16 +52,43 @@ char	*del_unused_quot(char *str)
 			j = i++;
 			while (str[i] && str[i] != quot)
 				i++;
-			del_unquot_extra(str, &i, &j);
+			del_unquot_extra(str, &i, &j, quot);
 		}
-		i++;
+		else
+			i++;
 	}
 	res = ft_strdup(str);
 	free(str);
 	return (res);
 }
 
-char	*expend_words(t_token *token, char *str)
+static char	*replace_str(char *str, char *new, int i, int j)
+{
+	char	*res;
+	int		x;
+	int		y;
+	int		z;
+
+	res = ft_strnew(ft_strlen(str) - (i - j) + ft_strlen(new));
+	if (!res)
+		return (NULL);
+	y = 0;
+	x = 0;
+	while (str[y] && y < j)
+		res[x++] = str[y++];
+	if (new)
+	{
+		z = 0;
+		while (new[z])
+			res[x++] = new[z++];
+	}
+	y += i - j;
+	ft_strcat(&res[x], &str[y]);
+	free(str);
+	return (res);
+}
+
+char	*expend_words(char *str)
 {
 	int		i;
 	char	*util;
@@ -95,32 +98,46 @@ char	*expend_words(t_token *token, char *str)
 
 	i = 0;
 	util = NULL;
+	var = NULL;
 	res = str;
 	while (res[i])
 	{
 		if (res[i] == '$' && quot_status(res, i) != 1)
 		{
-			j = i;
-			if (ft_strncmp(&res[i], "$?", 2) == 0)
-				util = ft_strdup("$?");
+			j = i++;
+			if (ft_strncmp(&res[i], "?", 1) == 0)
+			{
+				util = ft_itoa(errno);
+				i++;
+			}
 			else
 			{
-				while (ft_isalnum(str[i]) || str[i] == '_')
+				while (ft_isalnum(res[i]) || res[i] == '_')
 					i++;
-				util = ft_strndup(&str[j + 1], (i + 1 - j));
+				util = ft_strndup(&res[j + 1], (i - (j + 1)));
+				var = handler(3, NULL, util, NULL);
+				if (util)
+				{
+					free(util);
+					util = NULL;
+				}
+				if (var)
+					util = ft_strdup(var->val);
+				else
+					util = NULL;
 			}
-			if (!util)
-				exfree(token, "Error in expend words...\n", 't', 1);
-			var = handler(3, NULL, util, NULL);
-			if (!var)
-				res = replace_str(str, util, NULL);
-			else
-				res = replace_str(str, util, var->val);
-			free(util);
+			res = replace_str(res, util, i, j);
 			if (!res)
 				return (NULL);
+			i = j + ft_strlen(util);
+			if (util)
+			{
+				free(util);
+				util = NULL;
+			}
 		}
-		i++;
+		else
+			i++;
 	}
 	return (del_unused_quot(res));
 }

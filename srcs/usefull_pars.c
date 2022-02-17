@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   usefull_pars.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:35:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/16 12:31:50 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	get_type(t_token *tmp, int *l, int *f)
 	}
 }
 
-void	token_syntax(t_token *token)
+t_token	*token_syntax(t_token *token)
 {
 	t_token	*tmp;
 
@@ -114,9 +114,16 @@ void	token_syntax(t_token *token)
 	while (tmp)
 	{
 		if (tmp->type == pip && !tmp->next)
-			exfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+		{
+			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+			return (NULL);
+		}
 		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
-			exfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+		{
+			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+			return (NULL);
+		}
 		tmp = tmp->next;
 	}
+	return (token);
 }

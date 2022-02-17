@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 15:56:23 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:13:36 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ static int	exe_prog(t_cmd *cmd)
 		handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
 	}
 	if 	(execve(exe, arg, all) == -1)
-		printf("command failed\n");
+		exfree(cmd, "command failed\n", 'c', 127);
 	free(arg);
 	free(exe);
 	ft_free_tab(all);
-	return (1);
+	return (0);
 }
 
 static int	exe_cmd(t_cmd *cmd)
@@ -135,7 +135,7 @@ static int	exe_cmd(t_cmd *cmd)
 		return (0);
 	}
 	if 	(execve(exe, arg, all) == -1)
-		exfree(cmd, "command failed\n", 'c', 1);
+		exfree(cmd, "command failed\n", 'c', 127);
 	if (arg)
 		free(arg);
 	if (exe)
@@ -192,7 +192,7 @@ void	exec(t_cmd *cmd)
 		else if (!ft_strcmp(cmd->arg->str, "export"))
 			ex_port(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "exit"))
-			ex_hit(cmd);
+			exfree(cmd, "exit", 'c', 0);
 		else if (!fdok)
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
@@ -202,6 +202,6 @@ void	exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
-	printf("fdout : %d\n", cmd->fdout);
+//	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
 }

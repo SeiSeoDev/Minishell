@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/01/28 16:21:04 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/17 10:32:44 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	cmd_creat(t_token *token)
 	t_cmd	*res;
 	t_token	*tmp;
 
+	if (!token)
+		child(NULL);
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
 		exfree(token, "Error init cmd\n", 't', 1);
@@ -33,7 +35,7 @@ void	cmd_creat(t_token *token)
 		else
 			cmd_add(&tmp, data);
 	}
-	parsing_error(res);
+	res = parsing_error(res);
 	print_cmd(res);
 	child(res);
 }
@@ -46,7 +48,11 @@ void	expension(t_token *token)
 	while (tmp)
 	{
 		if (tmp->type == word || tmp->type == fd)
-			tmp->str = expend_words(tmp, tmp->str);
+		{
+			tmp->str = expend_words(tmp->str);
+			if (!tmp->str || !ft_strcmp(tmp->str, ""))
+				del_token(&token, tmp);
+		}
 		tmp = tmp->next;
 	}
 	cmd_creat(token);
@@ -70,7 +76,7 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
-	token_syntax(token);
+	token = token_syntax(token);
 	expension(token);
 }
 
@@ -82,23 +88,28 @@ void	split_words(char *str)
 	int		last;
 
 	i = 0;
+	last = 0;
 	tmp = NULL;
 	token = NULL;
 	while (str[i])
 	{
 		split(str, &i, &last);
-		if (!token)
+		if (i > last)
 		{
-			token = init_token(NULL, ft_strndup(&str[last], i - last), 0);
-			tmp = token;
+			if (!token)
+			{
+				token = init_token(NULL, ft_strndup(&str[last], i - last), 0);
+				tmp = token;
+			}
+			else
+			{
+				token->next = init_token(NULL, ft_strndup(&str[last], i - last), 0);
+				token = token->next;
+			}
+			if (!token)
+				exfree(token, "error init token...\n", 't', 1);
 		}
-		else
-		{
-			token->next = init_token(NULL, ft_strndup(&str[last], i - last), 0);
-			token = token->next;
-		}
-		if (!token)
-			exfree(token, "error init token...\n", 't', 1);
 	}
+//	print_token(tmp);
 	tokenize(tmp);
 }

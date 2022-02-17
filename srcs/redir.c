@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 11:02:19 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:14:10 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,15 @@ static char	*heredoc(t_token *redir)
 	while (ft_strcmp(str, redir->str))
 	{
 		if (quot)
-			res = link_here(res, expend_words(NULL, str));
+			res = link_here(res, expend_words(str));
 		else
 			res = link_here(res, str);
+		if (str)
+			free(str);
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 	}
+	if (str)
+		free(str);
 	if (!res)
 		res = ft_strdup("");
 	return (res);
