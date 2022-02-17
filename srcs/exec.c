@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 11:13:36 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 12:13:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	exe_prog(t_cmd *cmd)
 	env = handler(3, NULL, "PWD", NULL);
 	exe = ft_strjoin(env->val, &cmd->arg->str[1]);
 	arg = creat_arg(cmd);
-	if (!env || !exe || !arg || !(find_file(exe)))
+	if (!env || !exe || !arg)
 	{
 		if (exe)
 			free(exe);
@@ -93,6 +93,19 @@ static int	exe_prog(t_cmd *cmd)
 			free(arg);
 		ft_free_tab(all);
 		return (0);
+	}
+	if (!find_file(exe))
+	{
+		printf("no such file or directory");
+		return (0);
+	}
+	else
+	{
+		if (access(exe, X_OK) == -1)
+		{
+			printf("no rights to exec");
+			return (0);
+		}
 	}
 	if (!ft_strcmp(cmd->arg->str, "./minishell"))
 	{
@@ -143,13 +156,6 @@ static int	exe_cmd(t_cmd *cmd)
 	if (all)
 		ft_free_tab(all);
 	return (1);
-}
-
-void	ex_hit(t_cmd *cmd)
-{
-	(void)cmd;
-	handler(4, NULL, NULL, NULL);
-	exit(EXIT_SUCCESS);
 }
 
 void	exec(t_cmd *cmd)

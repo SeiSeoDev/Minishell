@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ex_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 11:13:21 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:33:10 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,11 @@ void	ex_port(t_cmd *cmd)
 		}
 		else if (arg->str && get_equalpos(arg->str) == 2)
 		{
-			tab = get_separation(arg->str);
+			tab = get_separation(arg->str); 
 			handler(5, NULL, tab[0], tab[1]);
 		}
 		else
-			exfree(cmd, "minishell: export: identifiant non valable\n", 'c', 1);
+			return ;
 		arg = arg->next;
 	}
 	return ;
