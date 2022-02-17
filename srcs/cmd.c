@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 12:03:35 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/17 10:35:29 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ t_cmd	*parsing_error(t_cmd *cmd)
 {
 	t_token	*red;
 
+	if (!cmd)
+		return (NULL);
 	red = cmd->redir;
 	if (red)
 	{

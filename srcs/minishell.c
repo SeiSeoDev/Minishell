@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 12:03:34 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/16 15:03:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,11 @@ void	loop(void)
 		// printf("%s\n", str);
 		if (str == NULL)
 		{
-			ft_putchar_fd('\n', 1);
-			loop();
+			printf("exit\n");
+			handler(4, NULL, NULL, NULL);
+			exit(EXIT_SUCCESS);
+		//	ft_putchar_fd('\n', 1);
+		//	loop();
 		}
 		add_history(str);
 		split_words(str);

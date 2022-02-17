@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 09:58:08 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/16 12:31:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,49 @@ void	close_fd(t_cmd *cmd)
 	{
 		if (token->fd != 1 && token->fd != 0)
 		{
-			printf("close fd -> %d", token->fd);
+			printf("close fd -> %d\n", token->fd);
 			close(token->fd);
 		}
 		token = token->next;
 	}
+}
+
+int isntopen(t_cmd *cmd)
+{
+	t_token *token;
+
+	token = cmd->redir;
+	if (!token)
+		return (0);
+	if (token->type == rout || token->type == rdout)
+	{
+		if (cmd->fdout <= 0)
+		{
+			if (access(token->next->str, R_OK ) != 0 )
+				printf("%s: No such file or directory\n", token->next->str);
+			else
+				printf("%s: OAUI Permission denied\n", token->next->str);
+			return (1);
+		}
+	}
+	else if (token->type == rin)
+	{
+		if (cmd->fdin <= 0)
+		{
+			if (access(token->next->str, F_OK ) != 0 )
+			{
+				ft_putstr_fd(token->next->str, 2);
+				ft_putstr_fd(": No such file or directory\n", 2);
+			}
+			else
+			{
+				ft_putstr_fd(token->next->str, 2);
+				ft_putstr_fd(": Permission denied\n", 2);
+			}
+			return (1);
+		}
+	}
+	return (0);
 }
 
 char	*fill_fd(t_cmd *cmd)
@@ -107,7 +145,7 @@ char	*fill_fd(t_cmd *cmd)
 			if (cmd->fdin)
 			token->fd = cmd->fdin;
 		}
-		else if (token->type == rdin)
+		if (token->type == rdin)
 		{
 			doc = heredoc(token->next);
 			if (!doc)
@@ -116,6 +154,7 @@ char	*fill_fd(t_cmd *cmd)
 		}
 		token = token->next;
 	}
+	//isntopen(cmd);
 	return (NULL);
 }
 

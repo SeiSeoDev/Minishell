@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/16 12:06:30 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/17 10:27:23 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,16 +145,11 @@ static int	exe_cmd(t_cmd *cmd)
 	return (0);
 }
 
-void	ex_hit(t_cmd *cmd)
-{
-	(void)cmd;
-	exit(EXIT_SUCCESS);
-}
-
 void	exec(t_cmd *cmd)
 {
 	char	*doc;
 	int		pipfd[2];
+	int		fdok;
 
 	doc = NULL;
 	if (cmd->redir)
@@ -174,7 +169,8 @@ void	exec(t_cmd *cmd)
 		}
 	}
 	dup2(cmd->fdin, STDIN_FILENO);
-	if (cmd != NULL && cmd->arg != NULL)
+	fdok = isntopen(cmd);
+	if (cmd != NULL && cmd->arg != NULL && !fdok)
 	{
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);
@@ -189,8 +185,8 @@ void	exec(t_cmd *cmd)
 		else if (!ft_strcmp(cmd->arg->str, "export"))
 			ex_port(cmd);
 		else if (!ft_strcmp(cmd->arg->str, "exit"))
-			ex_hit(cmd);
-		else
+			exfree(cmd, "exit", 'c', 0);
+		else if (!fdok)
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
 			if (!ft_strncmp(cmd->arg->str, "./", 2))
@@ -199,6 +195,6 @@ void	exec(t_cmd *cmd)
 				printf("Minishell: %s: command not found\n", cmd->arg->str);
 		}
 	}
-	printf("fdout : %d\n", cmd->fdout);
+//	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
 }

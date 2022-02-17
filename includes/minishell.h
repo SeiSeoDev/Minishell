@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 12:04:02 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/17 10:57:15 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,7 @@ t_token	*cmd_redir(t_token **tmp);
 int		find_file(char *path);
 char	*fill_fd(t_cmd *cmd);
 void	close_fd(t_cmd *cmd);
+int		isntopen(t_cmd *cmd);
 
 /*
 ** fork.c

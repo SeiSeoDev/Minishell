@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 12:05:18 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/17 10:32:44 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,11 @@ void	expension(t_token *token)
 	while (tmp)
 	{
 		if (tmp->type == word || tmp->type == fd)
+		{
 			tmp->str = expend_words(tmp->str);
+			if (!tmp->str || !ft_strcmp(tmp->str, ""))
+				del_token(&token, tmp);
+		}
 		tmp = tmp->next;
 	}
 	cmd_creat(token);
@@ -106,6 +110,6 @@ void	split_words(char *str)
 				exfree(token, "error init token...\n", 't', 1);
 		}
 	}
-	print_token(tmp);
+//	print_token(tmp);
 	tokenize(tmp);
 }
