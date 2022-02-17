@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 15:44:57 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:02:19 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	close_fd(t_cmd *cmd)
 	{
 		if (token->fd != 1 && token->fd != 0)
 		{
-			printf("close fd -> %d\n", token->fd);
+		//	printf("close fd -> %d\n", token->fd);
 			close(token->fd);
 		}
 		token = token->next;

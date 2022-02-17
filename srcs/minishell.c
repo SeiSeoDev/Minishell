@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 15:38:50 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 10:11:03 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void	loop(void)
 		// printf("%s\n", str);
 		if (str == NULL)
 		{
-			ft_putchar_fd('\n', 1);
-			loop();
+			printf("exit\n");
+			ex_hit(NULL);
 		}
 		add_history(str);
 		split_words(str);

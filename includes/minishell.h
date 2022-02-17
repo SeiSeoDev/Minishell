@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 15:19:22 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 10:11:37 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,7 @@ void	ex_unset(t_cmd *cmd);
 */
 
 void	exec(t_cmd *cmd);
+void	ex_hit(t_cmd *cmd);
 
 /*
 ** path.c
