@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/15 15:36:07 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 15:44:57 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,10 @@ int isntopen(t_cmd *cmd)
 	{
 		if (cmd->fdout <= 0)
 		{
-			if (access(token->next->str, R_OK ) != 0 )
+			if (access(token->next->str, F_OK ) != 0 )
 				printf("%s: No such file or directory\n", token->next->str);
 			else
-				printf("%s: OAUI Permission denied\n", token->next->str);
+				printf("%s: Permission denied\n", token->next->str);
 			return (1);
 		}
 	}

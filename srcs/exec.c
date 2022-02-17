@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 15:33:29 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/15 15:56:23 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ static int	exe_cmd(t_cmd *cmd)
 void	ex_hit(t_cmd *cmd)
 {
 	(void)cmd;
+	handler(4, NULL, NULL, NULL);
 	exit(EXIT_SUCCESS);
 }
 

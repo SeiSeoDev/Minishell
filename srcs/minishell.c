@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/15 12:03:34 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/15 15:38:50 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void sig_handler(int sig)
 	}
 	else if (sig == SIGQUIT)
 	{
+		ft_putstr_fd("\b\b  \b\b", 1);
 		return;
 	}
 }
@@ -116,7 +117,7 @@ int	main(int ac, char **av, char **env)
 	}
 	printf("PID : %d\n", getpid());
 	signal(SIGINT, sig_handler2);
-	signal(SIGQUIT, sig_handler2);
+	signal(SIGQUIT, sig_handler);
 	loop();
 	return (1);
 }
