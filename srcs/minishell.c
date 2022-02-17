@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 18:54:34 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/17 18:57:30 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,31 @@
 int	find_file(char *path)
 {
 	struct stat	sb;
-	int			res;
+	// int			res;
 
 	if (!path)
 		return (0);
 	if (lstat(path, &sb) == -1)
 		return (0);
-	printf("Type de fichier : ");
-	res = (sb.st_mode & S_IFMT);
-	if (res == S_IFBLK)
-		printf("périphérique de bloc\n");
-	else if (res == S_IFCHR)
-		printf("périphérique de caractère\n");
-	else if (res == S_IFDIR)
-		printf("répertoire\n");
-	else if (res == S_IFIFO)
-		printf("FIFO/tube\n");
-	else if (res == S_IFLNK)
-		printf("lien symbolique\n");
-	else if (res == S_IFREG)
-		printf("fichier ordinaire\n");
-	else if (res == S_IFSOCK)
-		printf("socket\n");
-	else
-		printf("inconnu ?\n");
-	return (res);
+	// printf("Type de fichier : ");
+	// res = (sb.st_mode & S_IFMT);
+	// if (res == S_IFBLK)
+	// 	printf("périphérique de bloc\n");
+	// else if (res == S_IFCHR)
+	// 	printf("périphérique de caractère\n");
+	// else if (res == S_IFDIR)
+	// 	printf("répertoire\n");
+	// else if (res == S_IFIFO)
+	// 	printf("FIFO/tube\n");
+	// else if (res == S_IFLNK)
+	// 	printf("lien symbolique\n");
+	// else if (res == S_IFREG)
+	// 	printf("fichier ordinaire\n");
+	// else if (res == S_IFSOCK)
+	// 	printf("socket\n");
+	// else
+	// 	printf("inconnu ?\n");
+	return (1);
 }
 
 void	loop(void)
