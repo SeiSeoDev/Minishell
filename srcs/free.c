@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 10:57:02 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/21 14:30:56 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ void	free_token(t_token *token)
 		while (token)
 		{
 			if (token->str)
-			{
 				free(token->str);
-			}
 			tmp = token;
 			token = token->next;
 			free(tmp);
@@ -45,6 +43,7 @@ void	free_cmd(t_cmd *cmd)
 		cmd = cmd->next;
 		free(tmp);
 	}
+	cmd = NULL;
 }
 
 void	free_env(t_env *env)
@@ -63,6 +62,7 @@ void	free_env(t_env *env)
 		env = env->next;
 		free(tmp);
 	}
+	env = NULL;
 }
 
 void	ctrfree(void *ptr, char *err, char type, int num)
