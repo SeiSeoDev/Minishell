@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/21 14:30:48 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/21 14:31:47 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,8 @@ void	loop(void)
 
 void sig_handler(int sig)
 {
-<<<<<<< HEAD
 	printf("Quit (core dumped)\n");
 	if (sig == SIGINT) 
-=======
-	printf("TEST\n");
-	if (sig == SIGINT)
->>>>>>> 572d9fe4ee62079e143d075cb9c2a247cb7993bb
 	{
 		rl_replace_line("", 0);
 		printf("\nIS PARENT\n");
