@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 11:07:53 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/17 14:08:58 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ int	ex_cd(t_cmd *cmd)
 		str = ft_strjoin(str, cmd->arg->next->str);
 	}
 	if (chdir(str) == -1)
-		return (0); // rajouter le msg d erreur
+	{
+		printf("Minishell: cd: %s: Not a directory\n", str);
+		return (0); 
+	}
 	else
 	{
 		handler(3, NULL, "OLDPWD", handler(3, NULL, "PWD", NULL)->val);
