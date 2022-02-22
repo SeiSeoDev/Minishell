@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/22 17:31:07 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/22 18:08:20 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ char	*fill_fd(t_cmd *cmd)
 				printf("Minishell: %s: Permission denied\n", token->next->str);
 				exfree(cmd, NULL, 'c', 1);
 			}
-			token->fd = cmd->fdout;
+			// token->fd = cmd->fdout;
 		}
 		else if (token->type == rdout)
 		{
@@ -150,7 +150,7 @@ char	*fill_fd(t_cmd *cmd)
 				printf("Minishell: %s: Permission denied\n", token->next->str);
 				exfree(cmd, NULL, 'c', 1);
 			}
-			token->fd = cmd->fdout;
+			// token->fd = cmd->fdout;
 		}
 		else if (token->type == rin)
 		{
@@ -165,7 +165,7 @@ char	*fill_fd(t_cmd *cmd)
 				printf("Minishell: %s: No such file or directory\n", token->next->str);
 				exfree(cmd, NULL, 'c', 1);
 			}
-			token->fd = cmd->fdin;
+			// token->fd = cmd->fdin;
 		}
 		if (token->type == rdin)
 		{
@@ -184,6 +184,7 @@ char	*fill_fd(t_cmd *cmd)
 		write(pipfd[1], doc, ft_strlen(doc));
 		dup2(pipfd[0], cmd->fdin);
 		close(pipfd[1]);
+		// close(pipfd[0]);
 		free(doc);
 	}
 	return (NULL);

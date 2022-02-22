@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/22 17:10:56 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/22 18:10:42 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	exec(t_cmd *cmd)
 	int		fdok;
 
 	if (cmd->redir)
-		fill_fd(cmd);
+	  	fill_fd(cmd);
 	dup2(cmd->fdin, STDIN_FILENO);
 	fdok = isntopen(cmd);
 	if (cmd != NULL && cmd->arg != NULL && !fdok)
@@ -151,9 +151,9 @@ void	exec(t_cmd *cmd)
 			dup2(cmd->fdout, STDOUT_FILENO);
 			if (exe_cmd(cmd) == 0)
 			{
-				if (ft_strncmp(cmd->arg->str, "/", 1))
+				if (!ft_strncmp(cmd->arg->str, "/", 1))
 					printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
-				else if (ft_strncmp(cmd->arg->str, ".", 1))
+				else
 					printf("Minishell: %s: command not found\n", cmd->arg->str);
 			}
 		}
