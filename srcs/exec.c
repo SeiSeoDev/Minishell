@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 12:13:40 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/22 17:10:56 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,118 +69,65 @@ static char	*creat_exe(t_env *env, t_cmd *cmd)
 	return (NULL);
 }
 
-static int	exe_prog(t_cmd *cmd)
-{
-	t_env	*env;
-	char	**arg;
-	char	*exe;
-	char	**all;
-
-	env = handler(3, NULL, NULL, NULL);
-	if (!env)
-		return (0);
-	all = get_env(env);
-	if (!all)
-		return (0);
-	env = handler(3, NULL, "PWD", NULL);
-	exe = ft_strjoin(env->val, &cmd->arg->str[1]);
-	arg = creat_arg(cmd);
-	if (!env || !exe || !arg)
-	{
-		if (exe)
-			free(exe);
-		if (arg)
-			free(arg);
-		ft_free_tab(all);
-		return (0);
-	}
-	if (!find_file(exe))
-	{
-		printf("no such file or directory");
-		return (0);
-	}
-	else
-	{
-		if (access(exe, X_OK) == -1)
-		{
-			printf("no rights to exec");
-			return (0);
-		}
-	}
-	if (!ft_strcmp(cmd->arg->str, "./minishell"))
-	{
-		printf("+1\n");
-		handler(3, NULL, "SHLVL", ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1));
-	}
-	if 	(execve(exe, arg, all) == -1)
-		exfree(cmd, "command failed\n", 'c', 127);
-	free(arg);
-	free(exe);
-	ft_free_tab(all);
-	return (0);
-}
-
 static int	exe_cmd(t_cmd *cmd)
 {
 	t_env	*env;
 	char	**arg;
 	char	*exe;
 	char	**all;
+	int		res;
 
 	env = handler(3, NULL, "PATH", NULL);
-	if (!env)
-		return (0);
 	exe = creat_exe(env, cmd);
 	if (!exe)
-		return (0);
-	arg = creat_arg(cmd);
-	env = handler(3, NULL, NULL, NULL);
-	if (!env)
-		return (0);
-	all = get_env(env);
-	if (!arg || !all)
 	{
-		free(exe);
-		if (all)
-			ft_free_tab(all);
-		if (arg)
-			free(arg);
-		return (0);
+		if (!ft_strncmp(cmd->arg->str, ".", 1))
+		{
+			env = handler(3, NULL, "PWD", NULL);
+			if (env)
+				exe = ft_strjoin(env->val, &cmd->arg->str[1]);
+		}
+		else if (!ft_strncmp(cmd->arg->str, "/", 1))
+		{
+			if (find_file(cmd->arg->str) || !ft_strcmp(cmd->arg->str, "/"))
+			{
+				printf("Minishell: %s: Is a directory\n", cmd->arg->str);
+				return (-1);
+			}
+			else
+				return (0);
+		}
 	}
-	if 	(execve(exe, arg, all) == -1)
-		exfree(cmd, "command failed\n", 'c', 127);
+	env = handler(3, NULL, NULL, NULL);
+	all = get_env(env);
+	arg = creat_arg(cmd);
+	res = find_file(exe);
+	if (!arg || !all || !exe || !res)
+		res = 0;
+	else if (access(exe, X_OK) == -1)
+	{
+		printf("Minishel: %s: Permission denied\n", cmd->arg->str);
+		res = -1;
+	}
+	else if (execve(exe, arg, all) == -1)
+		res = 0;
+	else
+		res = 1;
 	if (arg)
 		free(arg);
 	if (exe)
 		free(exe);
 	if (all)
 		ft_free_tab(all);
-	return (1);
+	return (res);
 }
 
 void	exec(t_cmd *cmd)
 {
-	char	*doc;
-	int		pipfd[2];
 	int		fdok;
 
-	doc = NULL;
 	if (cmd->redir)
-	{
-		doc = fill_fd(cmd);
-		if (doc)
-		{
-			if (!(is_built(cmd)))
-			{
-				if (pipe(pipfd) == -1)
-					exfree(cmd, "pipe failed\n", 'c', 1);
-				write(pipfd[1], doc, ft_strlen(doc));
-				dup2(pipfd[0], cmd->fdin);
-				close(pipfd[1]);
-			}
-			free(doc);
-		}
-	}
+		fill_fd(cmd);
 	dup2(cmd->fdin, STDIN_FILENO);
 	fdok = isntopen(cmd);
 	if (cmd != NULL && cmd->arg != NULL && !fdok)
@@ -202,12 +149,14 @@ void	exec(t_cmd *cmd)
 		else if (!fdok)
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
-			if (!ft_strncmp(cmd->arg->str, "./", 2))
-				exe_prog(cmd);
-			else if (!exe_cmd(cmd))
-				printf("Minishell: %s: command not found\n", cmd->arg->str);
+			if (exe_cmd(cmd) == 0)
+			{
+				if (ft_strncmp(cmd->arg->str, "/", 1))
+					printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
+				else if (ft_strncmp(cmd->arg->str, ".", 1))
+					printf("Minishell: %s: command not found\n", cmd->arg->str);
+			}
 		}
 	}
-//	printf("fdout : %d\n", cmd->fdout);
 	close_fd(cmd);
 }

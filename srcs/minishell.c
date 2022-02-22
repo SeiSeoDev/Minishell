@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/21 14:31:47 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/22 17:13:54 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,29 @@
 int	find_file(char *path)
 {
 	struct stat	sb;
-	// int			res;
+	int			res;
 
 	if (!path)
 		return (0);
 	if (lstat(path, &sb) == -1)
 		return (0);
-	// printf("Type de fichier : ");
-	// res = (sb.st_mode & S_IFMT);
-	// if (res == S_IFBLK)
-	// 	printf("périphérique de bloc\n");
-	// else if (res == S_IFCHR)
-	// 	printf("périphérique de caractère\n");
-	// else if (res == S_IFDIR)
-	// 	printf("répertoire\n");
-	// else if (res == S_IFIFO)
-	// 	printf("FIFO/tube\n");
-	// else if (res == S_IFLNK)
-	// 	printf("lien symbolique\n");
-	// else if (res == S_IFREG)
-	// 	printf("fichier ordinaire\n");
-	// else if (res == S_IFSOCK)
-	// 	printf("socket\n");
-	// else
-	// 	printf("inconnu ?\n");
-	return (1);
+	res = (sb.st_mode & S_IFMT);
+	if (res == S_IFBLK)
+		return (1);
+	else if (res == S_IFCHR)
+		return (2);
+	else if (res == S_IFDIR)
+		return (3);
+	else if (res == S_IFIFO)
+		return (4);
+	else if (res == S_IFLNK)
+		return (5);
+	else if (res == S_IFREG)
+		return (6);
+	else if (res == S_IFSOCK)
+		return (7);
+	else
+		return (8);
 }
 
 void	loop(void)
@@ -90,12 +88,14 @@ int	main(int ac, char **av, char **env)
 	str = ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1);
 	myenv = handler(3, NULL, "SHLVL", str);
 	free(str);
-	myenv = handler(3, NULL, NULL, NULL);
-	while (myenv)
-	{
-		printf("%s=%s\n", myenv->name, myenv->val);
-		myenv = myenv->next;
-	}
+/*
+**	myenv = handler(3, NULL, NULL, NULL);
+**	while (myenv)
+**	{
+**		printf("%s=%s\n", myenv->name, myenv->val);
+**		myenv = myenv->next;
+**	}
+*/
 	printf("PID : %d\n", getpid());
 	signal(SIGINT, sig_handler2);
 	signal(SIGQUIT, sig_handler2);
