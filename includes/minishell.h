@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/21 14:31:33 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/22 13:03:32 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ void	child(t_cmd *cmd);
 void	define_sig(int isparent);
 void	sig_handler(int sig);
 void	sig_handler2(int sig);
-
+void sig_heredoc(int sig);
 t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token);
 void	cmd_add(t_token **tmp, t_cmd *data);
 

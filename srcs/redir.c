@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/21 14:30:53 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/22 13:29:57 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static char	*heredoc(t_token *redir)
 	redir->str = del_unused_quot(redir->str);
 	while (ex == 0)
 	{
+		signal(SIGINT, sig_heredoc);
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 		if(str)
 		{
@@ -64,7 +65,7 @@ static char	*heredoc(t_token *redir)
 				res = link_here(res, expend_words(str));
 			else if (quot == 0 && ex == 0)
 				res = link_here(res, str);
-			free(str);
+			//free(str); suppr cause doublefree
 		}
 		else
 			ex = 1;

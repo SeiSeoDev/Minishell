@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/21 14:31:47 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:47:19 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int	main(int ac, char **av, char **env)
 	}
 	printf("PID : %d\n", getpid());
 	signal(SIGINT, sig_handler2);
+	signal(42, sig_handler2);
 	signal(SIGQUIT, sig_handler2);
 	loop();
 	return (1);
