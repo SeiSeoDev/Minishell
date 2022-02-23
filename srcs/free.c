@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/21 14:30:56 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:08:39 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,5 @@ void	exfree(void *ptr, char *err, char type, int num)
 		free_cmd(ptr);
 	if (err)
 		printf("%s\n", err);
-	ptr = NULL;
 	exit(num);
 }

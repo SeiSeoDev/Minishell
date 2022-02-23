@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expend.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 10:46:30 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/23 14:09:05 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ char	*del_unused_quot(char *str)
 			i++;
 	}
 	res = ft_strdup(str);
-	free(str);
+	if (str)
+		free(str);
 	return (res);
 }
 
@@ -84,7 +85,8 @@ static char	*replace_str(char *str, char *new, int i, int j)
 	}
 	y += i - j;
 	ft_strcat(&res[x], &str[y]);
-	free(str);
+	if (str)
+		free(str);
 	return (res);
 }
 
@@ -115,14 +117,13 @@ char	*expend_words(char *str)
 				while (ft_isalnum(res[i]) || res[i] == '_')
 					i++;
 				util = ft_strndup(&res[j + 1], (i - (j + 1)));
-				var = handler(3, NULL, util, NULL);
 				if (util)
 				{
+					var = handler(3, NULL, util, NULL);
 					free(util);
-					util = NULL;
+					if (var)
+						util = ft_strdup(var->val);
 				}
-				if (var)
-					util = ft_strdup(var->val);
 				else
 					util = NULL;
 			}
@@ -131,10 +132,7 @@ char	*expend_words(char *str)
 				return (NULL);
 			i = j + ft_strlen(util);
 			if (util)
-			{
 				free(util);
-				util = NULL;
-			}
 		}
 		else
 			i++;
