@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 14:05:31 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:12:05 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,21 @@ void sig_handler2(int sig)
 		ft_putchar_fd('\n', 1);
 		rl_redisplay();
 	}
-	else if (gl_state == 1)
+	else if (sig == SIGQUIT && gl_state == 1)
 	{
-		//need pid to kill the child process
 		ft_putstr_fd("Quit (core dumped)\n", 2);
 	}
-	else
+	else if (sig == SIGQUIT)
 		ft_putstr_fd("\b\b  \b\b", 1);
 }
 
+void sig_heredoc(int sig)
+{
+	rl_on_new_line();
+	(void)sig;
+	ft_putchar_fd('\n', 1);
+	exit(0);
+}
 void	child(t_cmd *cmd)
 {
 	int		*pipefd;
@@ -82,10 +88,11 @@ void	child(t_cmd *cmd)
 	t_cmd	*tmp;
 	
 	tmp = cmd;
-	gl_state = 1;
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
+	gl_state = 1;
+
 	i = 0;
 	if (get_nbpipe(cmd) == 1 && is_built(cmd))
 		exec(cmd);
