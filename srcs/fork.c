@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/22 18:10:07 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:05:31 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void	child(t_cmd *cmd)
 	{
 		while (i < get_nbpipe(cmd))
 		{
+			printf("In pipe\n");
 			pipe(&pipefd[i * 2]);
 			pitab[i] = fork();
 			if (pitab[i] == 0)
@@ -111,6 +112,7 @@ void	child(t_cmd *cmd)
 			dup2(pipefd[i * 2], fd_in);
 			close(pipefd[i * 2]);
 			close(pipefd[i * 2 + 1]);
+			printf("Out\n");
 			i++;
 			tmp = tmp->next;
 		}

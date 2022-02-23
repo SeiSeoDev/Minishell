@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/22 18:08:20 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:01:12 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,20 +172,22 @@ char	*fill_fd(t_cmd *cmd)
 			if (doc)
 				free(doc);
 			doc = heredoc(token->next);
-			if (!doc)
-				return (NULL);
+			cmd->fdin = open(token->next->str,  O_RDONLY);
 		}
 		token = token->next;
 	}
 	if (doc)
 	{
-		if (pipe(pipfd) == -1)
-			return (NULL);
-		write(pipfd[1], doc, ft_strlen(doc));
-		dup2(pipfd[0], cmd->fdin);
-		close(pipfd[1]);
-		// close(pipfd[0]);
+		if (!is_built(cmd))
+		{
+			if (pipe(pipfd) == -1)
+				return (NULL);
+			write(pipfd[1], doc, ft_strlen(doc));
+			dup2(pipfd[0], cmd->fdin);
+			close(pipfd[1]);
+			close(pipfd[0]);
+		}
 		free(doc);
 	}
-	return (NULL);
+	return (doc);
 }

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/22 18:10:42 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:09:07 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ static int	exe_cmd(t_cmd *cmd)
 			else
 				return (0);
 		}
+		else
+			return (0);
 	}
 	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
