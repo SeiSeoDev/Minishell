@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 14:10:39 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:43:55 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static char	*heredoc(t_token *redir)
 	redir->str = del_unused_quot(redir->str);
 	while (ex == 0)
 	{
-		signal(SIGINT, sig_heredoc);
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 		if (str && ft_strcmp(redir->str, str) != 0)
 		{

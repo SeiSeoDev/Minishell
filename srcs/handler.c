@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 11:26:47 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/23 17:54:19 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ static t_env	*addone_env(t_env *env, char *name, char *val)
 	return (tmp);
 }
 
-static t_env	*mod_env(t_env *env, char *name, char *val, int add)
+static t_env	*mod_env(t_env **env, char *name, char *val, int add)
 {
 	t_env	*tmp;
 
-	tmp = env;
+	tmp = *env;
 	if (!name)
 		return (tmp);
 	while (tmp)
@@ -108,8 +108,8 @@ static t_env	*mod_env(t_env *env, char *name, char *val, int add)
 	}
 	if (!tmp)
 	{
-		tmp = init_env(NULL, ft_strdup(name), ft_strdup(val));
-		printf("LOL\n");
+		*env = init_env(NULL, ft_strdup(name), ft_strdup(val));
+		tmp = *env;
 	}
 	return (tmp);
 }
@@ -118,10 +118,16 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 {
 	t_env			*res;
 	static t_env	*myenv;
+	// static int		ret;
 
 	res = NULL;
+	// if (name && !ft_strcmp(name, "?") && !val)
+	// 	return (init_env(NULL, ft_strdup(name), ft_itoa(ret)));
+	// else if (name && !ft_strcmp(name, "?") && val)
+	// 	ret = ft_atoi(val);
 	if (opt == 0)
 	{
+		// ret = 0;
 		myenv = init_handler(env);
 		if (!myenv)
 			exfree(NULL, "Error in init_handler", 0, 1);
@@ -131,10 +137,11 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 	else if (opt == 2)
 		res = delone_env(&myenv, name);
 	else if (opt == 3)
-		res = mod_env(myenv, name, val, 0);
+		res = mod_env(&myenv, name, val, 0);
 	else if (opt == 4)
 		free_env(myenv);
 	else if (opt == 5)
-		res = mod_env(myenv, name, val, 1);
+		res = mod_env(&myenv, name, val, 1);
+	// printf("ret = %d\n", ret);
 	return (res);
 }

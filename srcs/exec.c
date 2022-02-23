@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/23 14:09:07 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 17:43:52 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static char	*creat_exe(t_env *env, t_cmd *cmd)
 	int		i;
 	int		j;
 
-	if (!env->val)
+	if (!env || !env->val)
 		return (NULL);
 	i = -1;
 	j = i + 1;
@@ -92,7 +92,7 @@ static int	exe_cmd(t_cmd *cmd)
 			if (find_file(cmd->arg->str) || !ft_strcmp(cmd->arg->str, "/"))
 			{
 				printf("Minishell: %s: Is a directory\n", cmd->arg->str);
-				return (-1);
+				exfree(cmd, NULL, 'c', 127);
 			}
 			else
 				return (0);
@@ -104,14 +104,18 @@ static int	exe_cmd(t_cmd *cmd)
 	all = get_env(env);
 	arg = creat_arg(cmd);
 	res = find_file(exe);
+	printf("exe = %s\n", exe);
 	if (!arg || !all || !exe || !res)
+	{
+		printf("error\n");
 		res = 0;
-	else if (access(exe, X_OK) == -1)
+	}
+	if (access(exe, X_OK) == -1)
 	{
 		printf("Minishel: %s: Permission denied\n", cmd->arg->str);
 		res = -1;
 	}
-	else if (execve(exe, arg, all) == -1)
+	if (execve(exe, arg, all) == -1)
 		res = 0;
 	else
 		res = 1;
