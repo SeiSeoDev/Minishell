@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/23 14:09:07 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/24 12:35:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,15 @@ static int	exe_cmd(t_cmd *cmd)
 void	exec(t_cmd *cmd)
 {
 	int		fdok;
+	char	*doc;
 
 	if (cmd->redir)
-	  	fill_fd(cmd);
+	  	doc = fill_fd(cmd);
+	if (doc)
+	{
+		write(cmd->fdin, doc, ft_strlen(doc));
+		free(doc);
+	}
 	dup2(cmd->fdin, STDIN_FILENO);
 	fdok = isntopen(cmd);
 	if (cmd != NULL && cmd->arg != NULL && !fdok)

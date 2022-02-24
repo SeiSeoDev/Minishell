@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/23 14:08:45 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/24 12:01:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ void sig_handler(int sig)
 
 int	main(int ac, char **av, char **env)
 {
-	t_env	*myenv;
+	// t_env	*myenv;
 	char	*str;
 
 	(void)ac;
 	(void)av;
 	handler(0, env, NULL, NULL);
 	str = ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1);
-	myenv = handler(3, NULL, "SHLVL", str);
+	handler(3, NULL, "SHLVL", str);
 	free(str);
 /*
 **	myenv = handler(3, NULL, NULL, NULL);
