@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:15:27 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 19:36:48 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ void	child(t_cmd *cmd)
 			tmp->pid = fork();
 			if (tmp->pid == 0)
 			{
+				printf("cmd nb: %d\n", i);
 				signal(SIGQUIT, SIG_DFL);
 				if (get_nbpipe(cmd) != get_nbpipe(tmp) || herdoc(tmp))
 					dup2(fd_in, STDIN_FILENO);
@@ -162,7 +163,7 @@ void	child(t_cmd *cmd)
 				close(pipefd[i * 2 + 1]);
 				close(fd_in);
 				exec(tmp);
-				exfree(tmp, NULL, 'c', 1);
+				exfree(cmd, NULL, 'c', 1);
 			}
 			dup2(pipefd[i * 2], fd_in);
 			close(pipefd[i * 2]);

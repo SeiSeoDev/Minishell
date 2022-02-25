@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 16:18:17 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:37:56 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,14 @@ t_cmd	*parsing_error(t_cmd *cmd)
 	{
 		while (red)
 		{
-			if (red->type == word || red->type == pip)
+			if ((red->type == word || red->type == pip) ||
+				((red->type == rdout || red->type == rdin || red->type == rin
+				|| red->type == rout) && red->next && red->next->type >= 3) ||
+				((red->type == rdout || red->type == rdin
+				|| red->type == rin || red->type == rout) && (!red->next)))
 			{
-				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 2);
-				return (NULL);
-			}
-			else if ((red->type == rdout || red->type == rdin || red->type == rin
-				|| red->type == rout) && red->next && red->next->type >= 3)
-			{
-				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 2);
-				return (NULL);
-			}
-			else if ((red->type == rdout || red->type == rdin
-				|| red->type == rin || red->type == rout) && (!red->next))
-			{
-				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 2);
+				printf("Minishell: syntax error near unexpected token: %s\n", red->str);
+				ctrfree(cmd, NULL, 'c', 2);
 				return (NULL);
 			}
 			red = red->next;

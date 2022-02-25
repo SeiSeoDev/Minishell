@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 16:17:11 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:37:53 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,21 +109,29 @@ void	get_type(t_token *tmp, int *l, int *f)
 t_token	*token_syntax(t_token *token)
 {
 	t_token	*tmp;
+	int		ret;
 
 	tmp = token;
-	while (tmp)
+	ret = 0;
+	if (!token)
+		return (NULL);
+	if (tmp->type == pip)
+		ret = 1;
+	while (tmp && ret == 0)
 	{
-		if (tmp->type == pip && !tmp->next)
-		{
-			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 2);
-			return (NULL);
-		}
-		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
-		{
-			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 2);
-			return (NULL);
-		}
+		if ((tmp->type == pip && !tmp->next) ||
+			(tmp->type == pip && tmp->next && tmp->next->type == pip) ||
+			(tmp->type >= 3 && tmp->next && tmp->next->type >= pip))
+			ret = 1;
+		if (!tmp->next)
+			break ;
 		tmp = tmp->next;
+	}
+	if (ret == 1)
+	{
+		printf("Minishell: syntax error near unexpected token: %s\n", tmp->str);
+		ctrfree(token, NULL, 't', 2);
+		return (NULL);
 	}
 	return (token);
 }

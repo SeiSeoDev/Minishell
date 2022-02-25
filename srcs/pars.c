@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 11:51:31 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/25 19:23:05 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ void	cmd_creat(t_token *token)
 		else
 			cmd_add(&tmp, data);
 	}
-	res = parsing_error(res);
-	if (!res)
+	if (!parsing_error(res))
 		return ;
 	print_cmd(res);
 	child(res);
@@ -78,7 +77,8 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
-	token = token_syntax(token);
+	if (!token_syntax(token))
+		return ;
 	expension(token);
 }
 
@@ -109,7 +109,10 @@ void	split_words(char *str)
 				token = token->next;
 			}
 			if (!token)
-				exfree(token, "error init token...\n", 't', 1);
+			{
+				ctrfree(tmp, "error init token...\n", 't', 1);
+				return ;
+			}
 		}
 	}
 //	print_token(tmp);
