@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 15:34:17 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 15:56:55 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 18:32:26 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ void	ctrfree(void *ptr, char *err, char type, int num)
 		free_cmd(ptr);
 	if (err)
 		printf("%s\n", err);
-	errno = num;
-	ptr = NULL;
 }
 
 void	exfree(void *ptr, char *err, char type, int num)

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 14:43:55 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 18:37:41 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static char	*heredoc(t_token *redir)
 			if (quot == 1 && ex == 0)
 				res = link_here(res, str);
 			else if (quot == 0 && ex == 0)
-				res = link_here(res, str);
+				res = link_here(res, expend_words(str));
 			if (!res)
 				return (NULL);
 			free(str);
@@ -140,7 +140,7 @@ char	*fill_fd(t_cmd *cmd)
 				printf("Minishell: %s: Permission denied\n", token->next->str);
 				exfree(cmd, NULL, 'c', 1);
 			}
-			// token->fd = cmd->fdout;
+			token->fd = cmd->fdout;
 		}
 		else if (token->type == rdout)
 		{
@@ -150,7 +150,7 @@ char	*fill_fd(t_cmd *cmd)
 				printf("Minishell: %s: Permission denied\n", token->next->str);
 				exfree(cmd, NULL, 'c', 1);
 			}
-			// token->fd = cmd->fdout;
+			token->fd = cmd->fdout;
 		}
 		else if (token->type == rin)
 		{
@@ -165,14 +165,13 @@ char	*fill_fd(t_cmd *cmd)
 				printf("Minishell: %s: No such file or directory\n", token->next->str);
 				exfree(cmd, NULL, 'c', 1);
 			}
-			// token->fd = cmd->fdin;
+			token->fd = cmd->fdin;
 		}
 		if (token->type == rdin)
 		{
 			if (doc)
 				free(doc);
 			doc = heredoc(token->next);
-			cmd->fdin = open(token->next->str,  O_RDONLY);
 		}
 		token = token->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/23 17:43:52 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/23 18:05:19 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static int	exe_cmd(t_cmd *cmd)
 	all = get_env(env);
 	arg = creat_arg(cmd);
 	res = find_file(exe);
-	printf("exe = %s\n", exe);
+	// printf("exe = %s\n", exe);
 	if (!arg || !all || !exe || !res)
 	{
 		printf("error\n");
