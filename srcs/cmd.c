@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 11:37:56 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/25 14:47:39 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,21 @@ t_cmd	*parsing_error(t_cmd *cmd)
 			if (red->type == word || red->type == pip)
 			{
 				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				handler(2, NULL, "?", NULL);
 				return (NULL);
 			}
-			else if (red->type > 3 && (!red->next || red->next->type > 3))
+			else if ((red->type == rdout || red->type == rdin || red->type == rin
+				|| red->type == rout) && red->next && red->next->type >= 3)
 			{
 				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				handler(2, NULL, "?", NULL);
 				return (NULL);
 			}
-			else if (red->type == rdout && (!red->next))
+			else if ((red->type == rdout || red->type == rdin
+				|| red->type == rin || red->type == rout) && (!red->next))
 			{
 				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				handler(2, NULL, "?", NULL);
 				return (NULL);
 			}
 			red = red->next;

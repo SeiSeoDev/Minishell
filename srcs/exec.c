@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/23 14:09:07 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 14:45:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,32 @@ static int	exe_cmd(t_cmd *cmd)
 		res = -1;
 	}
 	else if (execve(exe, arg, all) == -1)
-		res = 0;
-	else
-		res = 1;
+	{
+		if (errno == ENOTDIR)// A component of the path prefix is not a directory.
+			res = errno;
+		if (errno == ENAMETOOLONG)// A component of a pathname exceeded 255 characters, or an entire path name exceeded 1023 characters.
+			res = errno;
+		if (errno == ENOENT)// The new process file does not exist.
+			res = errno;
+		if (errno == ELOOP)// Too many symbolic links were encountered in translating the pathname.
+			res = errno;
+		if (errno == EACCES)// Search permission is denied for a component of the path prefix.
+			res = errno;	// The new process file is not an ordinary file. The new process file mode denies execute permission.
+		if (errno == ENOEXEC)// The new process file has the appropriate access permission, but has an invalid magic number in its header.
+			res = errno;
+		if (errno == ENOMEM)// The new process requires more virtual memory than is allowed by the imposed maximum (getrlimit(2POSIX)).
+			res = errno;
+		if (errno == E2BIG)// The number of bytes in the new process argument list is larger than the system-imposed limit.
+			res = errno;
+		if (errno == EFAULT)// The new process file is not as long as indicated by the size values in its header. path, argv, or envp point to an illegal address.
+			res = errno;
+		if (errno == EIO)// An I/O error occurred while reading from the file system.
+			res = errno;
+		if (errno == EINVAL)// A system error occurred.
+			res = errno;
+		if (errno == EPERM)// The operation is performed in system address space. The operation is performed by a multi-threaded process.
+			res = errno;
+	}
 	if (arg)
 		free(arg);
 	if (exe)
@@ -124,11 +147,12 @@ static int	exe_cmd(t_cmd *cmd)
 	return (res);
 }
 
-void	exec(t_cmd *cmd)
+int	exec(t_cmd *cmd)
 {
 	int		fdok;
+	int		res;
 
-	if (cmd->redir)
+	if (cmd && cmd->redir)
 	  	fill_fd(cmd);
 	dup2(cmd->fdin, STDIN_FILENO);
 	fdok = isntopen(cmd);
@@ -151,14 +175,17 @@ void	exec(t_cmd *cmd)
 		else if (!fdok)
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
-			if (exe_cmd(cmd) == 0)
+			res = exe_cmd(cmd);
+			if (res == 0)
 			{
 				if (!ft_strncmp(cmd->arg->str, "/", 1))
 					printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
 				else
 					printf("Minishell: %s: command not found\n", cmd->arg->str);
+				return (127);
 			}
 		}
 	}
 	close_fd(cmd);
+	return (0);
 }

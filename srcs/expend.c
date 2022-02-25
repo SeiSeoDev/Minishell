@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expend.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 14:09:05 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/24 21:47:43 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,10 @@ char	*expend_words(char *str)
 			j = i++;
 			if (ft_strncmp(&res[i], "?", 1) == 0)
 			{
-				util = ft_itoa(errno);
+				var = handler(0, NULL, NULL, "?");
+				util = ft_strdup(var->val);
+				free(var->val);
+				free(var);
 				i++;
 			}
 			else
@@ -124,8 +127,6 @@ char	*expend_words(char *str)
 					if (var)
 						util = ft_strdup(var->val);
 				}
-				else
-					util = NULL;
 			}
 			res = replace_str(res, util, i, j);
 			if (!res)

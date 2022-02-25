@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/22 13:03:32 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/25 14:32:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_cmd
 	int				fdin;
 	int				fdout;
 	int				pid;
+	int				exit;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -184,7 +185,7 @@ void	ex_unset(t_cmd *cmd);
 ** exec.c
 */
 
-void	exec(t_cmd *cmd);
+int		exec(t_cmd *cmd);
 void	ex_hit(t_cmd *cmd);
 
 /*

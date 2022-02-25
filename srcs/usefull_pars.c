@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 12:31:50 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/25 13:15:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,11 +116,13 @@ t_token	*token_syntax(t_token *token)
 		if (tmp->type == pip && !tmp->next)
 		{
 			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+			handler(2, NULL, "?", NULL);
 			return (NULL);
 		}
 		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
 		{
 			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+			handler(2, NULL, "?", NULL);
 			return (NULL);
 		}
 		tmp = tmp->next;
