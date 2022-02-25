@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 11:37:56 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/25 16:18:17 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token)
 	if (!data)
 	{
 		free_token(token);
-		exfree(res, "init token failled\n", 'c', 1);
+		ctrfree(res, "init token failled\n", 'c', 1);
+		return (NULL);
 	}
 	use = *tmp;
 	*tmp = (*tmp)->next;
@@ -74,17 +75,19 @@ t_cmd	*parsing_error(t_cmd *cmd)
 		{
 			if (red->type == word || red->type == pip)
 			{
-				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 2);
 				return (NULL);
 			}
-			else if (red->type > 3 && (!red->next || red->next->type > 3))
+			else if ((red->type == rdout || red->type == rdin || red->type == rin
+				|| red->type == rout) && red->next && red->next->type >= 3)
 			{
-				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 2);
 				return (NULL);
 			}
-			else if (red->type == rdout && (!red->next))
+			else if ((red->type == rdout || red->type == rdin
+				|| red->type == rin || red->type == rout) && (!red->next))
 			{
-				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 1);
+				ctrfree(cmd, "syntax error near unexpected token\n", 'c', 2);
 				return (NULL);
 			}
 			red = red->next;

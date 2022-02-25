@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 18:37:41 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:04:39 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,9 @@ static char	*heredoc(t_token *redir)
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 		if (str && ft_strcmp(redir->str, str) != 0)
 		{
-			if (quot == 1 && ex == 0)
-				res = link_here(res, str);
-			else if (quot == 0 && ex == 0)
-				res = link_here(res, expend_words(str));
+			if (quot == 0)
+				str = expend_words(str);
+			res = link_here(res, str);
 			if (!res)
 				return (NULL);
 			free(str);
@@ -128,6 +127,8 @@ char	*fill_fd(t_cmd *cmd)
 	t_token *token;
 	int		pipfd[2];
 
+	if (!cmd)
+		return (NULL);
 	token = cmd->redir;
 	doc = NULL;
 	while (token)
@@ -172,20 +173,18 @@ char	*fill_fd(t_cmd *cmd)
 			if (doc)
 				free(doc);
 			doc = heredoc(token->next);
+			token->fd = cmd->fdin;
 		}
 		token = token->next;
 	}
 	if (doc)
 	{
-		if (!is_built(cmd))
-		{
-			if (pipe(pipfd) == -1)
-				return (NULL);
-			write(pipfd[1], doc, ft_strlen(doc));
-			dup2(pipfd[0], cmd->fdin);
-			close(pipfd[1]);
-			close(pipfd[0]);
-		}
+		if (pipe(pipfd) == -1)
+			return (NULL);
+		write(pipfd[1], doc, ft_strlen(doc));
+		dup2(pipfd[0], cmd->fdin);
+		// close(pipfd[1]);
+		// close(pipfd[0]);
 		free(doc);
 	}
 	return (doc);

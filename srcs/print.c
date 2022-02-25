@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 13:44:02 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 11:14:12 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:02:50 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	print_token(t_token *token)
 	{
 		i = 0;
 		tmp = token;
-		printf("Start print token\n");
 		while (tmp)
 		{
 			printf("token [%d]: TYPE[%d] word=%s\n", i++, tmp->type, tmp->str);

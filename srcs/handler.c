@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:46 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 17:54:19 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 16:16:05 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,16 +118,19 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 {
 	t_env			*res;
 	static t_env	*myenv;
-	// static int		ret;
+	static int		exit_status;
 
 	res = NULL;
-	// if (name && !ft_strcmp(name, "?") && !val)
-	// 	return (init_env(NULL, ft_strdup(name), ft_itoa(ret)));
-	// else if (name && !ft_strcmp(name, "?") && val)
-	// 	ret = ft_atoi(val);
+	if (name && !ft_strcmp(name, "?"))
+	{
+		exit_status = opt;
+		return (NULL);
+	}
+	if (val && !ft_strcmp(val, "?"))
+		return (init_env(NULL, NULL, ft_itoa(exit_status)));
 	if (opt == 0)
 	{
-		// ret = 0;
+		exit_status = 0;
 		myenv = init_handler(env);
 		if (!myenv)
 			exfree(NULL, "Error in init_handler", 0, 1);
@@ -142,6 +145,5 @@ t_env	*handler(int opt, char **env, char *name, char *val)
 		free_env(myenv);
 	else if (opt == 5)
 		res = mod_env(&myenv, name, val, 1);
-	// printf("ret = %d\n", ret);
 	return (res);
 }

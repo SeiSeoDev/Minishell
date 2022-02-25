@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   usefull_pars.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/16 12:31:50 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/25 16:17:11 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,12 +115,12 @@ t_token	*token_syntax(t_token *token)
 	{
 		if (tmp->type == pip && !tmp->next)
 		{
-			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 2);
 			return (NULL);
 		}
 		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
 		{
-			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 1);
+			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 2);
 			return (NULL);
 		}
 		tmp = tmp->next;

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 17:17:45 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:14:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_cmd
 	int				fdin;
 	int				fdout;
 	int				pid;
+	int				exit;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -228,7 +229,7 @@ void	child(t_cmd *cmd);
 void	define_sig(int isparent);
 void	sig_handler(int sig);
 void	sig_handler2(int sig);
-void sig_heredoc(int sig);
+void	sig_heredoc(int sig);
 t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token);
 void	cmd_add(t_token **tmp, t_cmd *data);
 

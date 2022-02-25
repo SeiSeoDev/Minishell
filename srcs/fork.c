@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/23 17:57:40 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:15:27 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	get_nbpipe(t_cmd *cmd)
 
 int	is_built(t_cmd *cmd)
 {
-	if (!cmd || !cmd->arg)
+	if (!cmd || !cmd->arg || !cmd->arg->str)
 		return (0);
 	if (!ft_strcmp(cmd->arg->str, "echo"))
 		return (1);
@@ -78,18 +78,68 @@ void sig_heredoc(int sig)
 	ft_putchar_fd('\n', 1);
 	exit(0);
 }
+
+int	wait_process(t_cmd *cmd) 
+{ 
+	int		status;
+	t_cmd	*tmp;
+
+	status = 0;
+	tmp = cmd;
+	while (tmp)
+	{
+		if (!is_built(tmp))
+		{
+			 if (waitpid(tmp->pid, &status, 0) == -1)
+				write(STDERR_FILENO, "ERROR\n", 6);
+			 if (WIFEXITED(status))
+				tmp->exit = WEXITSTATUS(status);
+			 else if (WIFSIGNALED(status))
+				tmp->exit = WTERMSIG(status) + 128;
+		}
+		tmp = tmp->next;
+	}
+	tmp = cmd;
+	while (tmp && tmp->next)
+	{
+		if (tmp->exit == 131)
+			write(1, "^Quit (core dumped)\n", 21);
+		tmp = tmp->next;
+	}
+	if (tmp->exit == 131)
+		write(1, "^Quit (core dumped)\n", 21);
+	return (tmp->exit);
+}
+
+int	herdoc(t_cmd *cmd)
+{
+	t_token *redir;
+	int		res;
+
+	res = 0;
+	redir = cmd->redir;
+	while (redir)
+	{
+		if (redir->type == rdin)
+			res = 1;
+		else if (redir->type == rin)
+			res = 0;
+		redir = redir->next;
+	}
+	return (res);
+}
+
 void	child(t_cmd *cmd)
 {
 	int		*pipefd;
-	int		*pitab;
 	int		i;
 	int		fd_in;
-	int		status;
 	t_cmd	*tmp;
 	
 	tmp = cmd;
+	if (!tmp)
+		return ;
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
-	pitab = malloc((get_nbpipe(cmd)) * sizeof(int));
 	fd_in = dup(STDIN_FILENO);
 	gl_state = 1;
 	i = 0;
@@ -97,22 +147,22 @@ void	child(t_cmd *cmd)
 		exec(cmd);
 	else
 	{
-		while (i < get_nbpipe(cmd))
+		while (tmp)
 		{
 			pipe(&pipefd[i * 2]);
-			pitab[i] = fork();
-			if (pitab[i] == 0)
+			tmp->pid = fork();
+			if (tmp->pid == 0)
 			{
 				signal(SIGQUIT, SIG_DFL);
-				if (i != 0)
+				if (get_nbpipe(cmd) != get_nbpipe(tmp) || herdoc(tmp))
 					dup2(fd_in, STDIN_FILENO);
-				if ((i + 1) != get_nbpipe(cmd))
+				if (tmp->next)
 					dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
 				close(pipefd[i * 2]);
 				close(pipefd[i * 2 + 1]);
 				close(fd_in);
 				exec(tmp);
-				exfree(cmd, NULL, 'c', 1);
+				exfree(tmp, NULL, 'c', 1);
 			}
 			dup2(pipefd[i * 2], fd_in);
 			close(pipefd[i * 2]);
@@ -122,11 +172,11 @@ void	child(t_cmd *cmd)
 		}
 	}
 	close(fd_in);
-    i = -1;
-    while (++i < get_nbpipe(cmd))
-		waitpid(pitab[i], &status, 0);
+	i = wait_process(cmd);
+	handler(i, NULL, "?", NULL);
 	gl_state = 0;
-	free_cmd(cmd);
-	free(pipefd);
-	free(pitab);
+	if (cmd)
+		free_cmd(cmd);
+	if (pipefd)
+		free(pipefd);
 }

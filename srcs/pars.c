@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/17 10:32:44 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/25 11:51:31 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	cmd_creat(t_token *token)
 			cmd_add(&tmp, data);
 	}
 	res = parsing_error(res);
+	if (!res)
+		return ;
 	print_cmd(res);
 	child(res);
 }

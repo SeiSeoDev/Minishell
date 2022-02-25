@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/23 18:05:19 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:15:20 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static char	**creat_arg(t_cmd *cmd)
 	char	**arg;
 	int		i;
 
+	if (!cmd)
+		return (NULL);
 	tmp = cmd->arg;
 	i = 0;
 	while (tmp)
@@ -78,47 +80,92 @@ static int	exe_cmd(t_cmd *cmd)
 	int		res;
 
 	env = handler(3, NULL, "PATH", NULL);
-	exe = creat_exe(env, cmd);
-	if (!exe)
+	exe = NULL;
+	if (ft_strncmp(cmd->arg->str, ".", 1) || ft_strncmp(cmd->arg->str, "/", 1))
+		exe = creat_exe(env, cmd);
+	else
 	{
-		if (!ft_strncmp(cmd->arg->str, ".", 1))
+		if (!ft_strcmp(cmd->arg->str, "/"))
 		{
-			env = handler(3, NULL, "PWD", NULL);
-			if (env)
-				exe = ft_strjoin(env->val, &cmd->arg->str[1]);
+			printf("Minishell: %s: Is a directory\n", cmd->arg->str);
+			exfree(cmd, NULL, 'c', 126);
 		}
-		else if (!ft_strncmp(cmd->arg->str, "/", 1))
+		env = handler(3, NULL, "PWD", NULL);
+		if (env)
+			exe = ft_strjoin(env->val, &cmd->arg->str[1]);
+		if (find_file(exe))
 		{
-			if (find_file(cmd->arg->str) || !ft_strcmp(cmd->arg->str, "/"))
+			if (!ft_strncmp(cmd->arg->str, "/", 1))
 			{
 				printf("Minishell: %s: Is a directory\n", cmd->arg->str);
-				exfree(cmd, NULL, 'c', 127);
+				exfree(cmd, NULL, 'c', 126);
 			}
-			else
-				return (0);
+			printf("Minishell: %s: command not found\n", cmd->arg->str);
+			exfree(cmd, NULL, 'c', 127);
 		}
 		else
-			return (0);
+		{
+			if (!ft_strncmp(cmd->arg->str, "/", 1))
+				printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
+			else
+				printf("Minishell: %s: command not found\n", cmd->arg->str);
+			exfree(cmd, NULL, 'c', 127);
+		}
+	}
+	if (exe)
+		printf("exe = %s\n", exe);
+	else
+	{
+		printf("Minishell: %s: command not found\n", cmd->arg->str);
+		exfree(cmd, NULL, 'c', 127);
+	}
+	if (cmd)
+		print_cmd(cmd);
+	else
+	{
+		printf("Minishell: %s: command not found\n", cmd->arg->str);
+		exfree(cmd, NULL, 'c', 127);
 	}
 	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
 	arg = creat_arg(cmd);
 	res = find_file(exe);
-	// printf("exe = %s\n", exe);
 	if (!arg || !all || !exe || !res)
-	{
-		printf("error\n");
-		res = 0;
-	}
-	if (access(exe, X_OK) == -1)
+		res = -1;
+	else if (access(exe, X_OK) == -1)
 	{
 		printf("Minishel: %s: Permission denied\n", cmd->arg->str);
-		res = -1;
+		ctrfree(cmd, NULL, 'c', 1);
+		return (-1);
 	}
-	if (execve(exe, arg, all) == -1)
-		res = 0;
-	else
-		res = 1;
+	else if (execve(exe, arg, all) == -1)
+	{
+		if (errno == ENOTDIR)// A component of the path prefix is not a directory.
+			res = errno;
+		if (errno == ENAMETOOLONG)// A component of a pathname exceeded 255 characters, or an entire path name exceeded 1023 characters.
+			res = errno;
+		if (errno == ENOENT)// The new process file does not exist.
+			res = errno;
+		if (errno == ELOOP)// Too many symbolic links were encountered in translating the pathname.
+			res = errno;
+		if (errno == EACCES)// Search permission is denied for a component of the path prefix.
+			res = errno;	// The new process file is not an ordinary file. The new process file mode denies execute permission.
+		if (errno == ENOEXEC)// The new process file has the appropriate access permission, but has an invalid magic number in its header.
+			res = errno;
+		if (errno == ENOMEM)// The new process requires more virtual memory than is allowed by the imposed maximum (getrlimit(2POSIX)).
+			res = errno;
+		if (errno == E2BIG)// The number of bytes in the new process argument list is larger than the system-imposed limit.
+			res = errno;
+		if (errno == EFAULT)// The new process file is not as long as indicated by the size values in its header. path, argv, or envp point to an illegal address.
+			res = errno;
+		if (errno == EIO)// An I/O error occurred while reading from the file system.
+			res = errno;
+		if (errno == EINVAL)// A system error occurred.
+			res = errno;
+		if (errno == EPERM)// The operation is performed in system address space. The operation is performed by a multi-threaded process.
+			res = errno;
+		printf("Error in execve\n");
+	}
 	if (arg)
 		free(arg);
 	if (exe)
@@ -131,8 +178,9 @@ static int	exe_cmd(t_cmd *cmd)
 void	exec(t_cmd *cmd)
 {
 	int		fdok;
+	int		res;
 
-	if (cmd->redir)
+	if (cmd && cmd->redir)
 	  	fill_fd(cmd);
 	dup2(cmd->fdin, STDIN_FILENO);
 	fdok = isntopen(cmd);
@@ -155,13 +203,15 @@ void	exec(t_cmd *cmd)
 		else if (!fdok)
 		{
 			dup2(cmd->fdout, STDOUT_FILENO);
-			if (exe_cmd(cmd) == 0)
-			{
-				if (!ft_strncmp(cmd->arg->str, "/", 1))
-					printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
-				else
-					printf("Minishell: %s: command not found\n", cmd->arg->str);
-			}
+			res = exe_cmd(cmd);
+			// if (res == 0)
+			// {
+			// 	if (!ft_strncmp(cmd->arg->str, "/", 1))
+			// 		printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
+			// 	else
+			// 		printf("Minishell: %s: command not found\n", cmd->arg->str);
+			// 	return (127);
+			// }
 		}
 	}
 	close_fd(cmd);
