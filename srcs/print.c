@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 13:44:02 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:02:50 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 14:25:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,19 @@ void	print_cmd(t_cmd *cmd)
 		tmp = cmd;
 		while (tmp)
 		{
-			printf("cmd [%d]:\n", i++);
+			printf("CMD [%d]:\n", i++);
 			if (tmp->arg)
+			{
+				printf("ARG: ");
 				print_token(tmp->arg);
+			}
 			else
 				printf("no arg...\n");
 			if (tmp->redir)
+			{
+				printf("REDIR: ");
 				print_token(tmp->redir);
+			}
 			else
 				printf("no redir...\n");
 			printf("fdin = %d | fd out = %d | pid = %d\n", tmp->fdin, tmp->fdout, tmp->pid);

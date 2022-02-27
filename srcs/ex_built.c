@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 14:08:58 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/02/27 14:09:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ex_echo(t_cmd *cmd)
 
 	arg = cmd->arg->next;
 	n = 0;
-	if (arg && !ft_strcmp(arg->str, "-n"))
+	if (arg && arg->str && !ft_strcmp(arg->str, "-n"))
 	{
 		n = 1;
 		arg = arg->next;

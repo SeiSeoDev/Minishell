@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/25 19:52:40 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 14:13:23 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	exec(t_cmd *cmd)
 	  	fill_fd(cmd);
 	dup2(cmd->fdin, STDIN_FILENO);
 	fdok = isntopen(cmd);
-	if (cmd != NULL && cmd->arg != NULL && !fdok)
+	if (cmd != NULL && cmd->arg != NULL && !fdok && cmd->arg->str)
 	{
 		if (!ft_strcmp(cmd->arg->str, "echo"))
 			ex_echo(cmd);

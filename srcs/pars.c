@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 19:23:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 14:15:38 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,25 @@ void	cmd_creat(t_token *token)
 void	expension(t_token *token)
 {
 	t_token	*tmp;
+	int		i;
 
 	tmp = token;
 	while (tmp)
 	{
 		if (tmp->type == word || tmp->type == fd)
 		{
-			tmp->str = expend_words(tmp->str);
-			if (!tmp->str || !ft_strcmp(tmp->str, ""))
-				del_token(&token, tmp);
+			i = 0;
+			while (tmp->str && tmp->str[i])
+			{
+				if (tmp->str[i] == '$' && quot_status(tmp->str, i) != 1 &&
+					(ft_isalnum(tmp->str[i + 1]) || tmp->str[i + 1] == '_' ||
+					tmp->str[i + 1] == '?' || tmp->str[i + 1] == '$'))
+				{
+					tmp->str = expend_words(tmp->str, i);
+					printf("expend = %s\n", tmp->str);
+				}
+				i++;
+			}
 		}
 		tmp = tmp->next;
 	}
@@ -115,6 +125,6 @@ void	split_words(char *str)
 			}
 		}
 	}
-//	print_token(tmp);
+	print_token(tmp);
 	tokenize(tmp);
 }

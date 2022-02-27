@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:14:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 13:16:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ t_token	*token_syntax(t_token *token);
 */
 
 char	*del_unused_quot(char *str);
-char	*expend_words(char *str);
+char	*expend_words(char *str, int i);
 
 /*
 ** pars.c

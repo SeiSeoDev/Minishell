@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expend.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 18:11:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 16:13:32 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 14:21:43 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void del_unquot_extra(char *str, int *i, int *j, char q)
 			str[*i] = str[*i + 1];
 			(*i)++;
 		}
-		str[*i- 1] = '\0';
+		str[*i - 1] = '\0';
 		*i = len;
 	}
 }
@@ -71,8 +71,16 @@ static char	*replace_str(char *str, char *new, int i, int j)
 	int		z;
 
 	res = ft_strnew(ft_strlen(str) - (i - j) + ft_strlen(new));
-	if (!res)
+	if (!res || !new)
+	{
+		if (res)
+			free(res);
+		if (new)
+			free(new);
+		if (str)
+			free(str);
 		return (NULL);
+	}
 	y = 0;
 	x = 0;
 	while (str[y] && y < j)
@@ -90,53 +98,57 @@ static char	*replace_str(char *str, char *new, int i, int j)
 	return (res);
 }
 
-char	*expend_words(char *str)
+char	*expend_words(char *str, int i)
 {
-	int		i;
 	char	*util;
 	int		j;
 	t_env	*var;
 	char	*res;
 
-	i = 0;
 	util = NULL;
-	var = NULL;
-	res = str;
-	while (res[i])
+	res = ft_strdup(str);
+	if (str)
+		free(str);
+	if (!res)
+		return (NULL);
+	j = i + 1;
+	if (res[j] == '?')
 	{
-		if (res[i] == '$' && quot_status(res, i) != 1)
+		var = handler(-1, NULL, NULL, "?");
+		if (var)
 		{
-			j = i++;
-			if (ft_strncmp(&res[i], "?", 1) == 0)
-			{
-				var = handler(0, NULL, NULL, "?");
-				util = ft_strdup(var->val);
+			util = ft_strdup(var->val);
+			if (var->val)
 				free(var->val);
-				free(var);
-				i++;
-			}
-			else
-			{
-				while (ft_isalnum(res[i]) || res[i] == '_')
-					i++;
-				util = ft_strndup(&res[j + 1], (i - (j + 1)));
-				if (util)
-				{
-					var = handler(3, NULL, util, NULL);
-					free(util);
-					if (var)
-						util = ft_strdup(var->val);
-				}
-			}
-			res = replace_str(res, util, i, j);
-			if (!res)
-				return (NULL);
-			i = j + ft_strlen(util);
-			if (util)
-				free(util);
+			free(var);
 		}
-		else
-			i++;
+		j++;
 	}
+	else if (res[j] == '$')
+	{
+		util = ft_itoa(getpid());
+		j++;
+	}
+	else
+	{
+		while (ft_isalnum(res[j]) || res[j] == '_')
+			j++;
+		util = ft_strndup(&res[i + 1], (j - (i + 1)));
+		if (util)
+		{
+			var = handler(3, NULL, util, NULL);
+			free(util);
+			if (var)
+				util = ft_strdup(var->val);
+			else
+				util = NULL;
+		}
+	}
+	res = replace_str(res, util, j, i);
+	if (util)
+		free(util);
+	if (!res)
+		return (NULL);
+	printf("res = %s\n", res);
 	return (del_unused_quot(res));
 }

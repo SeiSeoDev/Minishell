@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:39:02 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/17 11:33:10 by user42           ###   ########.fr       */
+/*   Updated: 2022/02/26 15:37:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	ex_port(t_cmd *cmd)
 		}
 		else if (arg->str && get_equalpos(arg->str) == 2)
 		{
-			tab = get_separation(arg->str); 
+			tab = get_separation(arg->str);
 			handler(5, NULL, tab[0], tab[1]);
 		}
 		else
@@ -106,7 +106,7 @@ void	ex_unset(t_cmd *cmd)
 	t_token	*tmp;
 
 	if (!cmd->arg->next)
-		ft_putstr_fd("unset: not enough arguments\n", 2);
+		ft_putstr_fd("Minishell: unset: not enough arguments\n", 2);
 	tmp = cmd->arg->next;
 	while (tmp)
 	{

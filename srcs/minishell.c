@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/25 16:13:20 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/26 14:54:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void sig_handler(int sig)
 
 int	main(int ac, char **av, char **env)
 {
-	// t_env	*myenv;
+	t_env	*myenv;
 	char	*str;
 
 	(void)ac;
@@ -88,14 +88,12 @@ int	main(int ac, char **av, char **env)
 	str = ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1);
 	handler(3, NULL, "SHLVL", str);
 	free(str);
-/*
-**	myenv = handler(3, NULL, NULL, NULL);
-**	while (myenv)
-**	{
-**		printf("%s=%s\n", myenv->name, myenv->val);
-**		myenv = myenv->next;
-**	}
-*/
+	myenv = handler(3, NULL, NULL, NULL);
+	while (myenv)
+	{
+		printf("%s=%s\n", myenv->name, myenv->val);
+		myenv = myenv->next;
+	}
 	printf("PID : %d\n", getpid());
 	signal(SIGINT, sig_handler2);
 	signal(42, sig_handler2);

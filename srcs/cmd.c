@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:28:32 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 18:37:56 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 14:05:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 
 void	cmd_add(t_token **tmp, t_cmd *data)
 {
-	t_token *use;
-
-	if ((*tmp)->type == rdin || (*tmp)->type == rdout || (*tmp)->type == rin
-		|| (*tmp)->type == rout)
+	t_token	*use;
+	
+	if ((*tmp)->type != word)
 	{
 		if (!data->redir)
 			data->redir = cmd_redir(tmp);

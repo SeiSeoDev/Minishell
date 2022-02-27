@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:04:39 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/27 13:28:08 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,33 +39,42 @@ static char	*link_here(char *res, char *str)
 	return (link);
 }
 
+static char	*read_here(char *str, char *res)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == '$' && quot_status(str, i) == 0 &&
+			(ft_isalnum(str[i + 1]) || str[i + 1] == '_' ||
+			str[i + 1] == '?' || str[i + 1] == '$'))
+			str = expend_words(str, i);
+		i++;
+	}
+	res = link_here(res, str);
+	if (!res)
+		return (NULL);
+	free(str);
+	return (res);
+}
+
 static char	*heredoc(t_token *redir)
 {
 	char	*str;
 	char	*res;
-	int		quot;
 	int		ex;
 
-	quot = 0;
 	ex = 0;
 	res = NULL;
 	if (!redir || !redir->str)
 		return (NULL);
-	if (ft_strchr(redir->str, '"') || ft_strchr(redir->str, '\''))
-		quot = 1;
 	redir->str = del_unused_quot(redir->str);
 	while (ex == 0)
 	{
 		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
 		if (str && ft_strcmp(redir->str, str) != 0)
-		{
-			if (quot == 0)
-				str = expend_words(str);
-			res = link_here(res, str);
-			if (!res)
-				return (NULL);
-			free(str);
-		}
+			res = read_here(str, res);
 		else
 			ex = 1;
 	}
