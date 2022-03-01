@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 11:41:24 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 00:11:44 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir)
 
 void	add_token(t_token *token, t_token *new)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = token->next;
 	token->next = new;
@@ -66,7 +66,7 @@ void	add_token(t_token *token, t_token *new)
 
 void	del_token(t_token **token, t_token *del)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	if (*token == del)
 	{

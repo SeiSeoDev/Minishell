@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/27 14:09:26 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 03:33:41 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,7 @@ int	ex_cd(t_cmd *cmd)
 		str = ft_strjoin(str, cmd->arg->next->str);
 	}
 	if (chdir(str) == -1)
-	{
 		printf("Minishell: cd: %s: Not a directory\n", str);
-		return (0); 
-	}
 	else
 	{
 		handler(3, NULL, "OLDPWD", handler(3, NULL, "PWD", NULL)->val);
@@ -75,5 +72,26 @@ int	ex_pwd(t_cmd *cmd)
 	myenv = handler(3, NULL, "PWD", NULL);
 	write(1, myenv->val, ft_strlen(myenv->val));
 	write(1, "\n", 1);
+	return (0);
+}
+
+int	is_built(t_cmd *cmd)
+{
+	if (!cmd || !cmd->arg || !cmd->arg->str)
+		return (0);
+	if (!ft_strcmp(cmd->arg->str, "echo"))
+		return (1);
+	else if (!ft_strcmp(cmd->arg->str, "cd"))
+		return (2);
+	else if (!ft_strcmp(cmd->arg->str, "pwd"))
+		return (3);
+	else if (!ft_strcmp(cmd->arg->str, "env"))
+		return (4);
+	else if (!ft_strcmp(cmd->arg->str, "unset"))
+		return (5);
+	else if (!ft_strcmp(cmd->arg->str, "export"))
+		return (6);
+	else if (!ft_strcmp(cmd->arg->str, "exit"))
+		return (7);
 	return (0);
 }

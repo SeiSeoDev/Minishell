@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+         #
+#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/01/28 16:36:24 by tamigore         ###   ########.fr        #
+#    Updated: 2022/03/01 00:02:38 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ SOURCES =	minishell.c		\
 			utils.c			\
 			cmd.c			\
 			redir.c			\
-			fork.c
+			fork.c			\
+			heredoc.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:47:15 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/26 15:31:39 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 00:11:24 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*join_nameval(char *name, char *val)
 	int		i;
 	int		j;
 	char	*res;
-	
+
 	i = 0;
 	if (!name || !val)
 		return (NULL);

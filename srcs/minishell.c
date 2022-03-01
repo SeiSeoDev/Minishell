@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/26 14:54:45 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 03:37:12 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,12 @@ int	find_file(char *path)
 
 void	loop(void)
 {
-	char 	*str;
+	char	*str;
 
 	str = NULL;
 	while (1)
 	{
 		str = readline("\e[1m\e[31m\002""Minishell : ""\001\e[0m\002");
-		// printf("%s\n", str);
 		if (str == NULL)
 		{
 			printf("exit\n");
@@ -59,23 +58,24 @@ void	loop(void)
 		free(str);
 	}
 }
-
-void sig_handler(int sig)
-{
-	printf("Quit (core dumped)\n");
-	if (sig == SIGINT) 
-	{
-		rl_replace_line("", 0);
-		printf("\nIS PARENT\n");
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else if (sig == SIGQUIT)
-	{
-		ft_putstr_fd("\b\b  \b\b", 1);
-		return;
-	}
-}
+/*
+**void	sig_handler(int sig)
+**{
+**	printf("Quit (core dumped)\n");
+**	if (sig == SIGINT)
+**	{
+**		rl_replace_line("", 0);
+**		printf("\nIS PARENT\n");
+**		rl_on_new_line();
+**		rl_redisplay();
+**	}
+**	else if (sig == SIGQUIT)
+**	{
+**		ft_putstr_fd("\b\b  \b\b", 1);
+**		return ;
+**	}
+**}
+*/
 
 int	main(int ac, char **av, char **env)
 {

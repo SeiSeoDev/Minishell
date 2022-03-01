@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/27 14:15:38 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 03:05:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	cmd_creat(t_token *token)
 	t_token	*tmp;
 
 	if (!token)
-		child(NULL);
+		return ;
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
 		exfree(token, "Error init cmd\n", 't', 1);
@@ -38,7 +38,7 @@ void	cmd_creat(t_token *token)
 	if (!parsing_error(res))
 		return ;
 	print_cmd(res);
-	child(res);
+	parent(res);
 }
 
 void	expension(t_token *token)
@@ -54,13 +54,12 @@ void	expension(t_token *token)
 			i = 0;
 			while (tmp->str && tmp->str[i])
 			{
-				if (tmp->str[i] == '$' && quot_status(tmp->str, i) != 1 &&
-					(ft_isalnum(tmp->str[i + 1]) || tmp->str[i + 1] == '_' ||
-					tmp->str[i + 1] == '?' || tmp->str[i + 1] == '$'))
-				{
+				if (tmp->str[i] == '$' && quot_status(tmp->str, i) != 1
+					&& (ft_isalnum(tmp->str[i + 1]) || tmp->str[i + 1] == '_'
+						|| tmp->str[i + 1] == '?' || tmp->str[i + 1] == '$'))
 					tmp->str = expend_words(tmp->str, i);
-					printf("expend = %s\n", tmp->str);
-				}
+				else
+					tmp->str = del_unused_quot(tmp->str);
 				i++;
 			}
 		}
@@ -97,34 +96,25 @@ void	split_words(char *str)
 	t_token	*token;
 	t_token	*tmp;
 	int		i;
-	int		last;
+	int		s;
 
 	i = 0;
-	last = 0;
-	tmp = NULL;
-	token = NULL;
+	s = 0;
+	if (!str || str[0] == '\0')
+		return ;
+	split(str, &i, &s);
+	token = init_token(NULL, ft_strndup(&str[s], i - s), 0);
+	tmp = token;
 	while (str[i])
 	{
-		split(str, &i, &last);
-		if (i > last)
+		split(str, &i, &s);
+		if (i > s)
 		{
+			token->next = init_token(NULL, ft_strndup(&str[s], i - s), 0);
+			token = token->next;
 			if (!token)
-			{
-				token = init_token(NULL, ft_strndup(&str[last], i - last), 0);
-				tmp = token;
-			}
-			else
-			{
-				token->next = init_token(NULL, ft_strndup(&str[last], i - last), 0);
-				token = token->next;
-			}
-			if (!token)
-			{
 				ctrfree(tmp, "error init token...\n", 't', 1);
-				return ;
-			}
 		}
 	}
-	print_token(tmp);
 	tokenize(tmp);
 }

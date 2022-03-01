@@ -6,84 +6,11 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/27 13:28:08 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 00:03:07 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*link_here(char *res, char *str)
-{
-	int		i;
-	int		j;
-	char	*link;
-
-	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 2));
-	i = 0;
-	j = 0;
-	if (res)
-	{
-		while (res[i])
-			link[j++] = res[i++];
-	}
-	if (str)
-	{
-		i = 0;
-		while (str[i])
-			link[j++] = str[i++];
-	}
-	link[j++] = '\n';
-	link[j] = '\0';
-	if (res)
-		free(res);
-	return (link);
-}
-
-static char	*read_here(char *str, char *res)
-{
-	int	i;
-
-	i = 0;
-	while (str && str[i])
-	{
-		if (str[i] == '$' && quot_status(str, i) == 0 &&
-			(ft_isalnum(str[i + 1]) || str[i + 1] == '_' ||
-			str[i + 1] == '?' || str[i + 1] == '$'))
-			str = expend_words(str, i);
-		i++;
-	}
-	res = link_here(res, str);
-	if (!res)
-		return (NULL);
-	free(str);
-	return (res);
-}
-
-static char	*heredoc(t_token *redir)
-{
-	char	*str;
-	char	*res;
-	int		ex;
-
-	ex = 0;
-	res = NULL;
-	if (!redir || !redir->str)
-		return (NULL);
-	redir->str = del_unused_quot(redir->str);
-	while (ex == 0)
-	{
-		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
-		if (str && ft_strcmp(redir->str, str) != 0)
-			res = read_here(str, res);
-		else
-			ex = 1;
-	}
-	if (!res)
-		res = ft_strdup("");
-	if (str)
-		free(str);
-	return (res);
-}
 
 void	close_fd(t_cmd *cmd)
 {
@@ -98,103 +25,63 @@ void	close_fd(t_cmd *cmd)
 	}
 }
 
-int isntopen(t_cmd *cmd)
+int	isntopen(t_cmd *cmd)
 {
-	t_token *token;
+	t_token	*t;
 
-	token = cmd->redir;
-	if (!token)
-		return (0);
-	if (token->type == rout || token->type == rdout)
+	t = cmd->redir;
+	while (t)
 	{
-		if (cmd->fdout <= 0)
+		if ((t->type == rout || t->type == rdout
+				|| t->type == rin) && t->fd <= 0)
 		{
-			if (access(token->next->str, F_OK ) != 0 )
-				printf("Minishell: %s: No such file or directory\n", token->next->str);
+			if (access(t->next->str, F_OK) != 0)
+				printf("Minishell: %s: No such file or directory\n",
+					t->next->str);
 			else
-				printf("Minishell: %s: Permission denied\n", token->next->str);
-			return (1);
+				printf("Minishell: %s: Permission denied\n", t->next->str);
+			exfree(cmd, NULL, 'c', 1);
 		}
-	}
-	else if (token->type == rin)
-	{
-		if (cmd->fdin <= 0)
-		{
-			if (access(token->next->str, F_OK ) != 0)
-				printf("Minishell: %s: No such file or directory\n", token->next->str);
-			else
-				printf("Minishell: %s: Permission denied\n", token->next->str);
-			return (1);
-		}
+		t = t->next;
 	}
 	return (0);
 }
 
-char	*fill_fd(t_cmd *cmd)
+char	*fill_fd(t_cmd *c, char *doc)
 {
-	char	*doc;
-	t_token *token;
-	int		pipfd[2];
+	t_token	*t;
 
-	if (!cmd)
-		return (NULL);
-	token = cmd->redir;
-	doc = NULL;
-	while (token)
+	t = c->redir;
+	while (t)
 	{
-		if (token->type == rout)
+		if (doc && (t->type == rdin || t->type == rin))
+			free(doc);
+		if (t->type == rout)
+			c->fdout = open(t->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		else if (t->type == rdout)
+			c->fdout = open(t->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		else if (t->type == rin)
 		{
-			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (cmd->fdin < 0)
-			{
-				printf("Minishell: %s: Permission denied\n", token->next->str);
-				exfree(cmd, NULL, 'c', 1);
-			}
-			token->fd = cmd->fdout;
+			c->fdin = open(t->next->str, O_RDONLY);
+			t->fd = c->fdin;
 		}
-		else if (token->type == rdout)
-		{
-			cmd->fdout = open(token->next->str, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (cmd->fdin < 0)
-			{
-				printf("Minishell: %s: Permission denied\n", token->next->str);
-				exfree(cmd, NULL, 'c', 1);
-			}
-			token->fd = cmd->fdout;
-		}
-		else if (token->type == rin)
-		{
-			if (doc)
-			{
-				free(doc);
-				doc = NULL;
-			}
-			cmd->fdin = open(token->next->str,  O_RDONLY);
-			if (cmd->fdin < 0)
-			{
-				printf("Minishell: %s: No such file or directory\n", token->next->str);
-				exfree(cmd, NULL, 'c', 1);
-			}
-			token->fd = cmd->fdin;
-		}
-		if (token->type == rdin)
-		{
-			if (doc)
-				free(doc);
-			doc = heredoc(token->next);
-			token->fd = cmd->fdin;
-		}
-		token = token->next;
-	}
-	if (doc)
-	{
-		if (pipe(pipfd) == -1)
-			return (NULL);
-		write(pipfd[1], doc, ft_strlen(doc));
-		dup2(pipfd[0], cmd->fdin);
-		// close(pipfd[1]);
-		// close(pipfd[0]);
-		free(doc);
+		else if (t->type == rdin)
+			doc = heredoc(t->next);
+		if (t->type == rout || t->type == rdout)
+			t->fd = c->fdout;
+		t = t->next;
 	}
 	return (doc);
 }
+/*
+**	if (doc)
+**	{
+**		if (pipe(pipfd) == -1)
+**			return (NULL);
+**		write(pipfd[1], doc, ft_strlen(doc));
+**		dup2(pipfd[0], cmd->fdin);
+**		close(pipfd[1]);
+**		close(pipfd[0]);
+**		free(doc);
+**	}
+*/
