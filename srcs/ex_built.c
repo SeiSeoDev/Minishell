@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 03:33:41 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 14:22:59 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,29 @@ int	is_built(t_cmd *cmd)
 	else if (!ft_strcmp(cmd->arg->str, "exit"))
 		return (7);
 	return (0);
+}
+
+t_token	*is_here(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+	t_token	*token;
+	t_token	*ret;
+
+	tmp = cmd;
+	while (tmp)
+	{
+		token = cmd->redir;
+		while (token)
+		{
+			if (token->type == rdin)
+			{
+				ret = token;
+			}	
+			else if (token->type == rin)
+				ret = NULL;
+			token = token->next;
+		}
+		tmp = tmp->next;
+	}
+	return (ret);
 }

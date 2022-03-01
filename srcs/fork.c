@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 08:22:10 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:47:01 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,15 @@ int	wait_process(t_cmd *cmd)
 
 void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 {
-	int	fd_in;
+	int		fd_in;
+	char	*doc;
 
+	doc = NULL;
 	fd_in = dup(STDIN_FILENO);
 	while (tmp && pipefd)
 	{
+		if (is_herdoc(tmp))
+			doc = heredoc(tmp);
 		pipe(&pipefd[*i * 2]);
 		tmp->pid = fork();
 		if (tmp->pid == 0)
@@ -99,7 +103,7 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 				dup2(pipefd[*i * 2 + 1], STDOUT_FILENO);
 			close(pipefd[*i * 2]);
 			close(pipefd[*i * 2 + 1]);
-			exec(tmp);
+			exec(tmp, doc);
 			exfree(cmd, NULL, 'c', 1);
 		}
 		dup2(pipefd[*i * 2], fd_in);
@@ -110,28 +114,30 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 	close(fd_in);
 }
 
-/*child....
-**if (get_nbpipe(cmd) != get_nbpipe(tmp) || is_herdoc(tmp))
-*/
-
 void	parent(t_cmd *cmd)
 {
 	int		i;
 	t_cmd	*tmp;
 	int		*pipefd;
+	char	*doc;
 
+	doc = NULL;
 	if (!cmd)
 		return ;
 	g_state = 1;
 	tmp = cmd;
 	i = 0;
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
+	if (is_built(cmd) && is_herdoc(cmd))
+		doc = heredoc(cmd);
 	if (get_nbpipe(cmd) == 1 && is_built(cmd))
-		exec(cmd);
+		exec(cmd, doc);
 	else
+	{
 		child(cmd, tmp, pipefd, &i);
-	i = wait_process(cmd);
-	handler(i, NULL, "?", NULL);
+		i = wait_process(cmd);
+		handler(i, NULL, "?", NULL);
+	}
 	g_state = 0;
 	if (pipefd)
 		free(pipefd);

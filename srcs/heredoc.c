@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 21:37:31 by user42            #+#    #+#             */
-/*   Updated: 2022/03/01 08:50:55 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:40:37 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,15 @@ void	sig_heredoc(int sig)
 int	is_herdoc(t_cmd *cmd)
 {
 	t_token	*redir;
-	int		res;
 
-	res = 0;
 	redir = cmd->redir;
 	while (redir)
 	{
 		if (redir->type == rdin)
-			res = 1;
-		else if (redir->type == rin)
-			res = 0;
+			return (1);
 		redir = redir->next;
 	}
-	return (res);
+	return (0);
 }
 
 static char	*link_here(char *res, char *str)
@@ -84,28 +80,37 @@ static char	*read_here(char *s, char *res)
 	return (res);
 }
 
-char	*heredoc(t_token *redir)
+char	*heredoc(t_cmd *cmd)
 {
 	char	*str;
 	char	*res;
 	int		ex;
+	t_token	*redir;
 
 	ex = 0;
 	res = NULL;
-	if (!redir || !redir->str)
+	if (!cmd->redir || !cmd->redir->str)
 		return (NULL);
-	redir->str = del_unused_quot(redir->str);
-	while (ex == 0)
+	redir = cmd->redir;
+	while (redir)
 	{
-		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
-		if (str && ft_strcmp(redir->str, str) != 0)
-			res = read_here(str, res);
-		else
-			ex = 1;
+		if (redir->type == lim)
+		{
+			redir->str = del_unused_quot(redir->str);
+			while (ex == 0)
+			{
+				str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
+				if (str && ft_strcmp(redir->str, str) != 0)
+					res = read_here(str, res);
+				else
+					ex = 1;
+			}
+			if (str)
+				free(str);
+		}
+		redir = redir->next;
 	}
 	if (!res)
 		res = ft_strdup("");
-	if (str)
-		free(str);
 	return (res);
 }

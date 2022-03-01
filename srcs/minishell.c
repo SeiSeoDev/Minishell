@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 03:37:12 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 14:20:35 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,28 +58,9 @@ void	loop(void)
 		free(str);
 	}
 }
-/*
-**void	sig_handler(int sig)
-**{
-**	printf("Quit (core dumped)\n");
-**	if (sig == SIGINT)
-**	{
-**		rl_replace_line("", 0);
-**		printf("\nIS PARENT\n");
-**		rl_on_new_line();
-**		rl_redisplay();
-**	}
-**	else if (sig == SIGQUIT)
-**	{
-**		ft_putstr_fd("\b\b  \b\b", 1);
-**		return ;
-**	}
-**}
-*/
 
 int	main(int ac, char **av, char **env)
 {
-	t_env	*myenv;
 	char	*str;
 
 	(void)ac;
@@ -88,13 +69,6 @@ int	main(int ac, char **av, char **env)
 	str = ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1);
 	handler(3, NULL, "SHLVL", str);
 	free(str);
-	myenv = handler(3, NULL, NULL, NULL);
-	while (myenv)
-	{
-		printf("%s=%s\n", myenv->name, myenv->val);
-		myenv = myenv->next;
-	}
-	printf("PID : %d\n", getpid());
 	signal(SIGINT, sig_handler2);
 	signal(42, sig_handler2);
 	signal(SIGQUIT, sig_handler2);

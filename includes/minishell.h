@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 08:22:33 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:32:31 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ void	ex_unset(t_cmd *cmd);
 /*
 ** exec.c
 */
-void	exec(t_cmd *cmd);
+void	exec(t_cmd *cmd, char *doc);
 
 /*
 ** utils.c
@@ -204,10 +204,9 @@ void	cmd_add(t_token **tmp, t_cmd *data);
 ** redir.c
 */
 int		find_file(char *path);
-char	*fill_fd(t_cmd *cmd, char *doc);
+void	fill_fd(t_cmd *cmd, char *doc);
 void	close_fd(t_cmd *cmd);
 int		isntopen(t_cmd *cmd);
-char	*heredoc(t_token *redir);
 
 /*
 ** fork.c
@@ -217,11 +216,12 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i);
 void	define_sig(int isparent);
 void	sig_handler(int sig);
 void	sig_handler2(int sig);
+t_token	*is_here(t_cmd *cmd);
 
 /*
 ** heredoc.c
 */
-char	*heredoc(t_token *redir);
+char	*heredoc(t_cmd *cmd);
 void	sig_heredoc(int sig);
 int		is_herdoc(t_cmd *cmd);
 

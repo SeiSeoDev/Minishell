@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 13:18:09 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:30:59 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,35 +122,10 @@ static void	exe_cmd(t_cmd *cmd)
 	exfree(cmd, NULL, 'c', 127);
 }
 
-t_token *is_here(t_cmd *cmd)
+void	exec(t_cmd *cmd, char *doc)
 {
-	t_cmd *tmp;
-	t_token *token;
-	t_token *ret;
-	tmp = cmd;
-	while (tmp)
-	{
-		token = cmd->redir;
-		while (token)
-		{
-			if (token->type == rdin)
-			{
-				ret = token;
-			}	
-			else if (token->type == rin)
-				ret = NULL;
-			token = token->next;
-		}
-		tmp = tmp->next;
-	}
-	return (ret);
-}
-
-void	exec(t_cmd *cmd)
-{
-
 	if (cmd && cmd->redir)
-		fill_fd(cmd, NULL);
+		fill_fd(cmd, doc);
 	if (!cmd || isntopen(cmd) || !cmd->arg || !cmd->arg->str)
 		exfree(cmd, NULL, 'c', 1);
 	dup2(cmd->fdin, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 08:21:42 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 14:21:10 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	cmd_creat(t_token *token)
 	}
 	if (!parsing_error(res))
 		return ;
-	print_cmd(res);
 	parent(res);
 }
 
