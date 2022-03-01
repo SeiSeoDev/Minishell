@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 17:39:47 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:10:47 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,29 +91,4 @@ int	is_built(t_cmd *cmd)
 	else if (!ft_strcmp(cmd->arg->str, "exit"))
 		return (7);
 	return (0);
-}
-
-t_token	*is_here(t_cmd *cmd)
-{
-	t_cmd	*tmp;
-	t_token	*token;
-	t_token	*ret;
-
-	tmp = cmd;
-	while (tmp)
-	{
-		token = cmd->redir;
-		while (token)
-		{
-			if (token->type == rdin)
-			{
-				ret = token;
-			}	
-			else if (token->type == rin)
-				ret = NULL;
-			token = token->next;
-		}
-		tmp = tmp->next;
-	}
-	return (ret);
 }

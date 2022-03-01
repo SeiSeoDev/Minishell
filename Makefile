@@ -6,7 +6,7 @@
 #    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/03/01 08:22:46 by dasanter         ###   ########.fr        #
+#    Updated: 2022/03/01 17:52:57 by dasanter         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(HEADER)
 	make -C $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) $(FLAGS) -o $(NAME) -lreadline -g
 
 norme:
 	norminette ./$(LIBFT)

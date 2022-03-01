@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 17:35:04 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:13:36 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_token	*is_here(t_cmd *cmd)
+{
+	t_token	*token;
+	t_token	*ret;
+
+	token = cmd->redir;
+	while (token)
+	{
+		if (token->type == rdin)
+		{
+			ret = token;
+		}	
+		else if (token->type == rin)
+			ret = NULL;
+		token = token->next;
+	}
+	return (ret);
+}
 
 void	close_fd(t_cmd *cmd)
 {
@@ -23,13 +42,6 @@ void	close_fd(t_cmd *cmd)
 			close(token->fd);
 		token = token->next;
 	}
-}
-
-void	print_err(char *str, char *file)
-{
-	ft_putstr_fd("Minishell: ", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(file, 2);
 }
 
 int	isntopen(t_cmd *cmd)

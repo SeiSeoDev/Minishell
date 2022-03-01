@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 17:38:49 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:08:29 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,30 +70,22 @@ static char	*creat_exe(t_env *env, t_cmd *cmd, int j, int i)
 
 static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 {
-	if (!ft_strcmp(c->arg->str, "/"))
+	if (ft_strncmp(c->arg->str, ".", 1))
 	{
-		fprintf(stderr, "Minishell: %s: Is a directory\n", s);
-		exfree(c, NULL, 'c', 126);
+		if (chdir(c->arg->str) == -1)
+		{
+			print_err(s, ": Not a directory\n");
+			exfree(c, NULL, 'c', 127);
+		}
+		else
+		{
+			print_err(s, ": Is a directory\n");
+			exfree(c, NULL, 'c', 126);
+		}
 	}
 	env = handler(3, NULL, "PWD", NULL);
 	if (env)
 		exe = ft_strjoin(env->val, &c->arg->str[1]);
-	if (find_file(exe))
-	{
-		if (!ft_strncmp(c->arg->str, "/", 1))
-		{
-			fprintf(stderr, "Minishell: %s: Is a directory\n", s);
-			exfree(c, NULL, 'c', 126);
-		}
-	}
-	else
-	{
-		if (!ft_strncmp(c->arg->str, "/", 1))
-		{
-			fprintf(stderr, "Minishell: %s: No such file or directory\n", s);
-			exfree(c, NULL, 'c', 127);
-		}
-	}
 	return (exe);
 }
 
@@ -106,7 +98,7 @@ static void	exe_cmd(t_cmd *cmd)
 
 	env = handler(3, NULL, "PATH", NULL);
 	exe = creat_exe(env, cmd, 0, 0);
-	if (!exe || !ft_strncmp(cmd->arg->str, "/", 1))
+	if (!exe)
 		exe = exe_extra(cmd, env, exe, cmd->arg->str);
 	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);

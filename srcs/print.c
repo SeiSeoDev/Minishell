@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 13:44:02 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 03:30:45 by user42           ###   ########.fr       */
+/*   Updated: 2022/03/01 18:10:23 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_err(char *str, char *file)
+{
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(file, 2);
+}
 
 void	del_unquot_extra(char *str, int *i, int *j, char q)
 {

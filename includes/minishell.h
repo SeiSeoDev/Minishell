@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 17:56:00 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:09:48 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ void	del_token(t_token **token, t_token *del);
 */
 void	print_cmd(t_cmd *cmd);
 void	print_token(t_token *token);
+void	print_err(char *str, char *file);
 
 /*
 ** handler.c

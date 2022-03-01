@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 17:56:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:01:40 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	wait_process(t_cmd *cmd)
 	{
 		if (!is_built(tmp))
 		{
-			if (waitpid(tmp->pid, &status, 0) == -1)
+			if (tmp->pid && waitpid(tmp->pid, &status, 0) == -1)
 				write(STDERR_FILENO, "ERROR\n", 6);
 			if (WIFEXITED(status))
 				tmp->exit = WEXITSTATUS(status);
@@ -92,7 +92,7 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int i)
 				dup2(fd_in, STDIN_FILENO);
 			child_extra(cmd, tmp, &pipefd[i * 2], doc);
 		}
-		if (doc)
+		if (doc && doc[0])
 			free(doc);
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);
