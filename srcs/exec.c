@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 17:31:40 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:09:41 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,10 +144,8 @@ void	exec(t_cmd *cmd, char *doc)
 	else if (!ft_strcmp(cmd->arg->str, "exit"))
 		exfree(cmd, "exit", 'c', 0);
 	else
-	{
-		dup2(cmd->fdout, STDOUT_FILENO);
-		if (is_here(cmd))
-			dup2(cmd->fdin, STDIN_FILENO);
+	{		
+		dup2(cmd->fdout, STDOUT_FILENO);	
 		exe_cmd(cmd);
 	}
 	close_fd(cmd);
