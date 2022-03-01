@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 18:34:00 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:53:15 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	parent(t_cmd *cmd)
 	tmp = cmd;
 	handler(0, NULL, "?", NULL);
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
-	if (is_built(cmd) && is_herdoc(cmd))
+	if (get_nbpipe(cmd) == 1 && is_built(cmd) && is_herdoc(cmd))
 		doc = heredoc(cmd);
 	if (get_nbpipe(cmd) == 1 && is_built(cmd))
 		exec(cmd, doc);
