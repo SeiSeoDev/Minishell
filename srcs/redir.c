@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 18:35:45 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:48:48 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	fill_fd(t_cmd *c, char *doc)
 	int		ftab[2];
 
 	t = c->redir;
-	while (t)
+	while (c && t)
 	{
 		if (t->type == rout)
 			c->fdout = open(t->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
@@ -96,6 +96,8 @@ void	fill_fd(t_cmd *c, char *doc)
 			t->fd = c->fdout;
 		t = t->next;
 	}
+	if (!doc)
+		return ;
 	if (c && is_here(c) && doc && !is_built(c))
 		here_write(ftab, c, doc);
 }
