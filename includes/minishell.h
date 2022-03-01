@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 18:06:48 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 08:22:33 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,18 +118,15 @@ typedef struct s_env
 /*
 ** free.c
 */
-
 void	free_token(t_token *token);
 void	free_cmd(t_cmd *cmd);
 void	free_env(t_env *env);
-void	free_tab(char **tab);
 void	ctrfree(void *ptr, char *err, char type, int num);
 void	exfree(void *ptr, char *err, char typ, int num);
 
 /*
 ** usefull_pars.c
 */
-
 void	skip_cot(char *str, int *i);
 void	split(char *str, int *i, int *last);
 void	get_type(t_token *tmp, int *l, int *f);
@@ -139,20 +136,17 @@ t_token	*token_syntax(t_token *token);
 /*
 ** expend.c
 */
-
 char	*del_unused_quot(char *str);
-char	*expend_words(char *str);
+char	*expend_words(char *str, int i);
 
 /*
 ** pars.c
 */
-
 void	split_words(char *str);
 
 /*
 ** init.c
 */
-
 t_env	*init_env(t_env *next, char *name, char *val);
 t_token	*init_token(t_token *next, char *str, int type);
 t_cmd	*init_cmd(t_cmd *next, t_token *arg, t_token *redir);
@@ -162,43 +156,37 @@ void	del_token(t_token **token, t_token *del);
 /*
 ** print.c
 */
-
 void	print_cmd(t_cmd *cmd);
 void	print_token(t_token *token);
 
 /*
 ** handler.c
 */
-
 t_env	*handler(int opt, char **env, char *name, char *val);
 
 /*
-** echo.c
+** ex_built.c
 */
-
 int		ex_echo(t_cmd *cmd);
-void	ex_env(t_cmd *cmd);
+int		is_built(t_cmd *cmd);
+int		ex_cd(t_cmd *cmd);
+int		ex_pwd(t_cmd *cmd);
+
+/*
+** ex_env.c
+*/
 void	ex_port(t_cmd *cmd);
+void	ex_env(t_cmd *cmd);
 void	ex_unset(t_cmd *cmd);
 
 /*
 ** exec.c
 */
-
 void	exec(t_cmd *cmd);
-void	ex_hit(t_cmd *cmd);
-
-/*
-** path.c
-*/
-
-int		ex_cd(t_cmd *cmd);
-int		ex_pwd(t_cmd *cmd);
 
 /*
 ** utils.c
 */
-
 char	**get_env(t_env *env);
 char	*get_value(char *ret);
 char	*get_name(char *ret);
@@ -206,17 +194,17 @@ char	*get_name(char *ret);
 /*
 ** cmd.c
 */
-
 t_cmd	*parsing_error(t_cmd *cmd);
 t_token	*cmd_arg(t_token **tmp);
 t_token	*cmd_redir(t_token **tmp);
+t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token);
+void	cmd_add(t_token **tmp, t_cmd *data);
 
 /*
 ** redir.c
 */
-
 int		find_file(char *path);
-char	*fill_fd(t_cmd *cmd);
+char	*fill_fd(t_cmd *cmd, char *doc);
 void	close_fd(t_cmd *cmd);
 int		isntopen(t_cmd *cmd);
 char	*heredoc(t_token *redir);
@@ -224,14 +212,17 @@ char	*heredoc(t_token *redir);
 /*
 ** fork.c
 */
-
-int		is_built(t_cmd *cmd);
-void	child(t_cmd *cmd);
+void	parent(t_cmd *cmd);
+void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i);
 void	define_sig(int isparent);
 void	sig_handler(int sig);
 void	sig_handler2(int sig);
+
+/*
+** heredoc.c
+*/
+char	*heredoc(t_token *redir);
 void	sig_heredoc(int sig);
-t_cmd	*cmd_init(t_cmd *res, t_token **tmp, t_token *token);
-void	cmd_add(t_token **tmp, t_cmd *data);
+int		is_herdoc(t_cmd *cmd);
 
 #endif

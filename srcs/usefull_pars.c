@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   usefull_pars.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 14:51:36 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 16:17:11 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/28 14:57:13 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,14 @@ void	split(char *str, int *i, int *last)
 	while (str[*i] == ' ' || str[*i] == '\t')
 		(*i)++;
 	*last = *i;
-	if (ft_strncmp(&str[*i], "<<", 2) == 0 || ft_strncmp(&str[*i], ">>", 2) == 0)
+	if (!ft_strncmp(&str[*i], "<<", 2) || !ft_strncmp(&str[*i], ">>", 2))
 		(*i) += 2;
 	else if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
 		(*i)++;
 	else
 	{
-		while (str[*i] && !(str[*i] == '|' || str[*i] == '<' || str[*i] == '>' ||
-			str[*i] == ' ' || str[*i] == '\t'))
+		while (str[*i] && !(str[*i] == '|' || str[*i] == '<' || str[*i] == '>'
+				|| str[*i] == ' ' || str[*i] == '\t'))
 		{
 			if (str[*i] == '"' || str[*i] == '\'')
 				skip_cot(str, i);
@@ -108,22 +108,28 @@ void	get_type(t_token *tmp, int *l, int *f)
 
 t_token	*token_syntax(t_token *token)
 {
-	t_token	*tmp;
+	t_token	*t;
+	int		ret;
 
-	tmp = token;
-	while (tmp)
+	t = token;
+	ret = 0;
+	if (!token)
+		return (NULL);
+	if (t->type == pip)
+		ret = 1;
+	while (t && ret == 0)
 	{
-		if (tmp->type == pip && !tmp->next)
-		{
-			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 2);
-			return (NULL);
-		}
-		if (tmp->type == pip && tmp->next && tmp->next->type == pip)
-		{
-			ctrfree(token, "minishell: syntax error near unexpected token\n", 't', 2);
-			return (NULL);
-		}
-		tmp = tmp->next;
+		if ((t->type == pip && !t->next) || (t->type == pip
+				&& t->next && t->next->type == pip) || (t->type >= 3
+				&& t->next && t->next->type >= pip))
+			ret = 1;
+		if (!t->next)
+			break ;
+		t = t->next;
 	}
-	return (token);
+	if (!ret)
+		return (token);
+	printf("Minishell: syntax error near unexpected token: %s\n", t->str);
+	ctrfree(token, NULL, 't', 2);
+	return (NULL);
 }

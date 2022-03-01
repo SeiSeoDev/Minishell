@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/25 18:56:36 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 13:18:09 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,13 @@ static char	**creat_arg(t_cmd *cmd)
 	return (arg);
 }
 
-static char	*creat_exe(t_env *env, t_cmd *cmd)
+static char	*creat_exe(t_env *env, t_cmd *cmd, int j, int i)
 {
 	char	*exe;
-	int		i;
-	int		j;
 
 	if (!env || !env->val)
 		return (NULL);
-	i = -1;
-	j = i + 1;
-	while (env->val[++i])
+	while (env->val[i])
 	{
 		if (env->val[i] == ':')
 		{
@@ -67,112 +63,63 @@ static char	*creat_exe(t_env *env, t_cmd *cmd)
 			free(exe);
 			j = i + 1;
 		}
+		i++;
 	}
 	return (NULL);
 }
 
-static int	exe_cmd(t_cmd *cmd)
+static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
+{
+	if (!ft_strcmp(c->arg->str, "/"))
+	{
+		fprintf(stderr, "Minishell: %s: Is a directory\n", s);
+		exfree(c, NULL, 'c', 126);
+	}
+	env = handler(3, NULL, "PWD", NULL);
+	if (env)
+		exe = ft_strjoin(env->val, &c->arg->str[1]);
+	if (find_file(exe))
+	{
+		if (!ft_strncmp(c->arg->str, "/", 1))
+		{
+			fprintf(stderr, "Minishell: %s: Is a directory\n", s);
+			exfree(c, NULL, 'c', 126);
+		}
+	}
+	else
+	{
+		if (!ft_strncmp(c->arg->str, "/", 1))
+		{
+			fprintf(stderr, "Minishell: %s: No such file or directory\n", s);
+			exfree(c, NULL, 'c', 127);
+		}
+	}
+	return (exe);
+}
+
+static void	exe_cmd(t_cmd *cmd)
 {
 	t_env	*env;
 	char	**arg;
 	char	*exe;
 	char	**all;
-	int		res;
 
 	env = handler(3, NULL, "PATH", NULL);
-	exe = NULL;
-	if (ft_strncmp(cmd->arg->str, ".", 1) || ft_strncmp(cmd->arg->str, "/", 1))
-		exe = creat_exe(env, cmd);
-	else
-	{
-		if (!ft_strcmp(cmd->arg->str, "/"))
-		{
-			printf("Minishell: %s: Is a directory\n", cmd->arg->str);
-			exfree(cmd, NULL, 'c', 126);
-		}
-		env = handler(3, NULL, "PWD", NULL);
-		if (env)
-			exe = ft_strjoin(env->val, &cmd->arg->str[1]);
-		if (find_file(exe))
-		{
-			if (!ft_strncmp(cmd->arg->str, "/", 1))
-			{
-				printf("Minishell: %s: Is a directory\n", cmd->arg->str);
-				exfree(cmd, NULL, 'c', 126);
-			}
-			printf("Minishell: %s: command not found\n", cmd->arg->str);
-			exfree(cmd, NULL, 'c', 127);
-		}
-		else
-		{
-			if (!ft_strncmp(cmd->arg->str, "/", 1))
-				printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
-			else
-				printf("Minishell: %s: command not found\n", cmd->arg->str);
-			exfree(cmd, NULL, 'c', 127);
-		}
-	}
-	if (exe)
-		printf("exe = %s\n", exe);
-	else
-	{
-		printf("Minishell: %s: command not found\n", cmd->arg->str);
-		exfree(cmd, NULL, 'c', 127);
-	}
-	if (cmd)
-		print_cmd(cmd);
-	else
-	{
-		printf("Minishell: %s: command not found\n", cmd->arg->str);
-		exfree(cmd, NULL, 'c', 127);
-	}
+	exe = creat_exe(env, cmd, 0, 0);
+	if (!exe || !ft_strncmp(cmd->arg->str, "/", 1))
+		exe = exe_extra(cmd, env, exe, cmd->arg->str);
 	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
 	arg = creat_arg(cmd);
-	res = find_file(exe);
-	if (!arg || !all || !exe || !res)
-		res = -1;
-	else if (access(exe, X_OK) == -1)
-	{
-		printf("Minishel: %s: Permission denied\n", cmd->arg->str);
-		ctrfree(cmd, NULL, 'c', 1);
-		return (-1);
-	}
-	else if (execve(exe, arg, all) == -1)
-	{
-		if (errno == ENOTDIR)// A component of the path prefix is not a directory.
-			res = errno;
-		if (errno == ENAMETOOLONG)// A component of a pathname exceeded 255 characters, or an entire path name exceeded 1023 characters.
-			res = errno;
-		if (errno == ENOENT)// The new process file does not exist.
-			res = errno;
-		if (errno == ELOOP)// Too many symbolic links were encountered in translating the pathname.
-			res = errno;
-		if (errno == EACCES)// Search permission is denied for a component of the path prefix.
-			res = errno;	// The new process file is not an ordinary file. The new process file mode denies execute permission.
-		if (errno == ENOEXEC)// The new process file has the appropriate access permission, but has an invalid magic number in its header.
-			res = errno;
-		if (errno == ENOMEM)// The new process requires more virtual memory than is allowed by the imposed maximum (getrlimit(2POSIX)).
-			res = errno;
-		if (errno == E2BIG)// The number of bytes in the new process argument list is larger than the system-imposed limit.
-			res = errno;
-		if (errno == EFAULT)// The new process file is not as long as indicated by the size values in its header. path, argv, or envp point to an illegal address.
-			res = errno;
-		if (errno == EIO)// An I/O error occurred while reading from the file system.
-			res = errno;
-		if (errno == EINVAL)// A system error occurred.
-			res = errno;
-		if (errno == EPERM)// The operation is performed in system address space. The operation is performed by a multi-threaded process.
-			res = errno;
-		printf("Error in execve\n");
-	}
+	execve(exe, arg, all);
+	fprintf(stderr, "Minishell: %s: command not found\n", cmd->arg->str);
 	if (arg)
 		free(arg);
 	if (exe)
 		free(exe);
 	if (all)
 		ft_free_tab(all);
-	return (res);
+	exfree(cmd, NULL, 'c', 127);
 }
 
 t_token *is_here(t_cmd *cmd)
@@ -201,55 +148,32 @@ t_token *is_here(t_cmd *cmd)
 
 void	exec(t_cmd *cmd)
 {
-	int		fdok;
-	int		res;
-	int		pitab[2];
-	int		pid;
-	char 	*herestr;
-	pid = cmd->pid;
-	herestr = NULL;
+
 	if (cmd && cmd->redir)
-	  	herestr = fill_fd(cmd);
-	fdok = isntopen(cmd);
-	if (is_here(cmd))
+		fill_fd(cmd, NULL);
+	if (!cmd || isntopen(cmd) || !cmd->arg || !cmd->arg->str)
+		exfree(cmd, NULL, 'c', 1);
+	dup2(cmd->fdin, STDIN_FILENO);
+	if (!ft_strcmp(cmd->arg->str, "echo"))
+		ex_echo(cmd);
+	else if (!ft_strcmp(cmd->arg->str, "cd"))
+		ex_cd(cmd);
+	else if (!ft_strcmp(cmd->arg->str, "pwd"))
+		ex_pwd(cmd);
+	else if (!ft_strcmp(cmd->arg->str, "env"))
+		ex_env(cmd);
+	else if (!ft_strcmp(cmd->arg->str, "unset"))
+		ex_unset(cmd);
+	else if (!ft_strcmp(cmd->arg->str, "export"))
+		ex_port(cmd);
+	else if (!ft_strcmp(cmd->arg->str, "exit"))
+		exfree(cmd, "exit", 'c', 0);
+	else
 	{
-		pipe(pitab);
-		printf("pipe : %d --> %d\n", pitab[0], pitab[1]);
-		printf("HEREDOCSTR : %s\n", herestr);
-		dup2(pitab[0], STDIN_FILENO);
-		dup2(pitab[1], STDOUT_FILENO);
-		printf("pipe : %d --> %d\n", pitab[0], pitab[1]);
-		write(pitab[1], herestr, ft_strlen(herestr));
-	}
-	if (cmd != NULL && cmd->arg != NULL && !fdok)
-	{
-		if (!ft_strcmp(cmd->arg->str, "echo"))
-			ex_echo(cmd);
-		else if (!ft_strcmp(cmd->arg->str, "cd"))
-			ex_cd(cmd);
-		else if (!ft_strcmp(cmd->arg->str, "pwd"))
-			ex_pwd(cmd);
-		else if (!ft_strcmp(cmd->arg->str, "env"))
-			ex_env(cmd);
-		else if (!ft_strcmp(cmd->arg->str, "unset"))
-			ex_unset(cmd);
-		else if (!ft_strcmp(cmd->arg->str, "export"))
-			ex_port(cmd);
-		else if (!ft_strcmp(cmd->arg->str, "exit"))
-			exfree(cmd, "exit", 'c', 0);
-		else if (!fdok)
-		{
-			dup2(cmd->fdout, STDOUT_FILENO);
-			res = exe_cmd(cmd);
-			// if (res == 0)
-			// {
-			// 	if (!ft_strncmp(cmd->arg->str, "/", 1))
-			// 		printf("Minishell: %s: No such file or directory\n", cmd->arg->str);
-			// 	else
-			// 		printf("Minishell: %s: command not found\n", cmd->arg->str);
-			// 	return (127);
-			// }
-		}
+		dup2(cmd->fdout, STDOUT_FILENO);
+		if (is_here(cmd))
+			dup2(cmd->fdin, STDIN_FILENO);
+		exe_cmd(cmd);
 	}
 	close_fd(cmd);
 }

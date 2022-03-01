@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:47:15 by dasanter          #+#    #+#             */
-/*   Updated: 2022/01/19 17:31:53 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 00:11:24 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ char	*join_nameval(char *name, char *val)
 	int		i;
 	int		j;
 	char	*res;
-	
+
 	i = 0;
+	if (!name || !val)
+		return (NULL);
 	res = malloc(sizeof(char) * (ft_strlen(name) + ft_strlen(val) + 2));
 	if (!res)
 		return (NULL);

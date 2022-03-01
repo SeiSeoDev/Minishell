@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:39:19 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 08:21:42 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	cmd_creat(t_token *token)
 	t_token	*tmp;
 
 	if (!token)
-		child(NULL);
+		return ;
 	data = init_cmd(NULL, NULL, NULL);
 	if (!data)
 		exfree(token, "Error init cmd\n", 't', 1);
@@ -35,25 +35,33 @@ void	cmd_creat(t_token *token)
 		else
 			cmd_add(&tmp, data);
 	}
-	res = parsing_error(res);
-	if (!res)
+	if (!parsing_error(res))
 		return ;
 	print_cmd(res);
-	child(res);
+	parent(res);
 }
 
 void	expension(t_token *token)
 {
 	t_token	*tmp;
+	int		i;
 
 	tmp = token;
 	while (tmp)
 	{
 		if (tmp->type == word || tmp->type == fd)
 		{
-			tmp->str = expend_words(tmp->str);
-			if (!tmp->str || !ft_strcmp(tmp->str, ""))
-				del_token(&token, tmp);
+			i = 0;
+			while (tmp->str && tmp->str[i])
+			{
+				if (tmp->str[i] == '$' && quot_status(tmp->str, i) != 1
+					&& (ft_isalnum(tmp->str[i + 1]) || tmp->str[i + 1] == '_'
+						|| tmp->str[i + 1] == '?' || tmp->str[i + 1] == '$'))
+					tmp->str = expend_words(tmp->str, i);
+				else
+					tmp->str = del_unused_quot(tmp->str);
+				i++;
+			}
 		}
 		tmp = tmp->next;
 	}
@@ -78,7 +86,8 @@ void	tokenize(t_token *token)
 			l = 1;
 		tmp = tmp->next;
 	}
-	token = token_syntax(token);
+	if (!token_syntax(token))
+		return ;
 	expension(token);
 }
 
@@ -87,31 +96,25 @@ void	split_words(char *str)
 	t_token	*token;
 	t_token	*tmp;
 	int		i;
-	int		last;
+	int		s;
 
 	i = 0;
-	last = 0;
-	tmp = NULL;
-	token = NULL;
+	s = 0;
+	if (!str || str[0] == '\0')
+		return ;
+	split(str, &i, &s);
+	token = init_token(NULL, ft_strndup(&str[s], i - s), 0);
+	tmp = token;
 	while (str[i])
 	{
-		split(str, &i, &last);
-		if (i > last)
+		split(str, &i, &s);
+		if (i > s)
 		{
+			token->next = init_token(NULL, ft_strndup(&str[s], i - s), 0);
+			token = token->next;
 			if (!token)
-			{
-				token = init_token(NULL, ft_strndup(&str[last], i - last), 0);
-				tmp = token;
-			}
-			else
-			{
-				token->next = init_token(NULL, ft_strndup(&str[last], i - last), 0);
-				token = token->next;
-			}
-			if (!token)
-				exfree(token, "error init token...\n", 't', 1);
+				ctrfree(tmp, "error init token...\n", 't', 1);
 		}
 	}
-//	print_token(tmp);
 	tokenize(tmp);
 }
