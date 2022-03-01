@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 15:40:32 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 16:37:24 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,20 @@ int	isntopen(t_cmd *cmd)
 	return (0);
 }
 
+void	here_write(int *ftab, t_cmd *c, char *doc)
+{
+	pipe(ftab);
+	c->fdin = ftab[0];
+	write(ftab[1], doc, ft_strlen(doc));
+	close(ftab[1]);
+}
+
 void	fill_fd(t_cmd *c, char *doc)
 {
 	t_token	*t;
-    int ftab[2];
-	int her;
+	int		ftab[2];
 
 	t = c->redir;
-	her = 0;
 	while (t)
 	{
 		if (t->type == rout)
@@ -73,21 +79,13 @@ void	fill_fd(t_cmd *c, char *doc)
 		{
 			c->fdin = open(t->next->str, O_RDONLY);
 			t->fd = c->fdin;
-			her = 0;
 		}
-		else if (t->type == rdin)
-			her = 1;
 		if (t->type == rout || t->type == rdout)
 			t->fd = c->fdout;
 		t = t->next;
 	}
-	if (her && doc && !is_built(c))
-	{
-		pipe(ftab);
-		c->fdin = ftab[0];
-		write(ftab[1], doc, ft_strlen(doc));
-		close(ftab[1]);
-	}
+	if (is_here(c) && doc && !is_built(c))
+		here_write(ftab, c, doc);
 	if (doc)
-			free(doc);
+		free(doc);
 }

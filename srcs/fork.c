@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 15:47:01 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 16:59:33 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 			close(pipefd[*i * 2]);
 			close(pipefd[*i * 2 + 1]);
 			exec(tmp, doc);
+			free(doc);
 			exfree(cmd, NULL, 'c', 1);
 		}
 		dup2(pipefd[*i * 2], fd_in);
@@ -127,6 +128,7 @@ void	parent(t_cmd *cmd)
 	g_state = 1;
 	tmp = cmd;
 	i = 0;
+	handler(0, NULL, "?", NULL);
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	if (is_built(cmd) && is_herdoc(cmd))
 		doc = heredoc(cmd);
