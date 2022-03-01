@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 15:40:32 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:17:29 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ int	isntopen(t_cmd *cmd)
 void	fill_fd(t_cmd *c, char *doc)
 {
 	t_token	*t;
-    int ftab[2];
-	int her;
+	int		ftab[2];
+	int		her;
 
 	t = c->redir;
 	her = 0;
@@ -89,5 +89,5 @@ void	fill_fd(t_cmd *c, char *doc)
 		close(ftab[1]);
 	}
 	if (doc)
-			free(doc);
+		free(doc);
 }

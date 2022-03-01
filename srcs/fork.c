@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 16:29:29 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:24:44 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,17 @@ int	wait_process(t_cmd *cmd)
 	return (tmp->exit);
 }
 
+void	child_extra(t_cmd *cmd, t_cmd *tmp, int *pipefd, char *doc)
+{
+	signal(SIGQUIT, SIG_DFL);
+	if (tmp->next)
+		dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	exec(tmp, doc);
+	exfree(cmd, NULL, 'c', 1);
+}
+
 void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 {
 	int		fd_in;
@@ -96,15 +107,9 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 		tmp->pid = fork();
 		if (tmp->pid == 0)
 		{
-			signal(SIGQUIT, SIG_DFL);
 			if (get_nbpipe(cmd) != get_nbpipe(tmp))
 				dup2(fd_in, STDIN_FILENO);
-			if (tmp->next)
-				dup2(pipefd[*i * 2 + 1], STDOUT_FILENO);
-			close(pipefd[*i * 2]);
-			close(pipefd[*i * 2 + 1]);
-			exec(tmp, doc);
-			exfree(cmd, NULL, 'c', 1);
+			child_extra(cmd, tmp, &pipefd[*i * 2], doc);
 		}
 		if (doc)
 			free(doc);
@@ -124,8 +129,6 @@ void	parent(t_cmd *cmd)
 	char	*doc;
 
 	doc = NULL;
-	if (!cmd)
-		return ;
 	g_state = 1;
 	tmp = cmd;
 	i = 0;
