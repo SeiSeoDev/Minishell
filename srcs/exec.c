@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 18:22:57 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 19:06:25 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static char	*creat_exe(t_env *env, t_cmd *cmd, int j, int i)
 
 static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 {
-	if (ft_strncmp(c->arg->str, ".", 1))
+	if (ft_search(c->arg->str, '/'))
 	{
 		if (chdir(c->arg->str) == -1)
 		{
@@ -104,7 +104,7 @@ static void	exe_cmd(t_cmd *cmd)
 	all = get_env(env);
 	arg = creat_arg(cmd);
 	execve(exe, arg, all);
-	fprintf(stderr, "Minishell: %s: command not found\n", cmd->arg->str);
+	print_err(cmd->arg->str, ": command not found\n");
 	if (arg)
 		free(arg);
 	if (exe)
