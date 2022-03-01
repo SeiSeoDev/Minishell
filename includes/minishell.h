@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:14:25 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:06:48 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ int		find_file(char *path);
 char	*fill_fd(t_cmd *cmd);
 void	close_fd(t_cmd *cmd);
 int		isntopen(t_cmd *cmd);
+char	*heredoc(t_token *redir);
 
 /*
 ** fork.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:04:39 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:18:20 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*link_here(char *res, char *str)
 	return (link);
 }
 
-static char	*heredoc(t_token *redir)
+char	*heredoc(t_token *redir)
 {
 	char	*str;
 	char	*res;
@@ -125,7 +125,6 @@ char	*fill_fd(t_cmd *cmd)
 {
 	char	*doc;
 	t_token *token;
-	int		pipfd[2];
 
 	if (!cmd)
 		return (NULL);
@@ -177,15 +176,16 @@ char	*fill_fd(t_cmd *cmd)
 		}
 		token = token->next;
 	}
-	if (doc)
-	{
-		if (pipe(pipfd) == -1)
-			return (NULL);
-		write(pipfd[1], doc, ft_strlen(doc));
-		dup2(pipfd[0], cmd->fdin);
-		// close(pipfd[1]);
-		// close(pipfd[0]);
-		free(doc);
-	}
+	// if (doc)
+	// {
+	// 	if (pipe(pipfd) == -1)
+	// 		return (NULL);
+	// 	write(pipfd[1], doc, ft_strlen(doc));
+	// 	dup2(pipfd[0], cmd->fdin);
+	// 	// close(pipfd[1]);
+	// 	// close(pipfd[0]);
+	// 	free(doc);
+	// }
+	printf("HEREDOCSTR : %s\n", doc);
 	return (doc);
 }

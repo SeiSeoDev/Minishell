@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/02/25 17:15:20 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:56:36 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,15 +175,52 @@ static int	exe_cmd(t_cmd *cmd)
 	return (res);
 }
 
+t_token *is_here(t_cmd *cmd)
+{
+	t_cmd *tmp;
+	t_token *token;
+	t_token *ret;
+	tmp = cmd;
+	while (tmp)
+	{
+		token = cmd->redir;
+		while (token)
+		{
+			if (token->type == rdin)
+			{
+				ret = token;
+			}	
+			else if (token->type == rin)
+				ret = NULL;
+			token = token->next;
+		}
+		tmp = tmp->next;
+	}
+	return (ret);
+}
+
 void	exec(t_cmd *cmd)
 {
 	int		fdok;
 	int		res;
-
+	int		pitab[2];
+	int		pid;
+	char 	*herestr;
+	pid = cmd->pid;
+	herestr = NULL;
 	if (cmd && cmd->redir)
-	  	fill_fd(cmd);
-	dup2(cmd->fdin, STDIN_FILENO);
+	  	herestr = fill_fd(cmd);
 	fdok = isntopen(cmd);
+	if (is_here(cmd))
+	{
+		pipe(pitab);
+		printf("pipe : %d --> %d\n", pitab[0], pitab[1]);
+		printf("HEREDOCSTR : %s\n", herestr);
+		dup2(pitab[0], STDIN_FILENO);
+		dup2(pitab[1], STDOUT_FILENO);
+		printf("pipe : %d --> %d\n", pitab[0], pitab[1]);
+		write(pitab[1], herestr, ft_strlen(herestr));
+	}
 	if (cmd != NULL && cmd->arg != NULL && !fdok)
 	{
 		if (!ft_strcmp(cmd->arg->str, "echo"))

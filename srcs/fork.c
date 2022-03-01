@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/02/25 17:15:27 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:54:55 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	child(t_cmd *cmd)
 			if (tmp->pid == 0)
 			{
 				signal(SIGQUIT, SIG_DFL);
-				if (get_nbpipe(cmd) != get_nbpipe(tmp) || herdoc(tmp))
+				if (get_nbpipe(cmd) != get_nbpipe(tmp))
 					dup2(fd_in, STDIN_FILENO);
 				if (tmp->next)
 					dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
