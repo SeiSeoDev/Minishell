@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 14:22:59 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:55:49 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,25 +98,19 @@ int	is_built(t_cmd *cmd)
 
 t_token	*is_here(t_cmd *cmd)
 {
-	t_cmd	*tmp;
 	t_token	*token;
 	t_token	*ret;
 
-	tmp = cmd;
-	while (tmp)
+	token = cmd->redir;
+	while (token)
 	{
-		token = cmd->redir;
-		while (token)
+		if (token->type == rdin)
 		{
-			if (token->type == rdin)
-			{
-				ret = token;
-			}	
-			else if (token->type == rin)
-				ret = NULL;
-			token = token->next;
-		}
-		tmp = tmp->next;
+			ret = token;
+		}	
+		else if (token->type == rin)
+			ret = NULL;
+		token = token->next;
 	}
 	return (ret);
 }

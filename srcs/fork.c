@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 17:34:39 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:48:20 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	wait_process(t_cmd *cmd)
 	{
 		if (!is_built(tmp))
 		{
-			if (waitpid(tmp->pid, &status, 0) == -1)
+			if (tmp->pid && waitpid(tmp->pid, &status, 0) == -1)
 				write(STDERR_FILENO, "ERROR\n", 6);
 			if (WIFEXITED(status))
 				tmp->exit = WEXITSTATUS(status);
@@ -74,10 +74,6 @@ int	wait_process(t_cmd *cmd)
 		tmp = tmp->next;
 	}
 	tmp = cmd;
-	while (tmp && tmp->exit == 131)
-		tmp = tmp->next;
-	if (tmp && tmp->exit == 131)
-		write(1, "^Quit (core dumped)\n", 21);
 	return (tmp->exit);
 }
 
@@ -111,7 +107,7 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 				dup2(fd_in, STDIN_FILENO);
 			child_extra(cmd, tmp, &pipefd[*i * 2], doc);
 		}
-		if (doc)
+		if (doc && doc[0])
 			free(doc);
 		dup2(pipefd[*i * 2], fd_in);
 		close(pipefd[*i * 2]);
