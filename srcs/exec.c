@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 18:16:21 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:22:57 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ static void	exe_cmd(t_cmd *cmd)
 
 void	exec(t_cmd *cmd, char *doc)
 {
-	fill_fd(cmd, doc);
+	if (cmd && cmd->redir)
+		fill_fd(cmd, doc);
 	if (!cmd || isntopen(cmd) || !cmd->arg || !cmd->arg->str)
 		exfree(cmd, NULL, 'c', 1);
 	dup2(cmd->fdin, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 18:01:40 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:34:00 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int i)
 				dup2(fd_in, STDIN_FILENO);
 			child_extra(cmd, tmp, &pipefd[i * 2], doc);
 		}
-		if (doc && doc[0])
-			free(doc);
+		if (doc)
+			ft_memdel((void **)&doc);
 		dup2(pipefd[i * 2], fd_in);
 		close(pipefd[i * 2]);
 		close(pipefd[(i++) * 2 + 1]);
