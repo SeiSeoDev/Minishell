@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 14:22:59 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:39:47 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ex_echo(t_cmd *cmd)
+void	ex_echo(t_cmd *cmd)
 {
 	int		n;
 	t_token	*arg;
@@ -33,10 +33,9 @@ int	ex_echo(t_cmd *cmd)
 	}
 	if (!n)
 		write(cmd->fdout, "\n", 1);
-	return (1);
 }
 
-int	ex_cd(t_cmd *cmd)
+void	ex_cd(t_cmd *cmd)
 {
 	char	buf[4096];
 	char	*str;
@@ -61,10 +60,9 @@ int	ex_cd(t_cmd *cmd)
 		handler(3, NULL, "OLDPWD", handler(3, NULL, "PWD", NULL)->val);
 		handler(3, NULL, "PWD", getcwd(buf, 4096));
 	}
-	return (1);
 }
 
-int	ex_pwd(t_cmd *cmd)
+void	ex_pwd(t_cmd *cmd)
 {
 	t_env	*myenv;
 
@@ -72,7 +70,6 @@ int	ex_pwd(t_cmd *cmd)
 	myenv = handler(3, NULL, "PWD", NULL);
 	write(1, myenv->val, ft_strlen(myenv->val));
 	write(1, "\n", 1);
-	return (0);
 }
 
 int	is_built(t_cmd *cmd)

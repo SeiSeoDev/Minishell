@@ -3,31 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 17:34:39 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:56:05 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_state = 0;
-
-static int	get_nbpipe(t_cmd *cmd)
-{
-	int		i;
-	t_cmd	*tmp;
-
-	i = 0;
-	tmp = cmd;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return (i);
-}
 
 void	sig_handler(int sig)
 {
@@ -53,7 +38,7 @@ void	sig_handler(int sig)
 		ft_putstr_fd("\b\b  \b\b", 1);
 }
 
-int	wait_process(t_cmd *cmd)
+static void	wait_process(t_cmd *cmd)
 {
 	int		status;
 	t_cmd	*tmp;
@@ -71,14 +56,10 @@ int	wait_process(t_cmd *cmd)
 			else if (WIFSIGNALED(status))
 				tmp->exit = WTERMSIG(status) + 128;
 		}
+		if (!tmp->next)
+			handler(tmp->exit, NULL, "?", NULL);
 		tmp = tmp->next;
 	}
-	tmp = cmd;
-	while (tmp && tmp->exit == 131)
-		tmp = tmp->next;
-	if (tmp && tmp->exit == 131)
-		write(1, "^Quit (core dumped)\n", 21);
-	return (tmp->exit);
 }
 
 void	child_extra(t_cmd *cmd, t_cmd *tmp, int *pipefd, char *doc)
@@ -92,7 +73,7 @@ void	child_extra(t_cmd *cmd, t_cmd *tmp, int *pipefd, char *doc)
 	exfree(cmd, NULL, 'c', 1);
 }
 
-void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
+void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int i)
 {
 	int		fd_in;
 	char	*doc;
@@ -103,19 +84,19 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 	{
 		if (is_herdoc(tmp))
 			doc = heredoc(tmp);
-		pipe(&pipefd[*i * 2]);
+		pipe(&pipefd[i * 2]);
 		tmp->pid = fork();
 		if (tmp->pid == 0)
 		{
 			if (get_nbpipe(cmd) != get_nbpipe(tmp))
 				dup2(fd_in, STDIN_FILENO);
-			child_extra(cmd, tmp, &pipefd[*i * 2], doc);
+			child_extra(cmd, tmp, &pipefd[i * 2], doc);
 		}
 		if (doc)
 			free(doc);
-		dup2(pipefd[*i * 2], fd_in);
-		close(pipefd[*i * 2]);
-		close(pipefd[((*i)++) * 2 + 1]);
+		dup2(pipefd[i * 2], fd_in);
+		close(pipefd[i * 2]);
+		close(pipefd[(i++) * 2 + 1]);
 		tmp = tmp->next;
 	}
 	close(fd_in);
@@ -123,7 +104,6 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 
 void	parent(t_cmd *cmd)
 {
-	int		i;
 	t_cmd	*tmp;
 	int		*pipefd;
 	char	*doc;
@@ -131,7 +111,6 @@ void	parent(t_cmd *cmd)
 	doc = NULL;
 	g_state = 1;
 	tmp = cmd;
-	i = 0;
 	handler(0, NULL, "?", NULL);
 	pipefd = malloc((get_nbpipe(cmd) * 2) * sizeof(int));
 	if (is_built(cmd) && is_herdoc(cmd))
@@ -140,9 +119,8 @@ void	parent(t_cmd *cmd)
 		exec(cmd, doc);
 	else
 	{
-		child(cmd, tmp, pipefd, &i);
-		i = wait_process(cmd);
-		handler(i, NULL, "?", NULL);
+		child(cmd, tmp, pipefd, 0);
+		wait_process(cmd);
 	}
 	g_state = 0;
 	if (pipefd)

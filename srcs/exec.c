@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 17:31:40 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:38:49 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,31 +124,27 @@ static void	exe_cmd(t_cmd *cmd)
 
 void	exec(t_cmd *cmd, char *doc)
 {
-	if (cmd && cmd->redir)
-		fill_fd(cmd, doc);
+	fill_fd(cmd, doc);
 	if (!cmd || isntopen(cmd) || !cmd->arg || !cmd->arg->str)
 		exfree(cmd, NULL, 'c', 1);
 	dup2(cmd->fdin, STDIN_FILENO);
 	if (!ft_strcmp(cmd->arg->str, "echo"))
-		ex_echo(cmd);
+		return (ex_echo(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "cd"))
-		ex_cd(cmd);
+		return (ex_cd(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "pwd"))
-		ex_pwd(cmd);
+		return (ex_pwd(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "env"))
-		ex_env(cmd);
+		return (ex_env(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "unset"))
-		ex_unset(cmd);
+		return (ex_unset(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "export"))
-		ex_port(cmd);
+		return (ex_port(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "exit"))
-		exfree(cmd, "exit", 'c', 0);
-	else
-	{
-		dup2(cmd->fdout, STDOUT_FILENO);
-		if (is_here(cmd))
-			dup2(cmd->fdin, STDIN_FILENO);
-		exe_cmd(cmd);
-	}
+		return (exfree(cmd, "exit", 'c', 0));
+	dup2(cmd->fdout, STDOUT_FILENO);
+	if (is_here(cmd))
+		dup2(cmd->fdin, STDIN_FILENO);
+	exe_cmd(cmd);
 	close_fd(cmd);
 }

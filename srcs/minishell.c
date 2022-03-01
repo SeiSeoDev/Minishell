@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 17:18:31 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:53:33 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,21 @@ void	sig_heredoc(int sig)
 	(void)sig;
 	ft_putchar_fd('\n', 1);
 	exit(0);
+}
+
+int	get_nbpipe(t_cmd *cmd)
+{
+	int		i;
+	t_cmd	*tmp;
+
+	i = 0;
+	tmp = cmd;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
 }
 
 void	loop(void)

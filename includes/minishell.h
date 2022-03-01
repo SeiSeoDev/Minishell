@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 16:01:12 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:56:00 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,10 +167,10 @@ t_env	*handler(int opt, char **env, char *name, char *val);
 /*
 ** ex_built.c
 */
-int		ex_echo(t_cmd *cmd);
 int		is_built(t_cmd *cmd);
-int		ex_cd(t_cmd *cmd);
-int		ex_pwd(t_cmd *cmd);
+void	ex_echo(t_cmd *cmd);
+void	ex_cd(t_cmd *cmd);
+void	ex_pwd(t_cmd *cmd);
 
 /*
 ** ex_env.c
@@ -212,7 +212,7 @@ int		isntopen(t_cmd *cmd);
 ** fork.c
 */
 void	parent(t_cmd *cmd);
-void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i);
+void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int i);
 void	define_sig(int isparent);
 void	sig_handler(int sig);
 t_token	*is_here(t_cmd *cmd);
@@ -223,5 +223,7 @@ t_token	*is_here(t_cmd *cmd);
 char	*heredoc(t_cmd *cmd);
 void	sig_heredoc(int sig);
 int		is_herdoc(t_cmd *cmd);
+
+int		get_nbpipe(t_cmd *cmd);
 
 #endif
