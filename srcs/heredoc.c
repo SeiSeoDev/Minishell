@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 21:37:31 by user42            #+#    #+#             */
-/*   Updated: 2022/03/01 17:34:26 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:12:53 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,21 @@ static char	*link_here(char *res, char *str)
 	int		j;
 	char	*link;
 
-	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 1));
+	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 2));
 	if (!link)
 		return (NULL);
 	i = 0;
 	j = 0;
 	if (res)
 	{
-		while (res[i])
+		while (res && link && res[i])
 			link[j++] = res[i++];
 		free(res);
 	}
 	if (str)
 	{
 		i = 0;
-		while (str[i])
+		while (str && link && str[i])
 			link[j++] = str[i++];
 		free(str);
 	}

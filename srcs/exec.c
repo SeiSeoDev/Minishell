@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 18:08:29 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:16:21 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,11 @@ void	exec(t_cmd *cmd, char *doc)
 	else if (!ft_strcmp(cmd->arg->str, "export"))
 		return (ex_port(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "exit"))
-		return (exfree(cmd, "exit", 'c', 0));
-	dup2(cmd->fdout, STDOUT_FILENO);
-	if (is_here(cmd))
-		dup2(cmd->fdin, STDIN_FILENO);
-	exe_cmd(cmd);
+		exfree(cmd, "exit", 'c', 0);
+	else
+	{		
+		dup2(cmd->fdout, STDOUT_FILENO);
+		exe_cmd(cmd);
+	}
 	close_fd(cmd);
 }
