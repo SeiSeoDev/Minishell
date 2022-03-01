@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 15:47:01 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 16:29:29 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	get_nbpipe(t_cmd *cmd)
 	return (i);
 }
 
-void	sig_handler2(int sig)
+void	sig_handler(int sig)
 {
 	if (sig == SIGINT && g_state == 0)
 	{
@@ -106,6 +106,8 @@ void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i)
 			exec(tmp, doc);
 			exfree(cmd, NULL, 'c', 1);
 		}
+		if (doc)
+			free(doc);
 		dup2(pipefd[*i * 2], fd_in);
 		close(pipefd[*i * 2]);
 		close(pipefd[((*i)++) * 2 + 1]);

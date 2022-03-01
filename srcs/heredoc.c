@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 21:37:31 by user42            #+#    #+#             */
-/*   Updated: 2022/03/01 15:40:37 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 16:31:09 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	sig_heredoc(int sig)
-{
-	rl_on_new_line();
-	(void)sig;
-	ft_putchar_fd('\n', 1);
-	exit(0);
-}
 
 int	is_herdoc(t_cmd *cmd)
 {
@@ -40,24 +32,26 @@ static char	*link_here(char *res, char *str)
 	int		j;
 	char	*link;
 
-	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 2));
+	link = malloc(sizeof(char) * (ft_strlen(res) + ft_strlen(str) + 1));
+	if (!link)
+		return (NULL);
 	i = 0;
 	j = 0;
 	if (res)
 	{
 		while (res[i])
 			link[j++] = res[i++];
+		free(res);
 	}
 	if (str)
 	{
 		i = 0;
 		while (str[i])
 			link[j++] = str[i++];
+		free(str);
 	}
 	link[j++] = '\n';
 	link[j] = '\0';
-	if (res)
-		free(res);
 	return (link);
 }
 
@@ -73,41 +67,46 @@ static char	*read_here(char *s, char *res)
 			s = expend_words(s, i);
 		i++;
 	}
-	res = link_here(res, s);
-	if (!res)
-		return (NULL);
-	free(s);
+	return (link_here(res, s));
+}
+
+static char	*heredoc_extra(t_token *redir, char *res, int ex)
+{
+	char	*str;
+
+	str = NULL;
+	if (res)
+	{
+		free(res);
+		res = NULL;
+	}
+	redir->str = del_unused_quot(redir->str);
+	while (ex == 0)
+	{
+		str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
+		if (str && ft_strcmp(redir->str, str) != 0)
+			res = read_here(str, res);
+		else
+			ex = 1;
+	}
+	if (str)
+		free(str);
 	return (res);
 }
 
 char	*heredoc(t_cmd *cmd)
 {
-	char	*str;
 	char	*res;
-	int		ex;
 	t_token	*redir;
 
-	ex = 0;
-	res = NULL;
-	if (!cmd->redir || !cmd->redir->str)
+	if (!cmd || !cmd->redir)
 		return (NULL);
+	res = NULL;
 	redir = cmd->redir;
 	while (redir)
 	{
 		if (redir->type == lim)
-		{
-			redir->str = del_unused_quot(redir->str);
-			while (ex == 0)
-			{
-				str = readline("\e[1m\e[31m\002"">""\001\e[0m\002");
-				if (str && ft_strcmp(redir->str, str) != 0)
-					res = read_here(str, res);
-				else
-					ex = 1;
-			}
-			if (str)
-				free(str);
-		}
+			res = heredoc_extra(redir, res, 0);
 		redir = redir->next;
 	}
 	if (!res)
