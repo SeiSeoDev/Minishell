@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 15:32:31 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 16:01:12 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,6 @@ void	parent(t_cmd *cmd);
 void	child(t_cmd *cmd, t_cmd *tmp, int *pipefd, int *i);
 void	define_sig(int isparent);
 void	sig_handler(int sig);
-void	sig_handler2(int sig);
 t_token	*is_here(t_cmd *cmd);
 
 /*

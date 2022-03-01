@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 14:21:10 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:18:22 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	cmd_creat(t_token *token)
 		else
 			cmd_add(&tmp, data);
 	}
-	if (!parsing_error(res))
+	if (!res || !parsing_error(res))
 		return ;
 	parent(res);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 14:20:35 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:18:31 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,14 @@ int	find_file(char *path)
 		return (8);
 }
 
+void	sig_heredoc(int sig)
+{
+	rl_on_new_line();
+	(void)sig;
+	ft_putchar_fd('\n', 1);
+	exit(0);
+}
+
 void	loop(void)
 {
 	char	*str;
@@ -69,9 +77,9 @@ int	main(int ac, char **av, char **env)
 	str = ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1);
 	handler(3, NULL, "SHLVL", str);
 	free(str);
-	signal(SIGINT, sig_handler2);
-	signal(42, sig_handler2);
-	signal(SIGQUIT, sig_handler2);
+	signal(SIGINT, sig_handler);
+	signal(42, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	loop();
 	return (1);
 }
