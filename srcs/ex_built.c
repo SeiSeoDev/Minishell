@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 17:20:15 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:52:24 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,31 +50,29 @@ void	ex_echo(t_cmd *cmd)
 		write(cmd->fdout, "\n", 1);
 }
 
-void	ex_cd(t_cmd *cmd)
+void	ex_cd(t_cmd *cmd, char *str, t_env *env, int f)
 {
 	char	buf[4096];
-	char	*str;
-	t_env	*env;
 
-	str = NULL;
 	if (cmd->arg->next)
 		str = cmd->arg->next->str;
-	if (!cmd->arg->next || !ft_strcmp(str, "~"))
-		str = ft_strdup("/mnt/nfs/homes/tamigore");
-	if (str[0] == '~' && str[1])
+	if ((!cmd->arg->next || !ft_strcmp(str, "~")) && env)
 	{
-		str = ft_strjoin("/mnt/nfs/homes/tamigore", "/");
-		str = ft_strjoin(str, &cmd->arg->next->str[1]);
+		str = ft_strdup(env->val);
+		f = 1;
+	}
+	if (str[0] == '~' && str[1] && env)
+	{
+		str = ft_strjoin(env->val, "/");
+		str = ft_free_join(str, &cmd->arg->next->str[1], 1);
+		f = 1;
 	}
 	if (chdir(str) == -1)
 		printf("Minishell: cd: %s: Not a directory\n", str);
 	else
-	{
-		env = handler(3, NULL, "PWD", NULL);
-		if (env)
-			handler(3, NULL, "OLDPWD", env->val);
 		handler(3, NULL, "PWD", getcwd(buf, 4096));
-	}
+	if (f)
+		free(str);
 }
 
 void	ex_pwd(t_cmd *cmd)
@@ -83,7 +81,8 @@ void	ex_pwd(t_cmd *cmd)
 
 	(void)cmd;
 	myenv = handler(3, NULL, "PWD", NULL);
-	write(1, myenv->val, ft_strlen(myenv->val));
+	if (myenv)
+		write(1, myenv->val, ft_strlen(myenv->val));
 	write(1, "\n", 1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/02 17:00:26 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:50:36 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	exec(t_cmd *cmd, char *doc)
 	if (!ft_strcmp(cmd->arg->str, "echo"))
 		return (ex_echo(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "cd"))
-		return (ex_cd(cmd));
+		return (ex_cd(cmd, NULL, handler(3, NULL, "HOME", NULL), 0));
 	else if (!ft_strcmp(cmd->arg->str, "pwd"))
 		return (ex_pwd(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "env"))
@@ -35,11 +35,8 @@ void	exec(t_cmd *cmd, char *doc)
 		return (ex_port(cmd));
 	else if (!ft_strcmp(cmd->arg->str, "exit"))
 		exfree(cmd, "exit", 'c', 0);
-	// else
-	// {	
 	dup2(cmd->fdout, STDOUT_FILENO);
 	exe_cmd(cmd);
-	// }
 	close_fd(cmd);
 }
 
@@ -121,17 +118,15 @@ void	tokenize(t_token *token)
 	expension(token);
 }
 
-void	split_words(char *str)
+void	split_words(char *str, int i, int s)
 {
 	t_token	*token;
 	t_token	*tmp;
-	int		i;
-	int		s;
 
-	i = 0;
-	s = 0;
-	if (!str || str[0] == '\0')
+	if (!str)
 		return ;
+	if (!str[0])
+		return (free(str));
 	split(str, &i, &s);
 	token = init_token(NULL, ft_strndup(&str[s], i - s), 0);
 	tmp = token;
@@ -146,5 +141,6 @@ void	split_words(char *str)
 				ctrfree(tmp, "error init token...\n", 't', 1);
 		}
 	}
+	ft_memdel((void **)&str);
 	tokenize(tmp);
 }

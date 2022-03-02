@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 16:43:27 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:25:04 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 			exe = ft_free_join(exe, c->arg->str, 1);
 			if (access(exe, X_OK) == -1)
 			{
-				printf("exe = %s\n", exe);
 				print_err(c->arg->str, ": Permission denied\n");
 				if (exe)
 					free(exe);

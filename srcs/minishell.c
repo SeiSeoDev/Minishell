@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 17:08:46 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:37:45 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ void	loop(void)
 			exfree(NULL, NULL, 0, 1);
 		}
 		add_history(str);
-		split_words(str);
-		free(str);
+		split_words(str, 0, 0);
 	}
 }
 
@@ -89,7 +88,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
-	if (!env)
+	if (!env || !env[0])
 	{
 		printf("env NULL exit\n");
 		return (1);
