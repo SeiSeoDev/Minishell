@@ -6,7 +6,7 @@
 #    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/07 16:03:33 by tamigore          #+#    #+#              #
-#    Updated: 2022/03/01 17:52:57 by dasanter         ###   ########.fr        #
+#    Updated: 2022/03/02 17:28:53 by dasanter         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,8 @@ SOURCES =	minishell.c		\
 			cmd.c			\
 			redir.c			\
 			fork.c			\
-			heredoc.c
+			heredoc.c		\
+			ex_hit.c
 
 SRCS = $(addprefix $(DIR_S),$(SOURCES))
 
