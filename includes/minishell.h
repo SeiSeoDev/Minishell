@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/02 16:15:33 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:28:38 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,5 +227,11 @@ void	sig_heredoc(int sig);
 int		is_herdoc(t_cmd *cmd);
 
 int		get_nbpipe(t_cmd *cmd);
+
+/*
+** ex_hit.c
+*/
+
+int ex_hit(t_cmd  *cmd);
 
 #endif

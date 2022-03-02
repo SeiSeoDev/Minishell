@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
+#    By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/08 15:04:29 by tamigore          #+#    #+#              #
-#    Updated: 2022/02/15 11:54:35 by user42           ###   ########.fr        #
+#    Updated: 2022/03/02 18:22:49 by dasanter         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,8 @@ SRC/I = ft_isalnum.c	\
 		ft_isalpha.c	\
 		ft_isascii.c	\
 		ft_isdigit.c	\
-		ft_isprint.c
+		ft_isprint.c	\
+		ft_strisnum.c
 
 SRC/P = ft_putchar.c	\
 		ft_putstr.c		\
