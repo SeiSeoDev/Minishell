@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 13:58:00 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/02 14:14:03 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ex_cd(t_cmd *cmd)
 	else if (str[0] == '~' && str[1])
 	{
 		str = ft_strjoin(handler(3, NULL, "HOME", NULL)->val, "/");
-		str = ft_strjoin(str, cmd->arg->next->str);
+		str = ft_strjoin(str, &cmd->arg->next->str[1]);
 	}
 	if (chdir(str) == -1)
 		printf("Minishell: cd: %s: Not a directory\n", str);
