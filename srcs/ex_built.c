@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 18:10:47 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 13:58:00 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	ex_cd(t_cmd *cmd)
 		str = ft_strdup(handler(3, NULL, "HOME", NULL)->val);
 	else
 		str = cmd->arg->next->str;
-	printf("str : %s\n", str);
 	if (!ft_strcmp(str, "~"))
 		str = handler(3, NULL, "HOME", NULL)->val;
 	else if (str[0] == '~' && str[1])
