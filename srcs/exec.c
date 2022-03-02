@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 14:01:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 14:16:29 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ static void	exe_cmd(t_cmd *cmd)
 
 	env = handler(3, NULL, "PATH", NULL);
 	exe = exe_extra(cmd, env, NULL, cmd->arg->str);
-	printf("exe = %s\n", exe);
 	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
 	arg = creat_arg(cmd);
