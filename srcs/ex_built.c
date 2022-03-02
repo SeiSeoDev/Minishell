@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/01 18:10:47 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 14:37:12 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	onlyn(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	ex_echo(t_cmd *cmd)
 {
@@ -19,17 +33,18 @@ void	ex_echo(t_cmd *cmd)
 
 	arg = cmd->arg->next;
 	n = 0;
-	if (arg && arg->str && !ft_strcmp(arg->str, "-n"))
-	{
-		n = 1;
-		arg = arg->next;
-	}
 	while (arg)
 	{
-		ft_putstr_fd(arg->str, cmd->fdout);
+		if (arg && arg->str && !ft_strncmp(arg->str, "-n", 2)
+			&& onlyn(&arg->str[1]))
+			n = 1;
+		else
+		{
+			ft_putstr_fd(arg->str, cmd->fdout);
+			if (arg->next)
+				ft_putstr_fd(" ", cmd->fdout);
+		}
 		arg = arg->next;
-		if (arg)
-			ft_putstr_fd(" ", cmd->fdout);
 	}
 	if (!n)
 		write(cmd->fdout, "\n", 1);
@@ -45,13 +60,12 @@ void	ex_cd(t_cmd *cmd)
 		str = ft_strdup(handler(3, NULL, "HOME", NULL)->val);
 	else
 		str = cmd->arg->next->str;
-	printf("str : %s\n", str);
 	if (!ft_strcmp(str, "~"))
 		str = handler(3, NULL, "HOME", NULL)->val;
 	else if (str[0] == '~' && str[1])
 	{
 		str = ft_strjoin(handler(3, NULL, "HOME", NULL)->val, "/");
-		str = ft_strjoin(str, cmd->arg->next->str);
+		str = ft_strjoin(str, &cmd->arg->next->str[1]);
 	}
 	if (chdir(str) == -1)
 		printf("Minishell: cd: %s: Not a directory\n", str);
