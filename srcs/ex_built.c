@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 15:37:46 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:22:22 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,24 +54,25 @@ void	ex_cd(t_cmd *cmd)
 {
 	char	buf[4096];
 	char	*str;
+	t_env	*env;
 
 	str = NULL;
-	if (cmd->arg->next == NULL)
-		str = ft_strdup(handler(3, NULL, "HOME", NULL)->val);
-	else
+	if (cmd->arg->next)
 		str = cmd->arg->next->str;
-	if (!ft_strcmp(str, "~"))
-		str = handler(3, NULL, "HOME", NULL)->val;
-	else if (str[0] == '~' && str[1])
+	if (!cmd->arg->next || !ft_strcmp(str, "~"))
+		str = ft_strdup("/mnt/nfs/homes/tamigore");
+	if (str[0] == '~' && str[1])
 	{
-		str = ft_strjoin(handler(3, NULL, "HOME", NULL)->val, "/");
+		str = ft_strjoin("/mnt/nfs/homes/tamigore", "/");
 		str = ft_strjoin(str, &cmd->arg->next->str[1]);
 	}
 	if (chdir(str) == -1)
 		printf("Minishell: cd: %s: Not a directory\n", str);
 	else
 	{
-		handler(3, NULL, "OLDPWD", handler(3, NULL, "PWD", NULL)->val);
+		env = handler(3, NULL, "PWD", NULL);
+		if (env)
+			handler(3, NULL, "OLDPWD", env->val);
 		handler(3, NULL, "PWD", getcwd(buf, 4096));
 	}
 }

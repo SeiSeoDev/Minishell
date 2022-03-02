@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 15:37:57 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:22:31 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	*creat_exe(t_env *env, t_cmd *cmd, int j, int i)
 	return (NULL);
 }
 
-static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
+static void	exe_dir(t_cmd *c, char *s)
 {
 	if (ft_search(c->arg->str, '/'))
 	{
@@ -86,24 +86,43 @@ static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 			exfree(c, NULL, 'c', 126);
 		}
 	}
-	exe = creat_exe(env, c, 0, 0);
-	if (!exe && c->arg->str[0] == '.')
+}
+
+static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
+{
+	exe_dir(c, s);
+	if (c->arg->str[0] == '.')
 	{
 		env = handler(3, NULL, "PWD", NULL);
-		exe = ft_strjoin(ft_strjoin(env->val, "/"), c->arg->str);
+		if (env)
+		{
+			exe = ft_strjoin(env->val, "/");
+			exe = ft_free_join(exe, c->arg->str, 1);
+			if (access(exe, X_OK) == -1)
+			{
+				printf("exe = %s\n", exe);
+				print_err(c->arg->str, ": Permission denied\n");
+				if (exe)
+					free(exe);
+				exfree(c, NULL, 'c', 126);
+			}
+		}
 	}
+	else
+		exe = creat_exe(env, c, 0, 0);
 	if (!exe)
 		exe = ft_strdup(c->arg->str);
 	return (exe);
 }
 
-static void	exe_cmd(t_cmd *cmd)
+void	exe_cmd(t_cmd *cmd)
 {
 	t_env	*env;
 	char	**arg;
 	char	*exe;
 	char	**all;
 
+	isntopen(cmd);
 	env = handler(3, NULL, "PATH", NULL);
 	exe = exe_extra(cmd, env, NULL, cmd->arg->str);
 	env = handler(3, NULL, NULL, NULL);
@@ -118,33 +137,4 @@ static void	exe_cmd(t_cmd *cmd)
 	if (all)
 		ft_free_tab(all);
 	exfree(cmd, NULL, 'c', 127);
-}
-
-void	exec(t_cmd *cmd, char *doc)
-{
-	if (cmd && cmd->redir)
-		fill_fd(cmd, doc);
-	if (!cmd || isntopen(cmd) || !cmd->arg || !cmd->arg->str)
-		exfree(cmd, NULL, 'c', 1);
-	dup2(cmd->fdin, STDIN_FILENO);
-	if (!ft_strcmp(cmd->arg->str, "echo"))
-		return (ex_echo(cmd));
-	else if (!ft_strcmp(cmd->arg->str, "cd"))
-		return (ex_cd(cmd));
-	else if (!ft_strcmp(cmd->arg->str, "pwd"))
-		return (ex_pwd(cmd));
-	else if (!ft_strcmp(cmd->arg->str, "env"))
-		return (ex_env(cmd));
-	else if (!ft_strcmp(cmd->arg->str, "unset"))
-		return (ex_unset(cmd));
-	else if (!ft_strcmp(cmd->arg->str, "export"))
-		return (ex_port(cmd));
-	else if (!ft_strcmp(cmd->arg->str, "exit"))
-		exfree(cmd, "exit", 'c', 0);
-	else
-	{		
-		dup2(cmd->fdout, STDOUT_FILENO);
-		exe_cmd(cmd);
-	}
-	close_fd(cmd);
 }

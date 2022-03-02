@@ -6,11 +6,42 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 16:34:35 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/02 15:24:49 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:00:26 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	exec(t_cmd *cmd, char *doc)
+{
+	if (cmd && cmd->redir)
+		fill_fd(cmd, doc);
+	if (isntopen(cmd) == 1)
+		return (close_fd(cmd));
+	if (!cmd || !cmd->arg || !cmd->arg->str)
+		exfree(cmd, NULL, 'c', 1);
+	dup2(cmd->fdin, STDIN_FILENO);
+	if (!ft_strcmp(cmd->arg->str, "echo"))
+		return (ex_echo(cmd));
+	else if (!ft_strcmp(cmd->arg->str, "cd"))
+		return (ex_cd(cmd));
+	else if (!ft_strcmp(cmd->arg->str, "pwd"))
+		return (ex_pwd(cmd));
+	else if (!ft_strcmp(cmd->arg->str, "env"))
+		return (ex_env(cmd));
+	else if (!ft_strcmp(cmd->arg->str, "unset"))
+		return (ex_unset(cmd));
+	else if (!ft_strcmp(cmd->arg->str, "export"))
+		return (ex_port(cmd));
+	else if (!ft_strcmp(cmd->arg->str, "exit"))
+		exfree(cmd, "exit", 'c', 0);
+	// else
+	// {	
+	dup2(cmd->fdout, STDOUT_FILENO);
+	exe_cmd(cmd);
+	// }
+	close_fd(cmd);
+}
 
 void	cmd_creat(t_token *token)
 {

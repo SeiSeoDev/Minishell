@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 16:31:03 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 18:48:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:06:36 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	close_fd(t_cmd *cmd)
 	token = cmd->redir;
 	while (token)
 	{
-		if (token->fd != 1 && token->fd != 0)
+		if (token->fd > 1)
 			close(token->fd);
 		token = token->next;
 	}
@@ -61,6 +61,8 @@ int	isntopen(t_cmd *cmd)
 			handler(1, NULL, "?", NULL);
 			if (!is_built(cmd))
 				exfree(cmd, NULL, 'c', 1);
+			else
+				return (1);
 		}
 		t = t->next;
 	}

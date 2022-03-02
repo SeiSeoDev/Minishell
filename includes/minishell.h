@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:38:39 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 18:09:48 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 16:15:33 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ char	*expend_words(char *str, int i);
 ** pars.c
 */
 void	split_words(char *str);
+void	exec(t_cmd *cmd, char *doc);
 
 /*
 ** init.c
@@ -183,7 +184,7 @@ void	ex_unset(t_cmd *cmd);
 /*
 ** exec.c
 */
-void	exec(t_cmd *cmd, char *doc);
+void	exe_cmd(t_cmd *cmd);
 
 /*
 ** utils.c

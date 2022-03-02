@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 15:52:17 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 15:39:26 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:22:27 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,20 @@ void	loop(void)
 int	main(int ac, char **av, char **env)
 {
 	char	*str;
+	t_env	*myenv;
 
 	(void)ac;
 	(void)av;
+	if (!env)
+	{
+		printf("env NULL exit\n");
+		return (1);
+	}
 	handler(0, env, NULL, NULL);
-	str = ft_itoa(ft_atoi(handler(3, NULL, "SHLVL", NULL)->val) + 1);
+	myenv = handler(3, NULL, "SHLVL", NULL);
+	if (!myenv)
+		myenv = handler(3, NULL, "SHLVL", "1");
+	str = ft_itoa(ft_atoi(myenv->val) + 1);
 	handler(3, NULL, "SHLVL", str);
 	free(str);
 	signal(SIGINT, sig_handler);
