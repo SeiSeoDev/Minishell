@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 14:01:05 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:36:54 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,11 @@ static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 	{
 		if (chdir(c->arg->str) == -1)
 		{
-			print_err(s, ": No such file or directory\n");
-			exfree(c, NULL, 'c', 127);
+			if (!find_file(c->arg->str))
+			{
+				print_err(s, ": No such file or directory\n");
+				exfree(c, NULL, 'c', 127);
+			}
 		}
 		else
 		{
@@ -84,12 +87,13 @@ static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 		}
 	}
 	exe = creat_exe(env, c, 0, 0);
-	if (!exe)
+	if (!exe && c->arg->str[0] == '.')
 	{
 		env = handler(3, NULL, "PWD", NULL);
-		if (env)
-			exe = ft_strjoin(env->val, &c->arg->str[0]);
+		exe = ft_strjoin(ft_strjoin(env->val, "/"), c->arg->str);
 	}
+	if (!exe)
+		exe = ft_strdup(c->arg->str);
 	return (exe);
 }
 
@@ -102,7 +106,6 @@ static void	exe_cmd(t_cmd *cmd)
 
 	env = handler(3, NULL, "PATH", NULL);
 	exe = exe_extra(cmd, env, NULL, cmd->arg->str);
-	printf("exe = %s\n", exe);
 	env = handler(3, NULL, NULL, NULL);
 	all = get_env(env);
 	arg = creat_arg(cmd);
