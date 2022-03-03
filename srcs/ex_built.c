@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 18:56:04 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/03 13:42:27 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	ex_cd(t_cmd *cmd, char *str, t_env *env, int f)
 
 	if (cmd->arg->next)
 		str = cmd->arg->next->str;
+	if (!env)
+		return (print_err(NULL, "cd : HOME not set\n"));
 	if ((!cmd->arg->next || !ft_strcmp(str, "~")) && env)
 	{
 		str = ft_strdup(env->val);
@@ -67,7 +69,7 @@ void	ex_cd(t_cmd *cmd, char *str, t_env *env, int f)
 		str = ft_free_join(str, &cmd->arg->next->str[1], 1);
 		f = 1;
 	}
-	if (chdir(str) == -1)
+	if (str && chdir(str) == -1)
 		printf("Minishell: cd: %s: Not a directory\n", str);
 	else
 		handler(3, NULL, "PWD", getcwd(buf, 4096));
