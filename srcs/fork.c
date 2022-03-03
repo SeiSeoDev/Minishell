@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:00:04 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/01 19:00:00 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:05:52 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ static void	wait_process(t_cmd *cmd)
 {
 	int		status;
 	t_cmd	*tmp;
+	int i;
 
+	i = 0;
 	status = 0;
 	tmp = cmd;
 	while (tmp)
@@ -60,6 +62,8 @@ static void	wait_process(t_cmd *cmd)
 			handler(tmp->exit, NULL, "?", NULL);
 		tmp = tmp->next;
 	}
+	while (status <= 10000000)
+		status++;
 }
 
 void	child_extra(t_cmd *cmd, t_cmd *tmp, int *pipefd, char *doc)

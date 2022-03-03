@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ex_built.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/03 14:09:43 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:38:54 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,10 @@ void	ex_pwd(t_cmd *cmd)
 	char	buf[4096];
 	char	*str;
 
-	(void)cmd;
 	str = getcwd(buf, 4096);
 	if (str)
-		write(1, str, ft_strlen(str));
-	write(1, "\n", 1);
+		ft_putstr_fd(str, cmd->fdout);
+	write(cmd->fdout, "\n", 1);
 }
 
 int	is_built(t_cmd *cmd)

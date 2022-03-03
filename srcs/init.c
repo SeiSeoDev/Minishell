@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 16:17:14 by tamigore          #+#    #+#             */
-/*   Updated: 2022/03/02 17:09:10 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:21:17 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_token	*init_token(t_token *next, char *str, int type)
 	res->type = type;
 	res->str = str;
 	res->next = next;
-	res->fd = 0;
+	res->fd = 1;
 	return (res);
 }
 
