@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:50:00 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/02 18:56:00 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/03 12:56:42 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void	exe_dir(t_cmd *c, char *s)
 static char	*exe_extra(t_cmd *c, t_env *env, char *exe, char *s)
 {
 	exe_dir(c, s);
-	if (c->arg->str[0] == '.')
+	if (c->arg->str[0] == '.' && c->arg->str[1] == '/')
 	{
 		env = handler(3, NULL, "PWD", NULL);
 		if (env)
