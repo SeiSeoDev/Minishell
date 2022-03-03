@@ -6,7 +6,7 @@
 /*   By: tamigore <tamigore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/03 13:42:27 by tamigore         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:09:43 by tamigore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ex_cd(t_cmd *cmd, char *str, t_env *env, int f)
 
 	if (cmd->arg->next)
 		str = cmd->arg->next->str;
-	if (!env)
+	if (!env && (!str || str[0] == '~'))
 		return (print_err(NULL, "cd : HOME not set\n"));
 	if ((!cmd->arg->next || !ft_strcmp(str, "~")) && env)
 	{
@@ -79,12 +79,13 @@ void	ex_cd(t_cmd *cmd, char *str, t_env *env, int f)
 
 void	ex_pwd(t_cmd *cmd)
 {
-	t_env	*myenv;
+	char	buf[4096];
+	char	*str;
 
 	(void)cmd;
-	myenv = handler(3, NULL, "PWD", NULL);
-	if (myenv)
-		write(1, myenv->val, ft_strlen(myenv->val));
+	str = getcwd(buf, 4096);
+	if (str)
+		write(1, str, ft_strlen(str));
 	write(1, "\n", 1);
 }
 
