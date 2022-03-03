@@ -6,7 +6,7 @@
 /*   By: dasanter <dasanter@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 16:07:14 by dasanter          #+#    #+#             */
-/*   Updated: 2022/03/03 12:36:00 by dasanter         ###   ########.fr       */
+/*   Updated: 2022/03/03 13:42:32 by dasanter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,8 @@ void	ex_cd(t_cmd *cmd, char *str, t_env *env, int f)
 
 	if (cmd->arg->next)
 		str = cmd->arg->next->str;
-	if (!env)
-	{
-		print_err(NULL, "cd : HOME not set\n");
-		return;
-	}
+	if (!env && (!str || str[0] == '~'))
+		return (print_err(NULL, "cd : HOME not set\n"));
 	if ((!cmd->arg->next || !ft_strcmp(str, "~")) && env)
 	{
 		str = ft_strdup(env->val);
